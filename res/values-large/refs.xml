@@ -1,0 +1,3 @@
+<resources>
+    <item type="layout" name="activity_receipt_list">@layout/activity_receipt_twopane</item>
+</resources>
