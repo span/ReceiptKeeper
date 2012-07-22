@@ -29,5 +29,9 @@
     <string name="search">Search</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
+    <string name="take_photo">Click icon to take photo</string>
+    <string name="cancel_prompt_data_loss">Do you wish to cancel and go back to the home screen? (All data will be lost)</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

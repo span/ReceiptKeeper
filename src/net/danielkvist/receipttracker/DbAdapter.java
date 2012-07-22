@@ -10,61 +10,46 @@ import android.util.Log;
 
 public class DbAdapter
 {
-
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_BODY = "body";
-    public static final String KEY_ROWID = "id";
-
-    private static final String TAG = "DbAdapter";
-    private DatabaseHelper dbHelper;
-    private SQLiteDatabase db;
-
-    /**
-     * Database creation sql statement
-     */
-    private static final String DATABASE_CREATE = "CREATE TABLE notes (id integer primary key autoincrement, "
-            + "title text not null, body text not null);";
-
+    private final Context context;
     private static final String DATABASE_NAME = "data";
     private static final String DATABASE_TABLE = "receipts";
+    private static final String TAG = "ReceiptTracker";
     private static final int DATABASE_VERSION = 1;
-
-    private final Context context;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper
-    {
-
-        DatabaseHelper(Context context)
-        {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db)
-        {
-
-            db.execSQL(DATABASE_CREATE);
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-        {
-            Log.w(TAG, "Upgrading " + DATABASE_TABLE + " database from version " + oldVersion + " to " + newVersion
-                    + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
-            onCreate(db);
-        }
-    }
+    
+    public static final String KEY_ROWID = "id";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_PHOTO = "photo";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_TIME = "time";
+    public static final String KEY_LOCATION_LAT = "location_lat";
+    public static final String KEY_LOCATION_LONG = "location_long";
+    public static final String KEY_SUM = "sum";
+    public static final String KEY_TAX = "tax";
+    public static final String KEY_COMMENT = "comment";
+    
+    
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase db;
+    
+    private static final String DATABASE_CREATE = "CREATE TABLE " + DATABASE_TABLE + " (" + 
+                        KEY_ROWID + " integer primary key autoincrement, " +
+                        KEY_NAME + " text not null, " +
+                        KEY_PHOTO + " text not null," +
+                        KEY_DATE + " text not null," +
+                        KEY_TIME + " text not null," +
+                        KEY_LOCATION_LAT + " text not null," +
+                        KEY_LOCATION_LONG + " text not null," +
+                        KEY_SUM + " text not null," +
+                        KEY_TAX + " text not null," +
+                        KEY_COMMENT + " text not null" +
+            		");";
 
     /**
      * 
      * @param context
      *            the Context within which to work
      */
-    public DbAdapter(Context context)
-    {
-        this.context = context;
-    }
+    public DbAdapter(Context context) { this.context = context; }
 
     /**
      * 
@@ -80,26 +65,25 @@ public class DbAdapter
         return this;
     }
 
-    public void close()
-    {
-        dbHelper.close();
-    }
+    public void close() { dbHelper.close(); }
 
     /**
      * 
+     * @param tax 
+     * @param sum 
+     * @param date 
+     * @param time 
+     * @param location 
      * @param title
      *            the title
      * @param body
      *            the body
      * @return rowId or -1 if failed
      */
-    public long createItem(String title, String body)
+    public long createItem(String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
     {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_TITLE, title);
-        initialValues.put(KEY_BODY, body);
-
-        return db.insert(DATABASE_TABLE, null, initialValues);
+        ContentValues values = putValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
+        return db.insert(DATABASE_TABLE, null, values);
     }
 
     /**
@@ -107,21 +91,18 @@ public class DbAdapter
      *            id to delete
      * @return true if deleted, false otherwise
      */
-    public boolean deleteItem(long rowId)
-    {
-
-        return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
-    }
+    public boolean deleteItem(long rowId) { return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0; }
 
     /**
      * Return a Cursor over the list of all entries in the database
      * 
      * @return Cursor over all notes
      */
-    public Cursor fetchAllItems()
-    {
-
-        return db.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_TITLE, KEY_BODY }, null, null, null, null, null);
+    public Cursor fetchAllItems() 
+    { 
+        return db.query(DATABASE_TABLE, new String[] 
+                                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
+                                null, null, null, null, null);
     }
 
     /**
@@ -136,9 +117,9 @@ public class DbAdapter
     public Cursor fetchNote(long rowId) throws SQLException
     {
 
-        Cursor cursor = db.query(true, DATABASE_TABLE, new String[] { KEY_ROWID, KEY_TITLE, KEY_BODY }, 
-                                    KEY_ROWID + "=" + rowId, null,
-                                    null, null, null, null);
+        Cursor cursor = db.query(true, DATABASE_TABLE, new String[] 
+                                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
+                                KEY_ROWID + "=" + rowId, null, null, null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -157,12 +138,42 @@ public class DbAdapter
      *            value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateItem(long rowId, String title, String body)
+    public boolean updateItem(long rowId, String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
+    {
+        ContentValues values = putValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
+        return db.update(DATABASE_TABLE, values, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    private ContentValues putValues(String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
     {
         ContentValues values = new ContentValues();
-        values.put(KEY_TITLE, title);
-        values.put(KEY_BODY, body);
+        values.put(KEY_NAME, name);
+        values.put(KEY_PHOTO, photo);
+        values.put(KEY_DATE, date);
+        values.put(KEY_TIME, time);
+        values.put(KEY_LOCATION_LAT, locLat);
+        values.put(KEY_LOCATION_LONG, locLong);
+        values.put(KEY_SUM, sum);
+        values.put(KEY_TAX, tax);
+        values.put(KEY_COMMENT, comment);
+        return values;
+    }
+    
+    private static class DatabaseHelper extends SQLiteOpenHelper
+    {
 
-        return db.update(DATABASE_TABLE, values, KEY_ROWID + "=" + rowId, null) > 0;
+        DatabaseHelper(Context context) { super(context, DATABASE_NAME, null, DATABASE_VERSION); }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) { db.execSQL(DATABASE_CREATE); }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+        {
+            Log.w(TAG, "Upgrading " + DATABASE_TABLE + " database from version " + oldVersion + " to " + newVersion
+                    + ", which will destroy all old data");
+            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+            onCreate(db);
+        }
     }
 }
