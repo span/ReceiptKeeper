@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AddReceiptFragment" >
+    android:id="@+id/scroller"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:padding="16dp">
+        tools:context=".AddReceiptFragment" >
 
         <TextView
             android:id="@+id/add_receipt_title"
@@ -74,65 +74,65 @@
             android:id="@+id/add_receipt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/name"
             android:inputType="text"
-            android:lines="1"
-            android:hint="@string/name" />
+            android:lines="1" />
 
         <EditText
             android:id="@+id/add_receipt_sum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/total_sum"
             android:inputType="numberDecimal"
-            android:lines="1"
-            android:hint="@string/total_sum" />
+            android:lines="1" />
 
         <EditText
             android:id="@+id/add_receipt_tax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/tax"
             android:inputType="numberDecimal"
-            android:lines="1"
-            android:hint="@string/tax" />
+            android:lines="1" />
 
         <EditText
             android:id="@+id/add_receipt_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/receipt_comment_"
             android:inputType="textMultiLine"
-            android:lines="3"
-            android:hint="@string/receipt_comment_" />
+            android:lines="3" />
 
         <TextView
             android:id="@+id/add_receipt_location"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        
-        <fragment android:id="@+id/my_map_fragment"
-              android:name="net.danielkvist.receipttracker.activity.MyMapFragment"
-              android:layout_width="match_parent"
-              android:layout_height="300dp" > 
+            android:layout_height="wrap_content" />
+
+        <fragment
+            android:id="@+id/my_map_fragment"
+            android:name="net.danielkvist.receipttracker.activity.MyMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" >
         </fragment>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.50"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.50"
+                android:text="@string/save" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.50"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.50"
-            android:text="@string/save" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
