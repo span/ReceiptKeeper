@@ -10,9 +10,11 @@ import com.google.android.maps.MyLocationOverlay;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.ReceiptListActivity;
+import net.danielkvist.util.BitmapScaler;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.LocationParser;
 import net.danielkvist.util.Receipt;
+import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -208,31 +210,24 @@ public class ReceiptAddFragment extends Fragment
             case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    Activity activity = getActivity();
-                    Uri selectedImage = imageUri;
-                    activity.getContentResolver().notifyChange(selectedImage, null);
-                    ImageView imageView = (ImageView) activity.findViewById(R.id.receipt_photo_image_view);
-                    ContentResolver cr = activity.getContentResolver();
-
-                    try
-                    {
-                        // TODO Fix scaling to be proportional
-                        // TODO Add click listener to image to view large version (launch gallery intent?)
-                        Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
-                        Bitmap bm = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
-
-                        imageView.setImageBitmap(bm);
-                        imageView.setVisibility(View.VISIBLE);
-
-                        Toast.makeText(activity, selectedImage.toString(), Toast.LENGTH_LONG).show();
-                    } 
-                    catch (Exception e)
-                    {
-                        Toast.makeText(activity, "Failed to load", Toast.LENGTH_SHORT).show();
-                        Log.e("ReceiptTracker", e.toString());
-                    }
+                    showBitmap();
                 }
         }
+    }
+    
+    private void showBitmap()
+    {
+        Activity activity = getActivity();
+        activity.getContentResolver().notifyChange(imageUri, null);
+        Toast.makeText(activity, "The image was saved to: " + imageUri.toString(), Toast.LENGTH_LONG).show();
+        
+        ImageView imageView = (ImageView) activity.findViewById(R.id.receipt_photo_image_view);
+        ContentResolver cr = activity.getContentResolver();
+
+        
+        // TODO Add click listener to image to view large version (launch gallery intent?)
+        ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, imageUri.getPath());
+        worker.execute(150, 150);
     }
 
 
