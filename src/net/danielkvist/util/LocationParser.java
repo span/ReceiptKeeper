@@ -78,7 +78,7 @@ public class LocationParser implements LocationListener
     
     public String getLongitude() { return latitude == -1 ? MESSAGE_PROVIDER_NA : String.valueOf(longitude); }
     
-    public String getLongLatString() { return "Latitude" + getLatitude() + " - Longitude: " + getLongitude(); }
+    public String getLongLatString() { return "Latitude: " + getLatitude() + " - Longitude: " + getLongitude(); }
     
     public String getAddress() { return addresses == null ? MESSAGE_PROVIDER_NA : addresses.get(0).getAddressLine(0); }
 
