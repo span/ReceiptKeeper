@@ -4,7 +4,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.ReceiptListActivity;
@@ -90,10 +92,6 @@ public class ReceiptAddFragment extends Fragment
         lp = new LocationParser(getActivity().getApplicationContext());
         locationView = (TextView) rootView.findViewById(R.id.add_receipt_location);
         locationView.setText(lp.getLongLatString());
-        
-        mapView = (MapView) rootView.findViewById(R.id.mapview);
-        //mapView.setBuiltInZoomControls(true);
-        // TODO show location on mapview
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +110,6 @@ public class ReceiptAddFragment extends Fragment
             @Override
             public void onClick(View v) { cancel(); }
         });
-        
-        
 
         return rootView;
     }

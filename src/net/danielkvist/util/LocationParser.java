@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.android.maps.GeoPoint;
+
 import android.content.Context;
 import android.location.Address;
 import android.location.Criteria;
@@ -22,6 +24,7 @@ public class LocationParser implements LocationListener
     private Context context;
     private Location location;
     private List<Address> addresses;
+    private GeoPoint currentGeoPoint;
     
     public LocationParser(Context context)
     {
@@ -36,6 +39,9 @@ public class LocationParser implements LocationListener
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
         location = locationManager.getLastKnownLocation(provider);
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        setCurrentGeoPoint(new GeoPoint((int) (latitude*1000000), (int) (longitude*1000000)));
 
         if (location != null) 
         {
@@ -47,16 +53,10 @@ public class LocationParser implements LocationListener
                     try
                     {
                         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        Log.d("ReceiptTracker", "Long: " + String.valueOf(longitude));
-                        Log.d("ReceiptTracker", "Lat: " + String.valueOf(latitude));
-                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        addresses = geocoder.getFromLocation(Double.parseDouble(getLatitude()), Double.parseDouble(getLongitude()), 1);
                     } 
                     catch (IOException e)
                     {
-                        latitude = -1;
-                        longitude = -1;
                         Log.d("ReceiptTracker", "Failed to init geocoder at location. " +
                                 "Lat: " + getLatitude() + " - Long: " + getLongitude());
                         Log.d("ReceiptTracker", e.getMessage());
@@ -66,8 +66,6 @@ public class LocationParser implements LocationListener
             };
             
             thread.start();
-            
-            
         } 
         else 
         {
@@ -103,6 +101,7 @@ public class LocationParser implements LocationListener
     {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+        setCurrentGeoPoint(new GeoPoint((int) (latitude*1000000), (int) (longitude*1000000)));
     }
 
     @Override
@@ -113,6 +112,22 @@ public class LocationParser implements LocationListener
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+    /**
+     * @return the currentGeoPoint
+     */
+    public GeoPoint getCurrentGeoPoint()
+    {
+        return currentGeoPoint;
+    }
+
+    /**
+     * @param currentGeoPoint the currentGeoPoint to set
+     */
+    public void setCurrentGeoPoint(GeoPoint currentGeoPoint)
+    {
+        this.currentGeoPoint = currentGeoPoint;
+    }
 
     
 

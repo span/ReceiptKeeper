@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".AddReceiptFragment" >
 
     <LinearLayout
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:padding="16dp" >
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/add_receipt_title"
@@ -111,13 +111,13 @@
               android:name="net.danielkvist.receipttracker.activity.MyMapFragment"
               android:layout_width="match_parent"
               android:layout_height="300dp" > 
-          </fragment>
+        </fragment>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="false"
         android:orientation="horizontal" >
 
         <Button
@@ -135,4 +135,4 @@
             android:text="@string/save" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
