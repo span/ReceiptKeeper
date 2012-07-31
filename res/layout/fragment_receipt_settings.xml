@@ -51,24 +51,14 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:text="@string/local_storage" />
-
+                        
                         <RadioButton
-                            android:id="@+id/storage_boxnet"
+                            android:id="@+id/storage_cloud"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/box_net_storage" />
+                            android:checked="true"
+                            android:text="@string/cloud_storage" />
 
-                        <RadioButton
-                            android:id="@+id/storage_google_drive"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/google_drive_storage" />
-
-                        <RadioButton
-                            android:id="@+id/storage_dropbox"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/dropbox_storage" />
                     </RadioGroup>
                 </LinearLayout>
 
@@ -92,11 +82,18 @@
                         android:text="@string/name" />
 
                     <Switch
-                        android:id="@+id/switch_datetime"
+                        android:id="@+id/switch_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="@string/date_and_time" />
+                        android:text="@string/date" />
+                    
+                    <Switch
+                        android:id="@+id/switch_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/time" />
 
                     <Switch
                         android:id="@+id/switch_location"
@@ -118,6 +115,13 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="@string/tax" />
+                    
+                    <Switch
+                        android:id="@+id/switch_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/comment" />
                 </LinearLayout>
 
                 <LinearLayout
