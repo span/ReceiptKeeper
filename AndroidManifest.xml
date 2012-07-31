@@ -32,7 +32,8 @@
         
         <activity
             android:name=".activity.ReceiptFrameActivity"
-            android:label="@string/title_receipt_detail" >
+            android:label="@string/title_receipt_detail" 
+            android:windowSoftInputMode="stateUnchanged">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ReceiptListActivity" />
