@@ -1,0 +1,244 @@
+package net.danielkvist.receipttracker.fragment;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.google.android.maps.MapView;
+
+import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.activity.ReceiptListActivity;
+import net.danielkvist.util.Communicator;
+import net.danielkvist.util.LocationParser;
+import net.danielkvist.util.Receipt;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class ReceiptAddFragment extends Fragment
+{
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    private Uri imageUri;
+    private String currentDate;
+    private String currentTime;
+    private String filename;
+    private TextView dateView;
+    private TextView timeView;
+    private Button cancelButton;
+    private Button saveButton;
+    private TextView locationView;
+    private TextView nameView;
+    private TextView taxView;
+    private TextView commentView;
+    private TextView sumView;
+    LocationParser lp;
+    private MapView mapView;
+    
+    public ReceiptAddFragment()
+    {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        /*
+         * if (getArguments().containsKey(ARG_ITEM_ID)) { mItem =
+         * MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+         * }
+         */
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        // TODO Get the settings from communicator and hide selected fields
+        View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
+        nameView = (TextView) rootView.findViewById(R.id.add_receipt_name);
+        sumView = (TextView) rootView.findViewById(R.id.add_receipt_sum);
+        taxView = (TextView) rootView.findViewById(R.id.add_receipt_tax);
+        commentView = (TextView) rootView.findViewById(R.id.add_receipt_comment);
+        
+        currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        currentTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+        dateView = (TextView) rootView.findViewById(R.id.add_receipt_date);
+        dateView.setText(currentDate);
+
+        timeView = (TextView) rootView.findViewById(R.id.add_receipt_time);
+        timeView.setText(currentTime);
+        
+        lp = new LocationParser(getActivity().getApplicationContext());
+        locationView = (TextView) rootView.findViewById(R.id.add_receipt_location);
+        locationView.setText(lp.getLongLatString());
+        
+        mapView = (MapView) rootView.findViewById(R.id.mapview);
+        //mapView.setBuiltInZoomControls(true);
+        // TODO show location on mapview
+
+        ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { takePhoto(); }
+        });
+        
+        saveButton = (Button) rootView.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { saveReceipt(); }
+        });
+        
+        cancelButton = (Button) rootView.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { cancel(); }
+        });
+        
+        
+
+        return rootView;
+    }
+
+    private void saveReceipt()
+    {
+        Receipt receipt = new Receipt();
+        Communicator communicator = new Communicator(getActivity());
+        
+        receipt.setName(nameView.getText().toString());
+        receipt.setPhoto(imageUri.toString());
+        receipt.setDate(dateView.getText().toString());
+        receipt.setTime(timeView.getText().toString());
+        receipt.setLocationLat(lp.getLatitude());
+        receipt.setLocationLong(lp.getLongitude());
+        receipt.setSum(sumView.getText().toString());
+        receipt.setTax(taxView.getText().toString());
+        receipt.setComment(commentView.getText().toString());
+        
+        communicator.saveReceipt(receipt);
+        // TODO Handle new boolean return from saveReceipt and launch intent, pass receipt to list
+    }
+   
+
+//    private void saveData()
+//    {
+//        DbAdapter dbAdapter = new DbAdapter(getActivity());
+//        
+//        try
+//        {
+//            dbAdapter.open();
+//            
+//            long result = dbAdapter.createItem(nameView.getText().toString(), imageUri.toString(), dateView.getText().toString(), timeView.getText().toString(), 
+//                                lp.getLatitude(), lp.getLongitude(), sumView.getText().toString(), taxView.getText().toString(), commentView.getText().toString());
+//            if(result == -1)
+//            {
+//                Toast.makeText(getActivity(), "Could not save to database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
+//            }
+//            else
+//            {
+//                Toast.makeText(getActivity(), "Receipt was saved to database!", Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(getActivity(), ReceiptListActivity.class);
+//                startActivity(intent);
+//            }
+//        }
+//        catch (SQLException e) {
+//            Log.d("ReceiptTracker", e.getMessage());
+//            Toast.makeText(getActivity(), "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
+//        }
+//    }
+
+    private void cancel()
+    {
+        new AlertDialog.Builder(getActivity())
+        .setTitle(R.string.cancel)
+        .setMessage(R.string.cancel_prompt_data_loss)
+        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                Intent intent = new Intent(getActivity(), ReceiptListActivity.class);
+                startActivity(intent);
+            }
+        })
+        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) { /* Nothing to do here */ }
+        }).show();
+    }
+
+    private void takePhoto()
+    {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
+        File mediaStorageDir = new File(
+                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                                    "ReceiptTracker");
+
+        if (!mediaStorageDir.exists())
+        {
+            if (!mediaStorageDir.mkdirs())
+            {
+                Log.d("ReceiptTracker", "failed to create directory");
+            }
+        }
+        
+        File photo = new File(mediaStorageDir.getPath(), filename);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+        imageUri = Uri.fromFile(photo);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Activity activity = getActivity();
+                    Uri selectedImage = imageUri;
+                    activity.getContentResolver().notifyChange(selectedImage, null);
+                    ImageView imageView = (ImageView) activity.findViewById(R.id.receipt_photo_image_view);
+                    ContentResolver cr = activity.getContentResolver();
+
+                    try
+                    {
+                        // TODO Fix scaling to be proportional
+                        // TODO Add click listener to image to view large version (launch gallery intent?)
+                        Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, selectedImage);
+                        Bitmap bm = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
+
+                        imageView.setImageBitmap(bm);
+                        imageView.setVisibility(View.VISIBLE);
+
+                        Toast.makeText(activity, selectedImage.toString(), Toast.LENGTH_LONG).show();
+                    } 
+                    catch (Exception e)
+                    {
+                        Toast.makeText(activity, "Failed to load", Toast.LENGTH_SHORT).show();
+                        Log.e("ReceiptTracker", e.toString());
+                    }
+                }
+        }
+    }
+
+
+
+}
