@@ -23,7 +23,7 @@ public class MyMapActivity extends MapActivity
         mapView.setBuiltInZoomControls(true);
 
         MapController mapController = mapView.getController();
-        mapController.setZoom(10);
+        mapController.setZoom(18);
 
         mlo = new MyLocationOverlay(this, mapView);
         mlo.enableMyLocation();
