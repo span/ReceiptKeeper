@@ -19,8 +19,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         <activity
-            android:name=".ReceiptListActivity"
+            android:name=".activity.ReceiptListActivity"
             android:label="@string/title_receipt_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,13 +29,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
-            android:name=".ReceiptFrameActivity"
+            android:name=".activity.ReceiptFrameActivity"
             android:label="@string/title_receipt_detail" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ReceiptListActivity" />
         </activity>
+        
+        <uses-library android:name="com.google.android.maps" />   
+        
+        <activity android:label="@string/app_name" android:name=".activity.MyMapActivity" />
     </application>
 
 </manifest>
