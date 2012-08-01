@@ -93,8 +93,30 @@ public class Communicator
     
     public ArrayList<Setting> getAllSettings()
     {
-        // TODO Get settings from db and return list
-        return null;
+        ArrayList<Setting> settingsList = null;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        try
+        {
+            dbAdapter.open();
+            Cursor c = dbAdapter.fetchAllSettings();
+            c.moveToFirst();
+            settingsList = new ArrayList<Setting>();
+            while(!c.isAfterLast())
+            {
+                Setting setting = new Setting();
+                setting.setName(c.getString(c.getColumnIndex(DbAdapter.KEY_NAME)));
+                setting.setValue(c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
+                
+                settingsList.add(setting);
+                c.moveToNext();
+            }
+        }
+        catch (SQLException e) 
+        {
+            Log.d("ReceiptTracker", e.getMessage());
+            Toast.makeText(context, "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
+        }
+        return settingsList;
     }
     
     
