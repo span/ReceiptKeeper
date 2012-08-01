@@ -87,7 +87,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        // TODO Add global storage setting
+        // TODO Add cloud storage setting
         Setting setting = new Setting();
         setting.setName("storage");
         switch(checkedId)

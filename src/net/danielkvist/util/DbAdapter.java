@@ -48,10 +48,34 @@ public class DbAdapter
             		");";
     
     private static final String DATABASE_CREATE_TABLE_SETTINGS = "CREATE TABLE " + DATABASE_TABLE_SETTINGS + " (" + 
-                        KEY_ROWID + " integer primary key autoincrement, " +
+                        KEY_ROWID + " integer primary key autoincrement, " +            
                         KEY_NAME + " text not null, " +
                         KEY_SETTING_VALUE + " integer not null" +
                     ");";
+    
+    private static final String DATABASE_INIT_SETTING_SUM = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
+    		            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
+    		            "values " +
+    		            "('" + Setting.SETTING_FIELD_SUM + "',1" +
+    		        ");";
+    
+    private static final String DATABASE_INIT_SETTING_TAX = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
+            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
+            "values " +
+            "('" + Setting.SETTING_FIELD_TAX + "',1" +
+        ");";
+    
+    private static final String DATABASE_INIT_SETTING_COMMENT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
+            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
+            "values " +
+            "('" + Setting.SETTING_FIELD_COMMENT + "',1" +
+        ");";
+    
+    private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
+            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
+            "values " +
+            "('" + Setting.SETTING_FIELD_LOCATION + "',1" +
+        ");";
 
     /**
      * 
@@ -237,7 +261,7 @@ public class DbAdapter
     public boolean updateSetting(long rowId, String name, int value)
     {
         ContentValues values = putSettingValues(name, value);
-        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_ROWID + "=" + rowId, null) > 0;
+        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_NAME + "=" + name, null) > 0;
     }
     
     /**
@@ -285,13 +309,18 @@ public class DbAdapter
     private static class DatabaseHelper extends SQLiteOpenHelper
     {
 
+
         DatabaseHelper(Context context) { super(context, DATABASE_NAME, null, DATABASE_VERSION); }
 
         @Override
         public void onCreate(SQLiteDatabase db) 
         { 
             db.execSQL(DATABASE_CREATE_TABLE_RECEIPTS); 
-            db.execSQL(DATABASE_CREATE_TABLE_SETTINGS); 
+            db.execSQL(DATABASE_CREATE_TABLE_SETTINGS);
+            db.execSQL(DATABASE_INIT_SETTING_SUM);
+            db.execSQL(DATABASE_INIT_SETTING_TAX);
+            db.execSQL(DATABASE_INIT_SETTING_COMMENT);
+            db.execSQL(DATABASE_INIT_SETTING_LOCATION);
         }
 
         @Override

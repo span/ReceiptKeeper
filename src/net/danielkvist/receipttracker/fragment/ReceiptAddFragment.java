@@ -127,7 +127,6 @@ public class ReceiptAddFragment extends Fragment
             intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             getActivity().startActivity(intent);
         }
-        // TODO Handle new boolean return from saveReceipt and launch intent, pass receipt to list
     }
    
     private void cancel()

@@ -28,7 +28,6 @@ public class MyMapActivity extends MapActivity
         mapController.setZoom(18);
 
         mlo = new MyLocationOverlay(this, mapView);
-        mlo.enableMyLocation();
 
         mapView.getOverlays().add(mlo);
         mapView.postInvalidate();
