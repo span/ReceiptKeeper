@@ -1,13 +1,16 @@
 package net.danielkvist.receipttracker.fragment;
 
 import net.danielkvist.receipttracker.content.MainMenuContent;
+import net.danielkvist.receipttracker.content.Receipt;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ReceiptListFragment extends ListFragment
 {
@@ -50,6 +53,13 @@ public class ReceiptListFragment extends ListFragment
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
         {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
+        }
+        
+        Intent intent = getActivity().getIntent();
+        Receipt receipt = (Receipt) intent.getParcelableExtra(Receipt.EXTRA_RECEIPT);
+        if(receipt != null)
+        {
+            
         }
     }
 

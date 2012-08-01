@@ -4,23 +4,17 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.ReceiptListActivity;
-import net.danielkvist.util.BitmapScaler;
+import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
-import net.danielkvist.util.LocationParser;
-import net.danielkvist.util.Receipt;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +32,7 @@ import android.widget.Toast;
 
 public class ReceiptAddFragment extends Fragment
 {
+    
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private Uri imageUri;
@@ -48,13 +43,10 @@ public class ReceiptAddFragment extends Fragment
     private TextView timeView;
     private Button cancelButton;
     private Button saveButton;
-    private TextView locationView;
     private TextView nameView;
     private TextView taxView;
     private TextView commentView;
     private TextView sumView;
-    LocationParser lp;
-    private MapView mapView;
     
     public ReceiptAddFragment()
     {
@@ -90,10 +82,6 @@ public class ReceiptAddFragment extends Fragment
 
         timeView = (TextView) rootView.findViewById(R.id.add_receipt_time);
         timeView.setText(currentTime);
-        
-        lp = new LocationParser(getActivity().getApplicationContext());
-        locationView = (TextView) rootView.findViewById(R.id.add_receipt_location);
-        locationView.setText(lp.getLongLatString());
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -120,49 +108,28 @@ public class ReceiptAddFragment extends Fragment
     {
         Receipt receipt = new Receipt();
         Communicator communicator = new Communicator(getActivity());
+        int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
+        int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
         
         receipt.setName(nameView.getText().toString());
         receipt.setPhoto(imageUri.toString());
         receipt.setDate(dateView.getText().toString());
         receipt.setTime(timeView.getText().toString());
-        receipt.setLocationLat(lp.getLatitude());
-        receipt.setLocationLong(lp.getLongitude());
+        receipt.setLocationLat(String.valueOf(latitude));
+        receipt.setLocationLong(String.valueOf(longitude));
         receipt.setSum(sumView.getText().toString());
         receipt.setTax(taxView.getText().toString());
         receipt.setComment(commentView.getText().toString());
         
-        communicator.saveReceipt(receipt);
+        if(communicator.saveReceipt(receipt))
+        {
+            Intent intent = new Intent(getActivity(), ReceiptListActivity.class);
+            intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
+            getActivity().startActivity(intent);
+        }
         // TODO Handle new boolean return from saveReceipt and launch intent, pass receipt to list
     }
    
-
-//    private void saveData()
-//    {
-//        DbAdapter dbAdapter = new DbAdapter(getActivity());
-//        
-//        try
-//        {
-//            dbAdapter.open();
-//            
-//            long result = dbAdapter.createItem(nameView.getText().toString(), imageUri.toString(), dateView.getText().toString(), timeView.getText().toString(), 
-//                                lp.getLatitude(), lp.getLongitude(), sumView.getText().toString(), taxView.getText().toString(), commentView.getText().toString());
-//            if(result == -1)
-//            {
-//                Toast.makeText(getActivity(), "Could not save to database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
-//            }
-//            else
-//            {
-//                Toast.makeText(getActivity(), "Receipt was saved to database!", Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(getActivity(), ReceiptListActivity.class);
-//                startActivity(intent);
-//            }
-//        }
-//        catch (SQLException e) {
-//            Log.d("ReceiptTracker", e.getMessage());
-//            Toast.makeText(getActivity(), "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
-//        }
-//    }
-
     private void cancel()
     {
         new AlertDialog.Builder(getActivity())
@@ -222,10 +189,27 @@ public class ReceiptAddFragment extends Fragment
         Toast.makeText(activity, "The image was saved to: " + imageUri.toString(), Toast.LENGTH_LONG).show();
         
         ImageView imageView = (ImageView) activity.findViewById(R.id.receipt_photo_image_view);
-        ContentResolver cr = activity.getContentResolver();
+        imageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ImageView i = (ImageView) v;
+                if(i.getDrawable() == null)
+                {
+                    takePhoto();
+                }
+                else
+                {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(imageUri, "image/*");
+                    startActivity(intent);
+                }
+                
+            }
+        });
 
-        
-        // TODO Add click listener to image to view large version (launch gallery intent?)
         ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, imageUri.getPath());
         worker.execute(150, 150);
     }
