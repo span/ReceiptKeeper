@@ -1,6 +1,7 @@
 package net.danielkvist.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.content.Receipt;
@@ -91,23 +92,19 @@ public class Communicator
         return receiptList;
     }
     
-    public ArrayList<Setting> getAllSettings()
+    public HashMap<String, Integer> getAllSettings()
     {
-        ArrayList<Setting> settingsList = null;
+        HashMap<String, Integer> settingsMap = null;
         DbAdapter dbAdapter = new DbAdapter(context);
         try
         {
             dbAdapter.open();
             Cursor c = dbAdapter.fetchAllSettings();
             c.moveToFirst();
-            settingsList = new ArrayList<Setting>();
+            settingsMap = new HashMap<String, Integer>();
             while(!c.isAfterLast())
             {
-                Setting setting = new Setting();
-                setting.setName(c.getString(c.getColumnIndex(DbAdapter.KEY_NAME)));
-                setting.setValue(c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
-                
-                settingsList.add(setting);
+                settingsMap.put(c.getString(c.getColumnIndex(DbAdapter.KEY_NAME)), c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
                 c.moveToNext();
             }
         }
@@ -116,7 +113,7 @@ public class Communicator
             Log.d("ReceiptTracker", e.getMessage());
             Toast.makeText(context, "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
         }
-        return settingsList;
+        return settingsMap;
     }
     
     
