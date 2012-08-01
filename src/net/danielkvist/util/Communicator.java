@@ -56,12 +56,13 @@ public class Communicator
             }
             if(result)
             {
-                Toast.makeText(context, "Data was saved to database!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Data was saved to database!", Toast.LENGTH_SHORT).show();
             }
             else
             {
                 Toast.makeText(context, "Could not save to database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
             }
+            dbAdapter.close();
         }
         catch (SQLException e) 
         {
@@ -107,6 +108,7 @@ public class Communicator
                 settingsMap.put(c.getString(c.getColumnIndex(DbAdapter.KEY_NAME)), c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
                 c.moveToNext();
             }
+            dbAdapter.close();
         }
         catch (SQLException e) 
         {

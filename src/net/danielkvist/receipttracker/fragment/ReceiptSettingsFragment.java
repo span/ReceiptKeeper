@@ -1,5 +1,7 @@
 package net.danielkvist.receipttracker.fragment;
 
+import java.util.HashMap;
+
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
@@ -73,18 +75,32 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
 
     private void setupSettingControls(View rootView)
     {
+        Communicator communicator = new Communicator(getActivity());
+        HashMap<String, Integer> settingsMap = communicator.getAllSettings();
+        
         ((RadioGroup) rootView.findViewById(R.id.radio_group_storage)).setOnCheckedChangeListener(this);
         
-        ((Switch) rootView.findViewById(R.id.switch_sum)).setOnCheckedChangeListener(this);
-        ((Switch) rootView.findViewById(R.id.switch_tax)).setOnCheckedChangeListener(this);
-        ((Switch) rootView.findViewById(R.id.switch_comment)).setOnCheckedChangeListener(this);
-        ((Switch) rootView.findViewById(R.id.switch_location)).setOnCheckedChangeListener(this);
+        Switch sumSwitch = (Switch) rootView.findViewById(R.id.switch_sum);
+        sumSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_SUM) == 0);
+        sumSwitch.setOnCheckedChangeListener(this);
+        
+        Switch taxSwitch = (Switch) rootView.findViewById(R.id.switch_tax);
+        taxSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_TAX) == 0);
+        taxSwitch.setOnCheckedChangeListener(this);
+        
+        Switch commentSwitch = (Switch) rootView.findViewById(R.id.switch_comment);
+        commentSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_COMMENT) == 0);
+        commentSwitch.setOnCheckedChangeListener(this);
+        
+        Switch locationSwitch = (Switch) rootView.findViewById(R.id.switch_location);
+        locationSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_LOCATION) == 0);
+        locationSwitch.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        // TODO Add cloud storage setting
+        // TODO Add cloud storage setting and make it do something :P
         Setting setting = new Setting();
         setting.setName("storage");
         switch(checkedId)
@@ -120,7 +136,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                 setting.setName(Setting.SETTING_FIELD_COMMENT);
                 break;
         }
-        setting.setValue(isChecked ? 1 : 0);
+        setting.setValue(isChecked ? View.VISIBLE : View.GONE);
         
         Communicator communicator = new Communicator(getActivity());
         communicator.saveSetting(setting);

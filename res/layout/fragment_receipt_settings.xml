@@ -77,28 +77,24 @@
                         android:id="@+id/switch_sum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:text="@string/total_sum" />
 
                     <Switch
                         android:id="@+id/switch_tax"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:text="@string/tax" />
 
                     <Switch
                         android:id="@+id/switch_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:text="@string/comment" />
 
                     <Switch
                         android:id="@+id/switch_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:text="@string/location" />
                 </LinearLayout>
 
