@@ -55,7 +55,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         }
     }
 
-    protected void showDetail(Receipt receipt)
+    private void showDetail(Receipt receipt)
     {
         // TODO Launch the detail activity with the receipt
     }
