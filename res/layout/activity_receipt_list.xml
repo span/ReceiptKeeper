@@ -1,9 +1,65 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:name="net.danielkvist.receipttracker.fragment.ReceiptListFragment"
-    android:id="@+id/receipt_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    tools:context=".ReceiptListActivity" />
+    android:orientation="vertical" >
+
+    <fragment
+        android:id="@+id/receipt_list"
+        android:name="net.danielkvist.receipttracker.fragment.ReceiptListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".ReceiptListActivity" />
+
+    <LinearLayout
+        android:id="@+id/receipt_added_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/receipt_last_purchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_added_"
+             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/receipt_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     />
+
+                <TextView
+                    android:id="@+id/receipt_sum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/receipt_date_and_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- TODO move linearlayout and textviews to own file -->
+
+</LinearLayout>
