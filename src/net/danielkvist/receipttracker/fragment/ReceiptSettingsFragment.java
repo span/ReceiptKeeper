@@ -16,12 +16,12 @@ import android.widget.TabHost.TabSpec;
 
 public class ReceiptSettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener
 {
-    private Communicator communicator;
+    
     
 
     public ReceiptSettingsFragment()
     {
-        communicator = new Communicator(getActivity());
+        
     }
     
     @Override
@@ -75,13 +75,10 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     {
         ((RadioGroup) rootView.findViewById(R.id.radio_group_storage)).setOnCheckedChangeListener(this);
         
-        ((Switch) rootView.findViewById(R.id.switch_name)).setOnCheckedChangeListener(this);
-        ((Switch) rootView.findViewById(R.id.switch_date)).setOnCheckedChangeListener(this);
-        ((Switch) rootView.findViewById(R.id.switch_time)).setOnCheckedChangeListener(this);
-        ((Switch) rootView.findViewById(R.id.switch_location)).setOnCheckedChangeListener(this);
         ((Switch) rootView.findViewById(R.id.switch_sum)).setOnCheckedChangeListener(this);
         ((Switch) rootView.findViewById(R.id.switch_tax)).setOnCheckedChangeListener(this);
         ((Switch) rootView.findViewById(R.id.switch_comment)).setOnCheckedChangeListener(this);
+        ((Switch) rootView.findViewById(R.id.switch_location)).setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -99,25 +96,17 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                 setting.setValue(Setting.SETTING_STORAGE_CLOUD);
                 break;
         }
+        
+        Communicator communicator = new Communicator(getActivity());
         communicator.saveSetting(setting);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-        // TODO Test switch selection changed
         Setting setting = new Setting();
         switch(buttonView.getId())
         {
-            case R.id.switch_name:
-                setting.setName(Setting.SETTING_FIELD_NAME);
-                break;
-            case R.id.switch_date:
-                setting.setName(Setting.SETTING_FIELD_DATE);
-                break;
-            case R.id.switch_time:
-                setting.setName(Setting.SETTING_FIELD_TIME);
-                break;
             case R.id.switch_location:
                 setting.setName(Setting.SETTING_FIELD_LOCATION);
                 break;
@@ -132,6 +121,8 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                 break;
         }
         setting.setValue(isChecked ? 1 : 0);
+        
+        Communicator communicator = new Communicator(getActivity());
         communicator.saveSetting(setting);
     }
 }

@@ -51,14 +51,13 @@
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:text="@string/local_storage" />
-                        
+
                         <RadioButton
                             android:id="@+id/storage_cloud"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
                             android:text="@string/cloud_storage" />
-
                     </RadioGroup>
                 </LinearLayout>
 
@@ -75,34 +74,6 @@
                         android:text="@string/receipt_settings" />
 
                     <Switch
-                        android:id="@+id/switch_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/name" />
-
-                    <Switch
-                        android:id="@+id/switch_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/date" />
-                    
-                    <Switch
-                        android:id="@+id/switch_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/time" />
-
-                    <Switch
-                        android:id="@+id/switch_location"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/location" />
-
-                    <Switch
                         android:id="@+id/switch_sum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,13 +86,20 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="@string/tax" />
-                    
+
                     <Switch
                         android:id="@+id/switch_comment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="@string/comment" />
+
+                    <Switch
+                        android:id="@+id/switch_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/location" />
                 </LinearLayout>
 
                 <LinearLayout

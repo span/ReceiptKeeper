@@ -113,22 +113,10 @@ public class DbAdapter
      *            the body
      * @return rowId or -1 if failed
      */
-    public long createReceipt(String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
+    public boolean createReceipt(String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
     {
         ContentValues values = putReceiptValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
-        return db.insert(DATABASE_TABLE_RECEIPTS, null, values);
-    }
-    
-    /**
-     * 
-     * @param name
-     * @param value
-     * @return
-     */
-    public long createSetting(String name, int value)
-    {
-        ContentValues values = putSettingValues(name, value);
-        return db.insert(DATABASE_TABLE_SETTINGS, null, values);
+        return db.insert(DATABASE_TABLE_RECEIPTS, null, values) > 0;
     }
 
     /**
@@ -152,17 +140,6 @@ public class DbAdapter
     { 
         SELECTED_TABLE = DATABASE_TABLE_RECEIPTS;
         return deleteItem(rowId);
-    }
-    
-    /**
-     * @param rowId
-     *            id to delete
-     * @return true if deleted, false otherwise
-     */
-    public boolean deleteSetting(long rowId) 
-    { 
-        SELECTED_TABLE = DATABASE_TABLE_SETTINGS;
-        return deleteItem(rowId); 
     }
 
     /**
@@ -258,10 +235,11 @@ public class DbAdapter
      * @param value
      * @return
      */
-    public boolean updateSetting(long rowId, String name, int value)
+    public boolean updateSetting(String name, int value)
     {
-        ContentValues values = putSettingValues(name, value);
-        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_NAME + "=" + name, null) > 0;
+        ContentValues values = new ContentValues();
+        values.put(KEY_SETTING_VALUE, value);
+        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_NAME + "='" + name + "'", null) > 0;
     }
     
     /**
@@ -289,20 +267,6 @@ public class DbAdapter
         values.put(KEY_SUM, sum);
         values.put(KEY_TAX, tax);
         values.put(KEY_COMMENT, comment);
-        return values;
-    }
-    
-    /**
-     * 
-     * @param name
-     * @param value
-     * @return
-     */
-    private ContentValues putSettingValues(String name, int value)
-    {
-        ContentValues values = new ContentValues();
-        values.put(KEY_NAME, name);
-        values.put(KEY_SETTING_VALUE, value);
         return values;
     }
     

@@ -26,7 +26,7 @@ public class Communicator
     
     public boolean saveReceipt(Receipt receipt)
     {
-        return saveData(DATA_TYPE_RECEIPT, receipt) == -1 ? false : true;
+        return saveData(DATA_TYPE_RECEIPT, receipt);
     }
     
     public void saveSetting(Setting setting)
@@ -34,9 +34,9 @@ public class Communicator
         saveData(DATA_TYPE_SETTING, setting);
     }
     
-    public long saveData(int type, Object data)
+    public boolean saveData(int type, Object data)
     {
-        long result = -1;
+        boolean result = false;
         DbAdapter dbAdapter = new DbAdapter(context);
         try
         {
@@ -45,7 +45,7 @@ public class Communicator
             {
                 case DATA_TYPE_SETTING:
                     Setting setting = (Setting) data;
-                    result = dbAdapter.createSetting(setting.getName(), setting.getValue());
+                    result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
                     break;
                 case DATA_TYPE_RECEIPT:
                     Receipt receipt = (Receipt) data;
@@ -53,13 +53,13 @@ public class Communicator
                             receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
                     break;
             }
-            if(result == -1)
+            if(result)
             {
-                Toast.makeText(context, "Could not save to database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Data was saved to database!", Toast.LENGTH_LONG).show();
             }
             else
             {
-                Toast.makeText(context, "Data was saved to database!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Could not save to database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
             }
         }
         catch (SQLException e) 
