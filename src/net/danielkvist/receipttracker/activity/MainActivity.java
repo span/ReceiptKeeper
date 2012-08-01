@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ReceiptListActivity extends FragmentActivity implements ReceiptListFragment.Callbacks
+public class MainActivity extends FragmentActivity implements ReceiptListFragment.Callbacks
 {
 
     private boolean mTwoPane;
@@ -22,8 +22,7 @@ public class ReceiptListActivity extends FragmentActivity implements ReceiptList
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        // TODO Check if possible to change layout file to another, refactor the current file
-        setContentView(R.layout.activity_receipt_list);
+        setContentView(R.layout.activity_main);
 
         if (findViewById(R.id.receipt_detail_container) != null)
         {

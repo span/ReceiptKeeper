@@ -55,7 +55,7 @@ public class ReceiptFrameActivity extends FragmentActivity
     {
         if (item.getItemId() == android.R.id.home)
         {
-            NavUtils.navigateUpTo(this, new Intent(this, ReceiptListActivity.class));
+            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
             return true;
         }
 

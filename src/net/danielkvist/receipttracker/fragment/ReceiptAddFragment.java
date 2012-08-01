@@ -6,7 +6,7 @@ import java.util.Date;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
-import net.danielkvist.receipttracker.activity.ReceiptListActivity;
+import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
@@ -123,7 +123,7 @@ public class ReceiptAddFragment extends Fragment
         
         if(communicator.saveReceipt(receipt))
         {
-            Intent intent = new Intent(getActivity(), ReceiptListActivity.class);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             getActivity().startActivity(intent);
         }
@@ -137,7 +137,7 @@ public class ReceiptAddFragment extends Fragment
         .setMessage(R.string.cancel_prompt_data_loss)
         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Intent intent = new Intent(getActivity(), ReceiptListActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
         })

@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme" >
         
         <activity
-            android:name=".activity.ReceiptListActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/title_receipt_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
