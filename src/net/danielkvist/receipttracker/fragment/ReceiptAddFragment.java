@@ -15,6 +15,8 @@ import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +78,6 @@ public class ReceiptAddFragment extends Fragment
         Communicator communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         
-        
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
         nameView = (TextView) rootView.findViewById(R.id.add_receipt_name);
         sumView = (TextView) rootView.findViewById(R.id.add_receipt_sum);
@@ -108,6 +110,22 @@ public class ReceiptAddFragment extends Fragment
             @Override
             public void onClick(View v) { cancel(); }
         });
+        
+        
+        sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
+        taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
+        commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
+        LinearLayout mapContainer = (LinearLayout) rootView.findViewById(R.id.map_container);
+        mapContainer.setVisibility(settingsMap.get(Setting.SETTING_FIELD_LOCATION));
+        // TODO Handle location hiding in a gracious way
+        /*if(settingsMap.get(Setting.SETTING_FIELD_LOCATION) != 0)
+        {
+            FragmentManager fm = getFragmentManager();
+            Fragment mapFragment = fm.findFragmentById(R.id.my_map_fragment);
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.remove(mapFragment).commit();
+        }*/
+        
 
         return rootView;
     }

@@ -56,25 +56,25 @@ public class DbAdapter
     private static final String DATABASE_INIT_SETTING_SUM = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
     		            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
     		            "values " +
-    		            "('" + Setting.SETTING_FIELD_SUM + "',1" +
+    		            "('" + Setting.SETTING_FIELD_SUM + "',0" +
     		        ");";
     
     private static final String DATABASE_INIT_SETTING_TAX = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
             KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
             "values " +
-            "('" + Setting.SETTING_FIELD_TAX + "',1" +
+            "('" + Setting.SETTING_FIELD_TAX + "',0" +
         ");";
     
     private static final String DATABASE_INIT_SETTING_COMMENT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
             KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
             "values " +
-            "('" + Setting.SETTING_FIELD_COMMENT + "',1" +
+            "('" + Setting.SETTING_FIELD_COMMENT + "',0" +
         ");";
     
     private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
             KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
             "values " +
-            "('" + Setting.SETTING_FIELD_LOCATION + "',1" +
+            "('" + Setting.SETTING_FIELD_LOCATION + "',0" +
         ");";
 
     /**
