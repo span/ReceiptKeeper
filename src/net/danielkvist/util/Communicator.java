@@ -2,7 +2,7 @@ package net.danielkvist.util;
 
 import java.util.ArrayList;
 
-import net.danielkvist.receipttracker.activity.ReceiptListActivity;
+import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.content.Receipt;
 import android.content.Context;
 import android.content.Intent;
