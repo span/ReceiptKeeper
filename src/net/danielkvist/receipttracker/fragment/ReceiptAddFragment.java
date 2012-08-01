@@ -2,13 +2,16 @@ package net.danielkvist.receipttracker.fragment;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -68,6 +71,11 @@ public class ReceiptAddFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // TODO Get the settings from communicator and hide selected fields
+
+        Communicator communicator = new Communicator(getActivity());
+        HashMap<String, Integer> settingsMap = communicator.getAllSettings();
+        
+        
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
         nameView = (TextView) rootView.findViewById(R.id.add_receipt_name);
         sumView = (TextView) rootView.findViewById(R.id.add_receipt_sum);
