@@ -1,5 +1,6 @@
 package net.danielkvist.receipttracker.fragment;
 
+import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
 
@@ -10,6 +11,7 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ReceiptListFragment extends ListFragment
@@ -48,18 +50,10 @@ public class ReceiptListFragment extends ListFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
-        // TODO Check if there is a receipt in the calling intent and show some "last saved" info
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
         {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
-        }
-        
-        Intent intent = getActivity().getIntent();
-        Receipt receipt = (Receipt) intent.getParcelableExtra(Receipt.EXTRA_RECEIPT);
-        if(receipt != null)
-        {
-            
         }
     }
 
