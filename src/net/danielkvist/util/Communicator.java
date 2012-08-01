@@ -3,6 +3,7 @@ package net.danielkvist.util;
 import java.util.ArrayList;
 
 import net.danielkvist.receipttracker.activity.ReceiptListActivity;
+import net.danielkvist.receipttracker.content.Receipt;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,14 +24,9 @@ public class Communicator
         this.context = context;
     }
     
-    public void saveReceipt(Receipt receipt)
+    public boolean saveReceipt(Receipt receipt)
     {
-        // TOOD Add return boolean and move intent to fragment
-        if(saveData(DATA_TYPE_RECEIPT, receipt) != -1)
-        {
-            Intent intent = new Intent(context, ReceiptListActivity.class);
-            context.startActivity(intent);
-        }
+        return saveData(DATA_TYPE_RECEIPT, receipt) == -1 ? false : true;
     }
     
     public void saveSetting(Setting setting)

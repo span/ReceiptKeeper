@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:fillViewport="true" >
 
-    <LinearLayout
+   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -112,11 +112,6 @@
             android:inputType="textMultiLine"
             android:lines="3" />
 
-        <TextView
-            android:id="@+id/add_receipt_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="6dp" />
 
         <fragment
             android:id="@+id/my_map_fragment"

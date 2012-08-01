@@ -2,6 +2,8 @@ package net.danielkvist.receipttracker.activity;
 
 import net.danielkvist.receipttracker.R;
 import android.os.Bundle;
+
+import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -9,7 +11,7 @@ import com.google.android.maps.MyLocationOverlay;
 
 public class MyMapActivity extends MapActivity
 {
-
+    public static GeoPoint currentGeoPoint;
     private MapView mapView;
     private MyLocationOverlay mlo;
 
@@ -41,7 +43,8 @@ public class MyMapActivity extends MapActivity
         {
             public void run()
             {
-                mapView.getController().animateTo(mlo.getMyLocation());
+                currentGeoPoint = mlo.getMyLocation();
+                mapView.getController().animateTo(currentGeoPoint);
             }
         });
     }
