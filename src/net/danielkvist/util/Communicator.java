@@ -117,6 +117,23 @@ public class Communicator
         }
         return settingsMap;
     }
+
+    public int getSettingValue(String name)
+    {
+        DbAdapter dbAdapter = new DbAdapter(context);
+        Cursor c = null;
+        try
+        {
+            dbAdapter.open();
+            c = dbAdapter.fetchSetting(name);
+        }
+        catch(SQLException e)
+        {
+            Log.d("ReceiptTracker", e.getMessage());
+            Toast.makeText(context, "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
+        }
+        return c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
+    }
     
     
 

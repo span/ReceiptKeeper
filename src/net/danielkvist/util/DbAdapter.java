@@ -198,12 +198,12 @@ public class DbAdapter
      * @throws SQLException
      *             if setting could not be found/retrieved
      */
-    public Cursor fetchSetting(long rowId) throws SQLException
+    public Cursor fetchSetting(String name) throws SQLException
     {
 
         Cursor cursor = db.query(true, DATABASE_TABLE_SETTINGS, new String[] 
                                 {KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE}, 
-                                KEY_ROWID + "=" + rowId, null, null, null, null, null);
+                                KEY_NAME + "='" + name + "'", null, null, null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
