@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.fragment;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.util.Communicator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,6 +31,12 @@ public class ReceiptSearchFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.fragment_receipt_search, container, false);
         ((TextView) rootView.findViewById(R.id.receipt_search_title)).setText("This is the receipt search fragment.");
+        
+        // TODO Fetch receipts and display them in list
+        // TODO Add click listeners to list to tell the main activity to launch the detail fragment
+        Communicator c = new Communicator(getActivity());
+        c.getAllReceipts();
+        
         return rootView;
     }
 }

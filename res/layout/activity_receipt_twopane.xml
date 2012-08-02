@@ -7,7 +7,7 @@
     android:layout_marginRight="16dp"
     android:divider="?android:attr/dividerHorizontal"
     android:showDividers="middle"
-    tools:context=".ReceiptListActivity">
+    tools:context=".ReceiptFrameActivity">
 
     <fragment android:name="net.danielkvist.receipttracker.fragment.ReceiptListFragment"
         android:id="@+id/receipt_list"
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <FrameLayout android:id="@+id/receipt_detail_container"
+    <FrameLayout android:id="@+id/receipt_frame_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3" />

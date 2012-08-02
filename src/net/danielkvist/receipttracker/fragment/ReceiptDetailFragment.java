@@ -2,12 +2,15 @@ package net.danielkvist.receipttracker.fragment;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.MainMenuContent;
+import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.util.task.ScaleBitmapFileTask;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ReceiptDetailFragment extends Fragment
@@ -17,8 +20,11 @@ public class ReceiptDetailFragment extends Fragment
 
     MainMenuContent.DummyItem mItem;
 
-    public ReceiptDetailFragment()
+    private Receipt receipt;
+
+    public ReceiptDetailFragment(Receipt receipt)
     {
+        this.receipt = receipt;
     }
 
     @Override
@@ -38,10 +44,14 @@ public class ReceiptDetailFragment extends Fragment
         // TODO Add option to share image
         // TODO Add image listener to view large version
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);
-        if (mItem != null)
-        {
-            ((TextView) rootView.findViewById(R.id.receipt_detail)).setText(mItem.content);
-        }
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.receipt_photo_image_view);
+        ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, receipt.getPhoto());
+        worker.execute(150, 150);
+//        if (mItem != null)
+//        {
+//            ((TextView) rootView.findViewById(R.id.receipt_detail)).setText(mItem.content);
+//        }
+        
         return rootView;
     }
 }

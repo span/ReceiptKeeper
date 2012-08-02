@@ -3,6 +3,7 @@ package net.danielkvist.receipttracker.fragment;
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.util.Communicator;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -55,6 +56,7 @@ public class ReceiptListFragment extends ListFragment
         {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
+        
     }
 
     @Override
