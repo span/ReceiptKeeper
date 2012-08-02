@@ -1,7 +1,5 @@
 package net.danielkvist.receipttracker.activity;
 
-import java.util.GregorianCalendar;
-
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
@@ -12,11 +10,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class ReceiptFrameActivity extends FragmentActivity
 {
+
+    private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
+    private static final int ADD_FRAGMENT = 1;
+    private static final int SEARCH_FRAGMENT = 2;
+    private static final int SETTINGS_FRAGMENT = 3;
+    private static final int DETAIL_FRAGMENT = 4;
+    private Fragment fragment = null;
+    private MenuItem saveItem;
+    private MenuItem editItem;
+    private Receipt receipt;
+    private Integer fragmentId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,45 +40,102 @@ public class ReceiptFrameActivity extends FragmentActivity
 
         if (savedInstanceState == null)
         {
-            Fragment fragment = null;
             Bundle arguments = new Bundle();
-            Integer fragmentId  = Integer.parseInt(getIntent().getStringExtra(ReceiptDetailFragment.ARG_ITEM_ID));
+            fragmentId = Integer.parseInt(getIntent().getStringExtra(ReceiptDetailFragment.ARG_ITEM_ID));
             
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, fragmentId.toString());
             
             
             switch(fragmentId)
             {
-                case 1:
+                case ADD_FRAGMENT:
                     fragment = new ReceiptAddFragment();
                     break;
-                case 2:
+                case SEARCH_FRAGMENT:
                     fragment = new ReceiptSearchFragment();
                     break;
-                case 3:
+                case SETTINGS_FRAGMENT:
                     fragment = new ReceiptSettingsFragment();
                     break;
-                case 4:
-                    Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
+                case DETAIL_FRAGMENT:
+                    receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
                     fragment = new ReceiptDetailFragment(receipt);
                     break;
             }
-            
-            
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().add(R.id.receipt_frame_container, fragment).commit();
+            getSupportFragmentManager().beginTransaction().add(RECEIPT_FRAME_CONTAINER, fragment).commit();
         }
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        
+        // TODO Add this and opOptionsIte... for two pane in MainActivity
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        editItem = menu.findItem(R.id.item_edit);
+        editItem.setVisible(true);
+        saveItem = menu.findItem(R.id.item_save);
+        saveItem.setVisible(false);
+        return true;
+    }
+    
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home)
-        {
+    public boolean onOptionsItemSelected(MenuItem item){
+        FragmentTransaction ft;
+        switch(item.getItemId()) {
+        case R.id.item_edit:
+            item.setVisible(false);
+            saveItem.setVisible(true);
+            fragment = new ReceiptAddFragment(receipt);
+            ft = getSupportFragmentManager().beginTransaction(); 
+            ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
+            ft.addToBackStack(null); 
+            ft.commit();
+            return true;
+        case R.id.item_save:
+            ReceiptAddFragment f = (ReceiptAddFragment) fragment;
+            receipt = f.updateReceipt();
+            fragment = new ReceiptDetailFragment(receipt);
+            ft = getSupportFragmentManager().beginTransaction(); 
+            ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
+            ft.commit();
+            return true;
+        case android.R.id.home:
             NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    /* (non-Javadoc)
+     * @see android.support.v4.app.FragmentActivity#onBackPressed()
+     */
+    @Override
+    public void onBackPressed()
+    {
+        // TODO Fix bug where 2 back presses are needed
+        super.onBackPressed();
+        switch(fragmentId)
+        {
+          case ADD_FRAGMENT:
+              invalidateOptionsMenu();
+              break;
+        }
+    }
+    
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        switch(fragmentId)
+        {
+            case DETAIL_FRAGMENT:
+                invalidateOptionsMenu();
+                break;
+        }
+    }
+    
 }

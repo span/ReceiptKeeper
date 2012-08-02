@@ -30,8 +30,7 @@
                 android:id="@+id/receipt_photo_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/image_of_the_receipt"
-                android:visibility="gone" />
+                android:contentDescription="@string/image_of_the_receipt" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -86,8 +85,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/name"
             android:inputType="text"
-            android:lines="1"
-            android:text="" />
+            android:lines="1" />
 
         <EditText
             android:id="@+id/add_receipt_sum"
@@ -95,8 +93,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/total_sum"
             android:inputType="numberDecimal"
-            android:lines="1"
-            android:text="" />
+            android:lines="1" />
 
         <EditText
             android:id="@+id/add_receipt_tax"
@@ -104,8 +101,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/tax"
             android:inputType="numberDecimal"
-            android:lines="1"
-            android:text="" />
+            android:lines="1" />
 
         <EditText
             android:id="@+id/add_receipt_comment"
@@ -113,11 +109,9 @@
             android:layout_height="wrap_content"
             android:hint="@string/receipt_comment_"
             android:inputType="textMultiLine"
-            android:lines="3"
-            android:text="" />
+            android:lines="3" />
 
         <fragment
-            android:id="@+id/my_map_fragment"
             android:name="net.danielkvist.receipttracker.activity.MyMapFragmentActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >

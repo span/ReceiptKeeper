@@ -10,13 +10,18 @@ import net.danielkvist.receipttracker.fragment.ReceiptListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.util.Communicator;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements ReceiptListFragment.Callbacks
 {
@@ -45,7 +50,17 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         }
         showLastReceipt(receipt);
         
+        //ActionBar actionBar = getActionBar();
+        //actionBar.show();
+
+        // set the app icon as an action to go home
+        // we are home so we don't need it
+        //actionBar.setDisplayHomeAsUpEnabled(true);
+
+        
     }
+    
+    
     
     private void showLastReceipt(final Receipt receipt)
     {
@@ -94,7 +109,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         if (mTwoPane)
         {
             Fragment fragment = null;
-            switch(Integer.parseInt(id))
+            switch(Integer.parseInt(id)) // TODO This switch is the same as in receiptFrameActivity, refactor?
             {
                 case 1:
                     fragment = new ReceiptAddFragment();
@@ -113,7 +128,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
             
             Bundle arguments = new Bundle();
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id);
-            //ReceiptDetailFragment fragment = new ReceiptDetailFragment(null); // TODO Fix this
+            //ReceiptDetailFragment fragment = new ReceiptDetailFragment(null); // TODO Launch the correct fragment, remove this?
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
 

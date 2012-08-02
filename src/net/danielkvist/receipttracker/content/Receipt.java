@@ -1,5 +1,8 @@
 package net.danielkvist.receipttracker.content;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,7 +21,19 @@ public class Receipt implements Parcelable
     private String tax;
     private String comment;
     
-    public Receipt() { }
+    public Receipt() 
+    { 
+        id = -1;
+        name = "";
+        photo = "";
+        date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        locationLat = "";
+        locationLong = "";
+        sum = "";
+        tax = "";
+        comment = "";
+    }
 
     public Receipt(Parcel in)
     {

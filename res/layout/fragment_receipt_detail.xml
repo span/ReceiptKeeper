@@ -21,48 +21,47 @@
             android:text="@string/receipt_details" />
 
         <ImageView
-            android:id="@+id/receipt_photo_image_view"
+            android:id="@+id/detail_receipt_photo_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image_of_the_receipt" />
 
         <TextView
-            android:id="@+id/receipt_name"
+            android:id="@+id/detail_receipt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
 
         <TextView
-            android:id="@+id/receipt_date_and_time"
+            android:id="@+id/detail_receipt_date_and_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
 
         <TextView
-            android:id="@+id/receipt_sum"
+            android:id="@+id/detail_receipt_sum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
 
         <TextView
-            android:id="@+id/receipt_tax"
+            android:id="@+id/detail_receipt_tax"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
 
         <TextView
-            android:id="@+id/receipt_comment"
+            android:id="@+id/detail_receipt_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
 
         <LinearLayout
-            android:id="@+id/map_container"
+            android:id="@+id/detail_map_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <fragment
-                android:id="@+id/my_map_fragment"
                 android:name="net.danielkvist.receipttracker.activity.MyMapFragmentActivity"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" >
