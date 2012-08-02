@@ -74,16 +74,37 @@ public class Communicator
     
     public ArrayList<Receipt> getAllReceipts()
     {
-        // TODO Get receipts from db and return list
+        Receipt receipt;
         ArrayList<Receipt> receiptList = null;
         DbAdapter dbAdapter = new DbAdapter(context);
+        
         try
         {
             dbAdapter.open();
-            Cursor c = dbAdapter.fetchAllReceipts();
-            
+            Cursor cursor = dbAdapter.fetchAllReceipts();
             receiptList = new ArrayList<Receipt>();
+            if(cursor != null)
+            {
+                while(!cursor.isAfterLast())
+                {
+                    receipt = new Receipt(
+                                cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DATE)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TIME)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_SUM)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
+                                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT))
+                            );
+                    receiptList.add(receipt);
+                    cursor.moveToNext();
+                }
+            }
             
+            dbAdapter.close();
         }
         catch (SQLException e) 
         {
@@ -100,14 +121,17 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            Cursor c = dbAdapter.fetchAllSettings();
-            c.moveToFirst();
+            Cursor cursor = dbAdapter.fetchAllSettings();
             settingsMap = new HashMap<String, Integer>();
-            while(!c.isAfterLast())
+            if(cursor != null)
             {
-                settingsMap.put(c.getString(c.getColumnIndex(DbAdapter.KEY_NAME)), c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
-                c.moveToNext();
+                while(!cursor.isAfterLast())
+                {
+                    settingsMap.put(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)), cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
+                    cursor.moveToNext();
+                }
             }
+            
             dbAdapter.close();
         }
         catch (SQLException e) 
@@ -120,19 +144,27 @@ public class Communicator
 
     public int getSettingValue(String name)
     {
-        DbAdapter dbAdapter = new DbAdapter(context);
+        int value = -1;
         Cursor c = null;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        
         try
         {
             dbAdapter.open();
             c = dbAdapter.fetchSetting(name);
+            if(c != null)
+            {
+                value = c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
+            }
+            
+            dbAdapter.close();
         }
         catch(SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
             Toast.makeText(context, "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
         }
-        return c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
+        return value;
     }
     
     
