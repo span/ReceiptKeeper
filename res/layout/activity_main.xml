@@ -19,8 +19,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_light"
         android:orientation="horizontal"
-        android:padding="4dp"
-        android:visibility="gone" >
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/receipt_last_purchase"
