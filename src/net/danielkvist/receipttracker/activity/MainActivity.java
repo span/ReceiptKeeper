@@ -38,33 +38,36 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         
         Intent intent = getIntent();
         Receipt receipt = (Receipt) intent.getParcelableExtra(Receipt.EXTRA_RECEIPT);
-        if(receipt != null)
+        if(receipt == null)
         {
-            showLastReceipt(receipt); // TODO Visa alltid senaste receipt, ta från db om behövs
+            Communicator communicator = new Communicator(this);
+            receipt = communicator.getLatestReceipt();
         }
-        
+        showLastReceipt(receipt);
         
     }
     
     private void showLastReceipt(final Receipt receipt)
     {
-        LinearLayout container = ((LinearLayout) findViewById(R.id.receipt_added_container));
-        container.setVisibility(View.VISIBLE);
-        container.setOnClickListener(new View.OnClickListener()
+        if(receipt != null)
         {
-            @Override
-            public void onClick(View v)
+            LinearLayout container = ((LinearLayout) findViewById(R.id.receipt_added_container));
+            container.setOnClickListener(new View.OnClickListener()
             {
-                showDetail(receipt);
-            }
-        });
-        TextView receiptName = (TextView) findViewById(R.id.receipt_name);
-        TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
-        TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
-        
-        receiptName.setText(getString(R.string.name) + ": " + receipt.getName() + ", ");
-        receiptSum.setText(getString(R.string.cost) + ": " + receipt.getSum());
-        receiptDateAndTime.setText(getString(R.string.date) + ": " + receipt.getDate() + " - " + receipt.getTime());
+                @Override
+                public void onClick(View v)
+                {
+                    showDetail(receipt);
+                }
+            });
+            
+            TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
+            TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
+            TextView receiptName = (TextView) findViewById(R.id.receipt_name);
+            receiptName.setText(getString(R.string.name) + ": " + receipt.getName() + ", ");
+            receiptSum.setText(getString(R.string.cost) + ": " + receipt.getSum());
+            receiptDateAndTime.setText(getString(R.string.date) + ": " + receipt.getDate() + " - " + receipt.getTime());
+        }
     }
 
     private void showDetail(Receipt receipt)

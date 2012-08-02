@@ -251,4 +251,5 @@ public class Receipt implements Parcelable
         }
     };
 
+
 }

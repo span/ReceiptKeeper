@@ -1,5 +1,7 @@
 package net.danielkvist.util;
 
+import java.security.KeyRep;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -198,6 +200,18 @@ public class DbAdapter
         }
         return cursor;
 
+    }
+    
+    public Cursor fetchLastReceipt()
+    {
+        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] 
+                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
+                null, null, null, null, KEY_ROWID + " DESC", "1");
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
     }
     
     /**
