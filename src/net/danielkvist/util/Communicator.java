@@ -145,16 +145,16 @@ public class Communicator
     public int getSettingValue(String name)
     {
         int value = -1;
-        Cursor c = null;
+        Cursor cursor = null;
         DbAdapter dbAdapter = new DbAdapter(context);
         
         try
         {
             dbAdapter.open();
-            c = dbAdapter.fetchSetting(name);
-            if(c != null)
+            cursor = dbAdapter.fetchSetting(name);
+            if(cursor != null)
             {
-                value = c.getInt(c.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
+                value = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
             }
             
             dbAdapter.close();
@@ -165,6 +165,42 @@ public class Communicator
             Toast.makeText(context, "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
         }
         return value;
+    }
+
+    public Receipt getLatestReceipt()
+    {
+        Receipt receipt = null;
+        Cursor cursor = null;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        
+        try
+        {
+            dbAdapter.open();
+            cursor = dbAdapter.fetchLastReceipt();
+            if(cursor != null)
+            {
+                receipt = new Receipt(
+                        cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_DATE)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TIME)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_SUM)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
+                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT))
+                    );
+            }
+            
+            dbAdapter.close();
+        }
+        catch(SQLException e)
+        {
+            Log.d("ReceiptTracker", e.getMessage());
+            Toast.makeText(context, "Could not open database... try again and please report it to the developer!", Toast.LENGTH_LONG).show();
+        }
+        return receipt;
     }
     
     
