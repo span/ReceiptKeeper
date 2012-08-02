@@ -128,7 +128,7 @@ public class ReceiptAddFragment extends Fragment
         int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
         
         receipt.setName(nameView.getText().toString());
-        receipt.setPhoto(imageUri.toString());
+        receipt.setPhoto(imageUri.getPath());
         receipt.setDate(dateView.getText().toString());
         receipt.setTime(timeView.getText().toString());
         receipt.setLocationLat(String.valueOf(latitude));

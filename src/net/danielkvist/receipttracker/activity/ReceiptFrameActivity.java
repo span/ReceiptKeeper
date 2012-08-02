@@ -1,6 +1,9 @@
 package net.danielkvist.receipttracker.activity;
 
+import java.util.GregorianCalendar;
+
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
@@ -31,6 +34,7 @@ public class ReceiptFrameActivity extends FragmentActivity
             
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, fragmentId.toString());
             
+            
             switch(fragmentId)
             {
                 case 1:
@@ -41,6 +45,10 @@ public class ReceiptFrameActivity extends FragmentActivity
                     break;
                 case 3:
                     fragment = new ReceiptSettingsFragment();
+                    break;
+                case 4:
+                    Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
+                    fragment = new ReceiptDetailFragment(receipt);
                     break;
             }
             
