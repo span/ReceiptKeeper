@@ -149,9 +149,15 @@ public class DbAdapter
      */
     public Cursor fetchAllReceipts() 
     { 
-        return db.query(DATABASE_TABLE_RECEIPTS, new String[] 
-                                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
-                                null, null, null, null, null);
+        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] 
+                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
+                null, null, null, null, null);
+        
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
     }
     
     /**
@@ -161,9 +167,14 @@ public class DbAdapter
      */
     public Cursor fetchAllSettings() 
     { 
-        return db.query(DATABASE_TABLE_SETTINGS, new String[] 
+        Cursor cursor = db.query(DATABASE_TABLE_SETTINGS, new String[] 
                                 {KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE}, 
                                 null, null, null, null, null);
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
     }
 
     /**
