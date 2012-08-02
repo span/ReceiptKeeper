@@ -4,6 +4,8 @@
     <string name="title_receipt_detail">Receipt Detail</string>
     <string name="title_receipt_list">Receipts</string>
     <string name="title_add_receipt">Add Receipt</string>
+    <string name="title_edit_receipt">Edit Receipt</string>
+    <string name="title_view_receipt">View Receipt</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="name">Name</string>

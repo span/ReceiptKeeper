@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
@@ -16,6 +17,7 @@ import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.v4.app.FragmentManager;
@@ -23,16 +25,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,21 +49,27 @@ public class ReceiptAddFragment extends Fragment
     
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    private Uri imageUri;
-    private String currentDate;
-    private String currentTime;
+    //private Uri imageUri;
     private String filename;
     private TextView dateView;
     private TextView timeView;
     private Button cancelButton;
     private Button saveButton;
-    private TextView nameView;
-    private TextView taxView;
-    private TextView commentView;
-    private TextView sumView;
+    private EditText nameView;
+    private EditText taxView;
+    private EditText commentView;
+    private EditText sumView;
+    private Receipt receipt;
+    private ImageView imageView;
     
     public ReceiptAddFragment()
     {
+        this(new Receipt());
+    }
+
+    public ReceiptAddFragment(Receipt receipt)
+    {
+        this.receipt = receipt;
     }
 
     @Override
@@ -80,35 +91,54 @@ public class ReceiptAddFragment extends Fragment
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
-        nameView = (TextView) rootView.findViewById(R.id.add_receipt_name);
+        imageView = (ImageView) rootView.findViewById(R.id.receipt_photo_image_view);
+        imageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ImageView i = (ImageView) v;
+                if(i.getDrawable() == null)
+                {
+                    takePhoto();
+                }
+                else
+                {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(receipt.getPhoto()), "image/*");
+                    startActivity(intent);
+                }
+                
+            }
+        });
+        showBitmap();
         
-        sumView = (TextView) rootView.findViewById(R.id.add_receipt_sum);
+        nameView = (EditText) rootView.findViewById(R.id.add_receipt_name);
+        nameView.setText(receipt.getName());
+        
+        sumView = (EditText) rootView.findViewById(R.id.add_receipt_sum);
         sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
+        sumView.setText(receipt.getSum());
         
-        taxView = (TextView) rootView.findViewById(R.id.add_receipt_tax);
+        taxView = (EditText) rootView.findViewById(R.id.add_receipt_tax);
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
+        taxView.setText(receipt.getTax());
         
-        commentView = (TextView) rootView.findViewById(R.id.add_receipt_comment);
+        commentView = (EditText) rootView.findViewById(R.id.add_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
+        commentView.setText(receipt.getComment());
         
         dateView = (TextView) rootView.findViewById(R.id.add_receipt_date);
-        currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        dateView.setText(currentDate);
+        dateView.setText(receipt.getDate());
         
         timeView = (TextView) rootView.findViewById(R.id.add_receipt_time);
-        currentTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        timeView.setText(currentTime);
+        timeView.setText(receipt.getTime());
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { takePhoto(); }
-        });
-        
-        saveButton = (Button) rootView.findViewById(R.id.save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { saveReceipt(); }
         });
         
         cancelButton = (Button) rootView.findViewById(R.id.cancel_button);
@@ -117,25 +147,33 @@ public class ReceiptAddFragment extends Fragment
             public void onClick(View v) { cancel(); }
         });
         
+        saveButton = (Button) rootView.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { saveReceipt(); }
+        });
+        
         return rootView;
     }
 
-    private void saveReceipt()
+    public Receipt updateReceipt()
     {
-        Receipt receipt = new Receipt();
         Communicator communicator = new Communicator(getActivity());
-        int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
-        int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
+        setViewValues();
         
-        receipt.setName(nameView.getText().toString());
-        receipt.setPhoto(imageUri.getPath());
-        receipt.setDate(dateView.getText().toString());
-        receipt.setTime(timeView.getText().toString());
-        receipt.setLocationLat(String.valueOf(latitude));
-        receipt.setLocationLong(String.valueOf(longitude));
-        receipt.setSum(sumView.getText().toString());
-        receipt.setTax(taxView.getText().toString());
-        receipt.setComment(commentView.getText().toString());
+        if(communicator.updateReceipt(receipt))
+        {
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
+            getActivity().startActivity(intent);
+        }
+        return receipt;
+    }
+    
+    public Receipt saveReceipt()
+    {
+        Communicator communicator = new Communicator(getActivity());
+        setViewValues();
         
         if(communicator.saveReceipt(receipt))
         {
@@ -143,17 +181,37 @@ public class ReceiptAddFragment extends Fragment
             intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             getActivity().startActivity(intent);
         }
+        
+        return receipt;
+    }
+    
+    private void setViewValues()
+    {
+        int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
+        int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
+        receipt.setName(nameView.getText().toString());
+        //receipt.setPhoto(imageUri.getPath()); // TODO Can probably remove this, doing this elsewhere
+        receipt.setDate(dateView.getText().toString());
+        receipt.setTime(timeView.getText().toString());
+        receipt.setLocationLat(String.valueOf(latitude));
+        receipt.setLocationLong(String.valueOf(longitude));
+        receipt.setSum(sumView.getText().toString());
+        receipt.setTax(taxView.getText().toString());
+        receipt.setComment(commentView.getText().toString());
     }
    
-    private void cancel()
+    public void cancel()
     {
         new AlertDialog.Builder(getActivity())
         .setTitle(R.string.cancel)
         .setMessage(R.string.cancel_prompt_data_loss)
         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
+                // TODO return something else here, not always going back to main (after editing for example)
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
+                
+                getActivity().finish();
             }
         })
         .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -179,7 +237,7 @@ public class ReceiptAddFragment extends Fragment
         
         File photo = new File(mediaStorageDir.getPath(), filename);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
-        imageUri = Uri.fromFile(photo);
+        receipt.setPhoto(photo.getAbsolutePath());
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
@@ -192,6 +250,7 @@ public class ReceiptAddFragment extends Fragment
             case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK)
                 {
+                    Toast.makeText(getActivity(), "The image was saved to: " + receipt.getPhoto(), Toast.LENGTH_LONG).show();
                     showBitmap();
                 }
         }
@@ -199,36 +258,8 @@ public class ReceiptAddFragment extends Fragment
     
     private void showBitmap()
     {
-        Activity activity = getActivity();
-        activity.getContentResolver().notifyChange(imageUri, null);
-        Toast.makeText(activity, "The image was saved to: " + imageUri.toString(), Toast.LENGTH_LONG).show();
-        
-        ImageView imageView = (ImageView) activity.findViewById(R.id.receipt_photo_image_view);
-        imageView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ImageView i = (ImageView) v;
-                if(i.getDrawable() == null)
-                {
-                    takePhoto();
-                }
-                else
-                {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.setDataAndType(imageUri, "image/*");
-                    startActivity(intent);
-                }
-                
-            }
-        });
-
-        ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, imageUri.getPath());
+        ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, receipt.getPhoto());
         worker.execute(150, 150);
     }
-
-
 
 }
