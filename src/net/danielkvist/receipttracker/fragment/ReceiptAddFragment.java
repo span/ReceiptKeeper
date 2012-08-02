@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MainActivity;
@@ -78,17 +81,22 @@ public class ReceiptAddFragment extends Fragment
         
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
         nameView = (TextView) rootView.findViewById(R.id.add_receipt_name);
-        sumView = (TextView) rootView.findViewById(R.id.add_receipt_sum);
-        taxView = (TextView) rootView.findViewById(R.id.add_receipt_tax);
-        commentView = (TextView) rootView.findViewById(R.id.add_receipt_comment);
         
-        currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        currentTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
-
+        sumView = (TextView) rootView.findViewById(R.id.add_receipt_sum);
+        sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
+        
+        taxView = (TextView) rootView.findViewById(R.id.add_receipt_tax);
+        taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
+        
+        commentView = (TextView) rootView.findViewById(R.id.add_receipt_comment);
+        commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
+        
         dateView = (TextView) rootView.findViewById(R.id.add_receipt_date);
+        currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         dateView.setText(currentDate);
-
+        
         timeView = (TextView) rootView.findViewById(R.id.add_receipt_time);
+        currentTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
         timeView.setText(currentTime);
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
@@ -109,22 +117,6 @@ public class ReceiptAddFragment extends Fragment
             public void onClick(View v) { cancel(); }
         });
         
-        
-        sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
-        taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
-        commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
-        LinearLayout mapContainer = (LinearLayout) rootView.findViewById(R.id.map_container);
-        mapContainer.setVisibility(settingsMap.get(Setting.SETTING_FIELD_LOCATION));
-        // TODO Handle location hiding in a gracious way
-        /*if(settingsMap.get(Setting.SETTING_FIELD_LOCATION) != 0)
-        {
-            FragmentManager fm = getFragmentManager();
-            Fragment mapFragment = fm.findFragmentById(R.id.my_map_fragment);
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.remove(mapFragment).commit();
-        }*/
-        
-
         return rootView;
     }
 

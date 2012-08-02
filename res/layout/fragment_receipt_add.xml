@@ -116,18 +116,12 @@
             android:lines="3"
             android:text="" />
 
-        <LinearLayout
-            android:id="@+id/map_container"
+        <fragment
+            android:id="@+id/my_map_fragment"
+            android:name="net.danielkvist.receipttracker.activity.MyMapFragmentActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-
-            <fragment
-                android:id="@+id/my_map_fragment"
-                android:name="net.danielkvist.receipttracker.activity.MyMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" >
-            </fragment>
-        </LinearLayout>
+        </fragment>
 
         <LinearLayout
             android:layout_width="match_parent"

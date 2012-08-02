@@ -1,6 +1,8 @@
 package net.danielkvist.receipttracker.activity;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.util.Communicator;
+import net.danielkvist.util.Setting;
 import android.os.Bundle;
 
 import com.google.android.maps.GeoPoint;
@@ -31,6 +33,9 @@ public class MyMapActivity extends MapActivity
 
         mapView.getOverlays().add(mlo);
         mapView.postInvalidate();
+        
+        Communicator communicator = new Communicator(this);
+        mapView.setVisibility(communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION));
     }
 
     @Override
