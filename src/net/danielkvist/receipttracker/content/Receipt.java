@@ -240,6 +240,30 @@ public class Receipt implements Parcelable
     {
         this.comment = comment;
     }
+    
+    public String getDateAndTime()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getDate());
+        sb.append(" ");
+        sb.append(getTime());
+        return sb.toString();
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName());
+        sb.append(" ");
+        sb.append(getDate());
+        sb.append(" ");
+        sb.append(getTime());
+        return sb.toString();
+    }
 
     @Override
     public int describeContents()
@@ -266,6 +290,5 @@ public class Receipt implements Parcelable
             return new Receipt[size];
         }
     };
-
 
 }
