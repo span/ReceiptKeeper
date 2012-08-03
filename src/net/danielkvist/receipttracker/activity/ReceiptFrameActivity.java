@@ -20,10 +20,10 @@ public class ReceiptFrameActivity extends FragmentActivity
 {
 
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
-    private static final int ADD_FRAGMENT = 1;
-    private static final int SEARCH_FRAGMENT = 2;
-    private static final int SETTINGS_FRAGMENT = 3;
-    private static final int DETAIL_FRAGMENT = 4;
+    private static final int ADD_FRAGMENT_ID = 1;
+    private static final int SEARCH_FRAGMENT_ID = 2;
+    private static final int SETTINGS_FRAGMENT_ID = 3;
+    private static final int DETAIL_FRAGMENT_ID = 4;
     private Fragment fragment = null;
     private MenuItem saveItem;
     private MenuItem editItem;
@@ -48,16 +48,16 @@ public class ReceiptFrameActivity extends FragmentActivity
             
             switch(fragmentId)
             {
-                case ADD_FRAGMENT:
+                case ADD_FRAGMENT_ID:
                     fragment = new ReceiptAddFragment();
                     break;
-                case SEARCH_FRAGMENT:
+                case SEARCH_FRAGMENT_ID:
                     fragment = new ReceiptSearchFragment();
                     break;
-                case SETTINGS_FRAGMENT:
+                case SETTINGS_FRAGMENT_ID:
                     fragment = new ReceiptSettingsFragment();
                     break;
-                case DETAIL_FRAGMENT:
+                case DETAIL_FRAGMENT_ID:
                     receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
                     fragment = new ReceiptDetailFragment(receipt);
                     break;
@@ -74,9 +74,28 @@ public class ReceiptFrameActivity extends FragmentActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         editItem = menu.findItem(R.id.item_edit);
-        editItem.setVisible(true);
         saveItem = menu.findItem(R.id.item_save);
-        saveItem.setVisible(false);
+
+        switch(fragmentId)
+        {
+            case ADD_FRAGMENT_ID:
+                editItem.setVisible(false);
+                saveItem.setVisible(true);
+                break;
+            case SEARCH_FRAGMENT_ID:
+                editItem.setVisible(false);
+                saveItem.setVisible(false);
+                break;
+            case SETTINGS_FRAGMENT_ID:
+                editItem.setVisible(false);
+                saveItem.setVisible(false);
+                break;
+            case DETAIL_FRAGMENT_ID:
+                editItem.setVisible(true);
+                saveItem.setVisible(false);
+                break;
+        }
+        
         return true;
     }
     
@@ -120,7 +139,7 @@ public class ReceiptFrameActivity extends FragmentActivity
         super.onBackPressed();
         switch(fragmentId)
         {
-          case ADD_FRAGMENT:
+          case ADD_FRAGMENT_ID:
               invalidateOptionsMenu();
               break;
         }
@@ -132,7 +151,7 @@ public class ReceiptFrameActivity extends FragmentActivity
         super.onResume();
         switch(fragmentId)
         {
-            case DETAIL_FRAGMENT:
+            case DETAIL_FRAGMENT_ID:
                 invalidateOptionsMenu();
                 break;
         }
