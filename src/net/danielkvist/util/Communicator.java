@@ -29,6 +29,11 @@ public class Communicator
     
     public ArrayList<Receipt> getAllReceipts()
     {
+        return getReceipts(0);
+    }
+    
+    public ArrayList<Receipt> getReceipts(int limit)
+    {
         Receipt receipt;
         ArrayList<Receipt> receiptList = null;
         DbAdapter dbAdapter = new DbAdapter(context);
@@ -36,7 +41,7 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            Cursor cursor = dbAdapter.fetchAllReceipts();
+            Cursor cursor = dbAdapter.fetchReceipts(limit);
             receiptList = new ArrayList<Receipt>();
             if (cursor != null)
             {
@@ -247,5 +252,7 @@ public class Communicator
             showToast(MESSAGE_COULD_NOT_SAVE);
         }
     }
+
+    
 
 }
