@@ -127,6 +127,8 @@ public class ReceiptAddFragment extends Fragment
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
         
+        // FIXME Add account selector and get accounts
+        
         commentView = (EditText) rootView.findViewById(R.id.add_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
         commentView.setText(receipt.getComment());
