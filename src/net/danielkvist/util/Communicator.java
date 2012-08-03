@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 public class Communicator
 {
-
+    // FIXME Add CRUD handling for accounts
     private static final String MESSAGE_DATA_WAS_SAVED = "Data was saved to database!";
     private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
     private static final String MESSAGE_COULD_NOT_OPEN = "Could not open database... try again and please report it to the developer!";
@@ -25,24 +25,6 @@ public class Communicator
     public Communicator(Context context)
     {
         this.context = context;
-    }
-
-    public boolean saveReceipt(Receipt receipt)
-    {
-        if(receipt.getId() > 0)
-        {
-            return updateReceipt(receipt);
-        }
-        else
-        {
-            return insertReceipt(receipt); 
-        }
-        
-    }
-
-    public void saveSetting(Setting setting)
-    {
-        updateSetting(setting);
     }
     
     public ArrayList<Receipt> getAllReceipts()
@@ -168,6 +150,24 @@ public class Communicator
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receipt;
+    }
+
+    public boolean saveReceipt(Receipt receipt)
+    {
+        if(receipt.getId() > 0)
+        {
+            return updateReceipt(receipt);
+        }
+        else
+        {
+            return insertReceipt(receipt); 
+        }
+        
+    }
+
+    public void saveSetting(Setting setting)
+    {
+        updateSetting(setting);
     }
 
     public boolean updateReceipt(Receipt receipt)

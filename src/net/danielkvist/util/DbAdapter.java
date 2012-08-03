@@ -16,7 +16,7 @@ public class DbAdapter
     
     private final Context context;
     private static final String DATABASE_NAME = "data";
-    private static final String TAG = R.string.tag_receipttracker;
+    private static final String TAG = "ReceiptTracker";
     private static final int DATABASE_VERSION = 1;
     
     public static String SELECTED_TABLE;
@@ -79,6 +79,8 @@ public class DbAdapter
             "values " +
             "('" + Setting.SETTING_FIELD_LOCATION + "',0" +
         ");";
+    
+    // FIXME Add accounts table with CRUD and read file with accounts for initial values (uk, se)
 
     /**
      * 
