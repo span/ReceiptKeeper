@@ -4,6 +4,7 @@ import android.app.LocalActivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import net.danielkvist.receipttracker.R;
 
 /**
  * This is a fragment that will be used during transition from activities to fragments.

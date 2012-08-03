@@ -3,6 +3,7 @@ package net.danielkvist.util;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import net.danielkvist.receipttracker.R;
 
 import com.google.android.maps.GeoPoint;
 
@@ -57,9 +58,9 @@ public class LocationParser implements LocationListener
                     } 
                     catch (IOException e)
                     {
-                        Log.d("ReceiptTracker", "Failed to init geocoder at location. " +
+                        Log.d(context.getString(R.string.tag_receipttracker), "Failed to init geocoder at location. " +
                                 "Lat: " + getLatitude() + " - Long: " + getLongitude());
-                        Log.d("ReceiptTracker", e.getMessage());
+                        Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
                     }
                     
                 }

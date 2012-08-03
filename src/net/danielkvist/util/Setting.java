@@ -1,5 +1,7 @@
 package net.danielkvist.util;
 
+import net.danielkvist.receipttracker.R;
+
 public class Setting
 {
 

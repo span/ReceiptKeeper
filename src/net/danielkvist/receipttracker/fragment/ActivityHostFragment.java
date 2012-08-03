@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
+import net.danielkvist.receipttracker.R;
 
 /**
  * This is a fragment that will be used during transition from activities to fragments.

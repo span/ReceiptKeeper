@@ -45,5 +45,6 @@
     <string name="last_added_">"Last added: "</string>
     <string name="receipt_details">Receipt details</string>
     <string name="you_have_not_added_any_receipts_yet_">You have not added any receipts yet.</string>
+    <string name="tag_receipttracker">ReceiptTracker</string>
 
 </resources>

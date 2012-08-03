@@ -2,6 +2,7 @@ package net.danielkvist.receipttracker.content;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import net.danielkvist.receipttracker.R;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,6 +1,7 @@
 package net.danielkvist.util;
 
 import java.security.KeyRep;
+import net.danielkvist.receipttracker.R;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,7 +16,7 @@ public class DbAdapter
     
     private final Context context;
     private static final String DATABASE_NAME = "data";
-    private static final String TAG = "ReceiptTracker";
+    private static final String TAG = R.string.tag_receipttracker;
     private static final int DATABASE_VERSION = 1;
     
     public static String SELECTED_TABLE;
