@@ -37,12 +37,9 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         if (findViewById(R.id.receipt_frame_container) != null)
         {
             mTwoPane = true;
-            ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true); // TODO
-                                                                                                                                  // Faktorera
-                                                                                                                                  // bort
-                                                                                                                                  // detta
-                                                                                                                                  // om
-                                                                                                                                  // mšjligt
+            ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true);
+            // TODO Take this out if possible, it's just setting a default value
+            // which is set anyway... maybe
         }
     }
 
@@ -99,11 +96,8 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         else
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
-            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4"); // TODO
-                                                                           // Refactor
-                                                                           // out
-                                                                           // these
-                                                                           // id's
+            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4");
+            // TODO Refactor out these id's
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
         }
@@ -130,13 +124,8 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
                     fragment = new ReceiptSettingsFragment();
                     break;
                 case 4:
-                    Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT); // TODO
-                                                                                                       // maybe
-                                                                                                       // the
-                                                                                                       // intent
-                                                                                                       // will
-                                                                                                       // be
-                                                                                                       // empty?
+                    Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
+                    // TODO maybe the intent will be empty?
                     fragment = new ReceiptDetailFragment(receipt);
                     break;
             }
