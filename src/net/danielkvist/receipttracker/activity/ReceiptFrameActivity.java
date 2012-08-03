@@ -71,7 +71,7 @@ public class ReceiptFrameActivity extends FragmentActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
-        // TODO Add this and opOptionsIte... for two pane in MainActivity
+        // XXX Add this and opOptionsIte... for two pane in MainActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         editItem = menu.findItem(R.id.item_edit);
@@ -139,7 +139,7 @@ public class ReceiptFrameActivity extends FragmentActivity
     @Override
     public void onBackPressed()
     {
-        // TODO Fix bug where 2 back presses are needed
+        // FIXME Fix bug where 2 back presses are needed
         super.onBackPressed();
         invalidateOptionsMenu();
     }

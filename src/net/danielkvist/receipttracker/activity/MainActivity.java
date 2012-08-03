@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         {
             mTwoPane = true;
             ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true);
-            // TODO Take this out if possible, it's just setting a default value
+            // XXX Take this out if possible, it's just setting a default value
             // which is set anyway... maybe
         }
     }
@@ -89,7 +89,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
     {
         if (mTwoPane)
         {
-            // TODO Test two pane code
+            // XXX Test two pane code
             Fragment fragment = new ReceiptDetailFragment(receipt);
             getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
         }
@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
             detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4");
-            // TODO Refactor out these id's
+            // XXX Refactor out these id's
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
         }
@@ -106,12 +106,12 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
     @Override
     public void onItemSelected(String id)
     {
-        // TODO Handle two pane layouts and test the switch statement result
+        // XXX Handle two pane layouts and test the switch statement result
         if (mTwoPane)
         {
             Fragment fragment = null;
             switch (Integer.parseInt(id))
-            // TODO This switch is the same as in receiptFrameActivity,
+            // XXX This switch is the same as in receiptFrameActivity,
             // refactor?
             {
                 case 1:
@@ -125,7 +125,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
                     break;
                 case 4:
                     Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-                    // TODO maybe the intent will be empty?
+                    // XXX maybe the intent will be empty?
                     fragment = new ReceiptDetailFragment(receipt);
                     break;
             }
@@ -133,7 +133,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
             Bundle arguments = new Bundle();
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id);
             // ReceiptDetailFragment fragment = new ReceiptDetailFragment(null);
-            // // TODO Launch the correct fragment, remove this?
+            // // XXX Launch the correct fragment, remove this?
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
 
