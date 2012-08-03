@@ -109,6 +109,7 @@ public class ReceiptFrameActivity extends FragmentActivity
             item.setVisible(false);
             saveItem.setVisible(true);
             fragment = new ReceiptAddFragment(receipt);
+            fragmentId = ADD_FRAGMENT_ID;
             ft = getSupportFragmentManager().beginTransaction(); 
             ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
             ft.addToBackStack(null); 
@@ -120,6 +121,7 @@ public class ReceiptFrameActivity extends FragmentActivity
             if(receipt != null)
             {
                 fragment = new ReceiptDetailFragment(receipt);
+                fragmentId = DETAIL_FRAGMENT_ID;
                 ft = getSupportFragmentManager().beginTransaction(); 
                 ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
                 ft.commit();
@@ -139,8 +141,17 @@ public class ReceiptFrameActivity extends FragmentActivity
     @Override
     public void onBackPressed()
     {
-        // FIXME Fix bug where 2 back presses are needed
         super.onBackPressed();
+        if(fragmentId == DETAIL_FRAGMENT_ID)
+        {
+            // If we're on the detail view we might as well finish the activity since we are going back
+            finish();
+        }
+        else if(fragmentId == ADD_FRAGMENT_ID)
+        {
+            // Change the current fragment id so that the options menu knows what to draw
+            fragmentId = DETAIL_FRAGMENT_ID;
+        }
         invalidateOptionsMenu();
     }
     
