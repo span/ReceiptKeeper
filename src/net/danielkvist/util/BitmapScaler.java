@@ -3,6 +3,7 @@ package net.danielkvist.util;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import net.danielkvist.receipttracker.R;
 
 public class BitmapScaler
 {

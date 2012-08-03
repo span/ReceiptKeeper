@@ -49,7 +49,6 @@ public class ReceiptAddFragment extends Fragment
     
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    //private Uri imageUri;
     private String filename;
     private TextView dateView;
     private TextView timeView;
@@ -215,7 +214,7 @@ public class ReceiptAddFragment extends Fragment
         .setMessage(R.string.cancel_prompt_data_loss)
         .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                // TODO return something else here, not always going back to main (after editing for example)
+                // TODO Return something else here, not always going back to main (saving edits after details launched from search for example)
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
                 
@@ -233,13 +232,13 @@ public class ReceiptAddFragment extends Fragment
         filename = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
         File mediaStorageDir = new File(
                                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                                    "ReceiptTracker");
+                                    getActivity().getString(R.string.tag_receipttracker));
 
         if (!mediaStorageDir.exists())
         {
             if (!mediaStorageDir.mkdirs())
             {
-                Log.d("ReceiptTracker", "failed to create directory");
+                Log.d(getActivity().getString(R.string.tag_receipttracker), "failed to create directory");
             }
         }
         

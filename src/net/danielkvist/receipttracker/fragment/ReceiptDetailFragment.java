@@ -30,23 +30,14 @@ public class ReceiptDetailFragment extends Fragment
 {
 
     public static final String ARG_ITEM_ID = "item_id";
-
     MainMenuContent.DummyItem mItem;
-
     private Receipt receipt;
-
     private TextView nameView;
-
     private TextView sumView;
-
     private TextView taxView;
-
     private TextView commentView;
-
     private TextView dateAndTimeView;
-
     private TextView timeView;
-
     private MenuItem editItem;
 
     public ReceiptDetailFragment(Receipt receipt)
@@ -58,16 +49,16 @@ public class ReceiptDetailFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        if (getArguments().containsKey(ARG_ITEM_ID))
-//        {
-//            mItem = MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-//        }
+        // if (getArguments().containsKey(ARG_ITEM_ID))
+        // {
+        // mItem =
+        // MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        // }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        // TODO Add all detail fields and fill them with data
         // TODO Add option to share image/receipt
         Communicator communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
@@ -86,26 +77,25 @@ public class ReceiptDetailFragment extends Fragment
                 startActivity(intent);
             }
         });
-        
-        
+
         nameView = (TextView) rootView.findViewById(R.id.detail_receipt_name);
         nameView.setText(receipt.getName());
-        
+
         sumView = (TextView) rootView.findViewById(R.id.detail_receipt_sum);
         sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
         sumView.setText(receipt.getSum());
-        
+
         taxView = (TextView) rootView.findViewById(R.id.detail_receipt_tax);
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
-        
+
         commentView = (TextView) rootView.findViewById(R.id.detail_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
         commentView.setText(receipt.getComment());
-        
+
         dateAndTimeView = (TextView) rootView.findViewById(R.id.detail_receipt_date_and_time);
         dateAndTimeView.setText(receipt.getDate());
-        
+
         return rootView;
     }
 }

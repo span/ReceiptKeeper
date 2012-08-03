@@ -3,6 +3,7 @@ package net.danielkvist.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.content.Receipt;
 import android.content.Context;
@@ -15,11 +16,9 @@ import android.widget.Toast;
 public class Communicator
 {
 
+    private static final String MESSAGE_DATA_WAS_SAVED = "Data was saved to database!";
     private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
-    private static final String MESSAGE_COULD_NOT_UPDATE = "Could not update the database... try again and please report it to the developer!";
     private static final String MESSAGE_COULD_NOT_OPEN = "Could not open database... try again and please report it to the developer!";
-    private static final int DATA_TYPE_RECEIPT = 0;
-    private static final int DATA_TYPE_SETTING = 1;
 
     private Context context;
 
@@ -36,55 +35,16 @@ public class Communicator
         }
         else
         {
-            return saveData(DATA_TYPE_RECEIPT, receipt); 
+            return insertReceipt(receipt); 
         }
         
     }
 
     public void saveSetting(Setting setting)
     {
-        saveData(DATA_TYPE_SETTING, setting);
+        updateSetting(setting);
     }
-
-    // TODO Refactor into separete saves
-    public boolean saveData(int type, Object data)
-    {
-        boolean result = false;
-        DbAdapter dbAdapter = new DbAdapter(context);
-        try
-        {
-            dbAdapter.open();
-            switch (type)
-            {
-                case DATA_TYPE_SETTING:
-                    Setting setting = (Setting) data;
-                    result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
-                    break;
-                case DATA_TYPE_RECEIPT:
-                    Receipt receipt = (Receipt) data;
-                    result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getDate(),
-                            receipt.getTime(), receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(),
-                            receipt.getTax(), receipt.getComment());
-                    break;
-            }
-            if (result)
-            {
-                showToast("Data was saved to database!");
-            } 
-            else
-            {
-                showToast(MESSAGE_COULD_NOT_SAVE);
-            }
-            dbAdapter.close();
-        } 
-        catch (SQLException e)
-        {
-            Log.d("ReceiptTracker", e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return result;
-    }
-
+    
     public ArrayList<Receipt> getAllReceipts()
     {
         Receipt receipt;
@@ -118,7 +78,7 @@ public class Communicator
             dbAdapter.close();
         } catch (SQLException e)
         {
-            Log.d("ReceiptTracker", e.getMessage());
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receiptList;
@@ -146,7 +106,7 @@ public class Communicator
             dbAdapter.close();
         } catch (SQLException e)
         {
-            Log.d("ReceiptTracker", e.getMessage());
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return settingsMap;
@@ -170,7 +130,7 @@ public class Communicator
             dbAdapter.close();
         } catch (SQLException e)
         {
-            Log.d("ReceiptTracker", e.getMessage());
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return value;
@@ -204,7 +164,7 @@ public class Communicator
         } 
         catch (SQLException e)
         {
-            Log.d("ReceiptTracker", e.getMessage());
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receipt;
@@ -220,15 +180,12 @@ public class Communicator
             result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getDate(),
                     receipt.getTime(), receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(),
                     receipt.getTax(), receipt.getComment());
-            if(!result)
-            {
-                showToast(MESSAGE_COULD_NOT_UPDATE);
-            }
+            showResult(result);
             dbAdapter.close();
         } 
         catch (SQLException e)
         {
-            Log.d("ReceiptTracker", e.getMessage());
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return result;
@@ -237,6 +194,58 @@ public class Communicator
     public void showToast(String message)
     {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+    }
+    
+    private boolean insertReceipt(Receipt receipt)
+    {
+        boolean result = false;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getDate(),
+                    receipt.getTime(), receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(),
+                    receipt.getTax(), receipt.getComment());
+            showResult(result);
+            dbAdapter.close();
+        } 
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return result;
+    }
+    
+    private boolean updateSetting(Setting setting)
+    {
+        boolean result = false;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
+            showResult(result);
+            dbAdapter.close();
+        } 
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return result;
+    }
+    
+    private void showResult(boolean result)
+    {
+        if (result)
+        {
+            showToast(MESSAGE_DATA_WAS_SAVED);
+        } 
+        else
+        {
+            showToast(MESSAGE_COULD_NOT_SAVE);
+        }
     }
 
 }
