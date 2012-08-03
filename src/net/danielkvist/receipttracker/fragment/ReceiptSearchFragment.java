@@ -1,6 +1,9 @@
 package net.danielkvist.receipttracker.fragment;
 
+import java.util.ArrayList;
+
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,7 +38,7 @@ public class ReceiptSearchFragment extends Fragment
         // FIXME Fetch receipts and display them in list
         // FIXME Add click listeners to list to tell the main activity to launch the detail fragment
         Communicator c = new Communicator(getActivity());
-        c.getAllReceipts();
+        ArrayList<Receipt> receiptList = c.getReceipts(10);
         
         return rootView;
     }

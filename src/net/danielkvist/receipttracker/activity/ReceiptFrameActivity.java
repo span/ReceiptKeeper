@@ -104,6 +104,7 @@ public class ReceiptFrameActivity extends FragmentActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         FragmentTransaction ft;
+        // XXX Add animation to the transactions?
         switch(item.getItemId()) {
         case R.id.item_edit:
             item.setVisible(false);

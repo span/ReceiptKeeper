@@ -148,15 +148,26 @@ public class DbAdapter
     }
 
     /**
-     * Return a Cursor over the list of all entries in the receipt table
+     * Return a Cursor over the list entries in the receipt table
      * 
      * @return Cursor over all notes
      */
-    public Cursor fetchAllReceipts() 
+    public Cursor fetchReceipts(int limit) 
     { 
-        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] 
-                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
-                null, null, null, null, null);
+        Cursor cursor;
+        if(limit > 0)
+        {
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] 
+                    {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
+                    null, null, null, null, null, String.valueOf(limit));
+        }
+        else
+        {
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] 
+                    {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
+                    null, null, null, null, null);
+        }
+        
         
         if (cursor != null)
         {
