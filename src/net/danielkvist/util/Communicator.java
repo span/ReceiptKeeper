@@ -15,6 +15,9 @@ import android.widget.Toast;
 public class Communicator
 {
 
+    private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
+    private static final String MESSAGE_COULD_NOT_UPDATE = "Could not update the database... try again and please report it to the developer!";
+    private static final String MESSAGE_COULD_NOT_OPEN = "Could not open database... try again and please report it to the developer!";
     private static final int DATA_TYPE_RECEIPT = 0;
     private static final int DATA_TYPE_SETTING = 1;
 
@@ -27,7 +30,15 @@ public class Communicator
 
     public boolean saveReceipt(Receipt receipt)
     {
-        return saveData(DATA_TYPE_RECEIPT, receipt);
+        if(receipt.getId() > 0)
+        {
+            return updateReceipt(receipt);
+        }
+        else
+        {
+            return saveData(DATA_TYPE_RECEIPT, receipt); 
+        }
+        
     }
 
     public void saveSetting(Setting setting)
@@ -35,6 +46,7 @@ public class Communicator
         saveData(DATA_TYPE_SETTING, setting);
     }
 
+    // TODO Refactor into separete saves
     public boolean saveData(int type, Object data)
     {
         boolean result = false;
@@ -57,19 +69,18 @@ public class Communicator
             }
             if (result)
             {
-                Toast.makeText(context, "Data was saved to database!", Toast.LENGTH_SHORT).show();
-            } else
+                showToast("Data was saved to database!");
+            } 
+            else
             {
-                Toast.makeText(context,
-                        "Could not save to database... try again and please report it to the developer!",
-                        Toast.LENGTH_LONG).show();
+                showToast(MESSAGE_COULD_NOT_SAVE);
             }
             dbAdapter.close();
-        } catch (SQLException e)
+        } 
+        catch (SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
-            Toast.makeText(context, "Could not open database... try again and please report it to the developer!",
-                    Toast.LENGTH_LONG).show();
+            showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return result;
     }
@@ -108,8 +119,7 @@ public class Communicator
         } catch (SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
-            Toast.makeText(context, "Could not open database... try again and please report it to the developer!",
-                    Toast.LENGTH_LONG).show();
+            showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receiptList;
     }
@@ -137,8 +147,7 @@ public class Communicator
         } catch (SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
-            Toast.makeText(context, "Could not open database... try again and please report it to the developer!",
-                    Toast.LENGTH_LONG).show();
+            showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return settingsMap;
     }
@@ -162,8 +171,7 @@ public class Communicator
         } catch (SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
-            Toast.makeText(context, "Could not open database... try again and please report it to the developer!",
-                    Toast.LENGTH_LONG).show();
+            showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return value;
     }
@@ -197,8 +205,7 @@ public class Communicator
         catch (SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
-            Toast.makeText(context, "Could not open database... try again and please report it to the developer!",
-                    Toast.LENGTH_LONG).show();
+            showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receipt;
     }
@@ -215,18 +222,21 @@ public class Communicator
                     receipt.getTax(), receipt.getComment());
             if(!result)
             {
-                Toast.makeText(context, "Could not update receipt... try again and please report it to the developer!",
-                        Toast.LENGTH_LONG).show();
+                showToast(MESSAGE_COULD_NOT_UPDATE);
             }
             dbAdapter.close();
         } 
         catch (SQLException e)
         {
             Log.d("ReceiptTracker", e.getMessage());
-            Toast.makeText(context, "Could not open database... try again and please report it to the developer!",
-                    Toast.LENGTH_LONG).show();
+            showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return result;
+    }
+
+    public void showToast(String message)
+    {
+        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
     }
 
 }
