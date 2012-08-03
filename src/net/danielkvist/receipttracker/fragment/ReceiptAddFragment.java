@@ -61,6 +61,7 @@ public class ReceiptAddFragment extends Fragment
     private EditText sumView;
     private Receipt receipt;
     private ImageView imageView;
+    private Communicator communicator;
     
     public ReceiptAddFragment()
     {
@@ -70,6 +71,7 @@ public class ReceiptAddFragment extends Fragment
     public ReceiptAddFragment(Receipt receipt)
     {
         this.receipt = receipt;
+        
     }
 
     @Override
@@ -81,14 +83,15 @@ public class ReceiptAddFragment extends Fragment
          * MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
          * }
          */
-
+        communicator = new Communicator(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        Communicator communicator = new Communicator(getActivity());
+        
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
+        
         
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.receipt_photo_image_view);
@@ -155,42 +158,45 @@ public class ReceiptAddFragment extends Fragment
         
         return rootView;
     }
-
-    public Receipt updateReceipt()
-    {
-        Communicator communicator = new Communicator(getActivity());
-        setViewValues();
-        
-        if(communicator.updateReceipt(receipt))
-        {
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
-            getActivity().startActivity(intent);
-        }
-        return receipt;
-    }
     
     public Receipt saveReceipt()
     {
-        Communicator communicator = new Communicator(getActivity());
-        setViewValues();
         
-        if(communicator.saveReceipt(receipt))
+        if(setViewValues())
         {
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
-            getActivity().startActivity(intent);
+            if(communicator.saveReceipt(receipt))
+            {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
+                getActivity().startActivity(intent);
+            }
+            
+            return receipt;
+        }
+        else
+        {
+            return null;
         }
         
-        return receipt;
     }
     
-    private void setViewValues()
+    private boolean setViewValues()
     {
         int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
         int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
-        receipt.setName(nameView.getText().toString());
-        //receipt.setPhoto(imageUri.getPath()); // TODO Can probably remove this, doing this elsewhere
+        
+        String name = nameView.getText().toString(); 
+        if(name.equals(""))
+        {
+            communicator.showToast("You need to fill in a name of your receipt.");
+            return false;
+        }
+        if(receipt.getPhoto().equals(""))
+        {
+            communicator.showToast("You need add a photo of your receipt.");
+            return false;
+        }
+        receipt.setName(name);
         receipt.setDate(dateView.getText().toString());
         receipt.setTime(timeView.getText().toString());
         receipt.setLocationLat(String.valueOf(latitude));
@@ -198,6 +204,8 @@ public class ReceiptAddFragment extends Fragment
         receipt.setSum(sumView.getText().toString());
         receipt.setTax(taxView.getText().toString());
         receipt.setComment(commentView.getText().toString());
+        
+        return true;
     }
    
     public void cancel()

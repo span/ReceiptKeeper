@@ -15,6 +15,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class ReceiptFrameActivity extends FragmentActivity
 {
@@ -114,12 +115,15 @@ public class ReceiptFrameActivity extends FragmentActivity
             ft.commit();
             return true;
         case R.id.item_save:
-            ReceiptAddFragment f = (ReceiptAddFragment) fragment;
-            receipt = f.updateReceipt();
-            fragment = new ReceiptDetailFragment(receipt);
-            ft = getSupportFragmentManager().beginTransaction(); 
-            ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
-            ft.commit();
+            ReceiptAddFragment f = (ReceiptAddFragment) fragment; // TODO Possible to refactor out extra f?
+            receipt = f.saveReceipt();
+            if(receipt != null)
+            {
+                fragment = new ReceiptDetailFragment(receipt);
+                ft = getSupportFragmentManager().beginTransaction(); 
+                ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
+                ft.commit();
+            }
             return true;
         case android.R.id.home:
             NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
@@ -137,24 +141,14 @@ public class ReceiptFrameActivity extends FragmentActivity
     {
         // TODO Fix bug where 2 back presses are needed
         super.onBackPressed();
-        switch(fragmentId)
-        {
-          case ADD_FRAGMENT_ID:
-              invalidateOptionsMenu();
-              break;
-        }
+        invalidateOptionsMenu();
     }
     
     @Override
     public void onResume()
     {
         super.onResume();
-        switch(fragmentId)
-        {
-            case DETAIL_FRAGMENT_ID:
-                invalidateOptionsMenu();
-                break;
-        }
+        invalidateOptionsMenu();
     }
     
 }
