@@ -115,7 +115,7 @@ public class ReceiptFrameActivity extends FragmentActivity
             ft.commit();
             return true;
         case R.id.item_save:
-            ReceiptAddFragment f = (ReceiptAddFragment) fragment; // TODO Possible to refactor out extra f?
+            ReceiptAddFragment f = (ReceiptAddFragment) fragment;
             receipt = f.saveReceipt();
             if(receipt != null)
             {
