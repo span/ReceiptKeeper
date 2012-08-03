@@ -37,34 +37,37 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         if (findViewById(R.id.receipt_frame_container) != null)
         {
             mTwoPane = true;
-            ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list))
-                    .setActivateOnItemClick(true); // TODO Faktorera bort detta om mšjligt
+            ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true); // TODO
+                                                                                                                                  // Faktorera
+                                                                                                                                  // bort
+                                                                                                                                  // detta
+                                                                                                                                  // om
+                                                                                                                                  // mšjligt
         }
-        
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see android.support.v4.app.FragmentActivity#onResume()
+     */
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         Intent intent = getIntent();
         Receipt receipt = (Receipt) intent.getParcelableExtra(Receipt.EXTRA_RECEIPT);
-        if(receipt == null)
+        if (receipt == null)
         {
             Communicator communicator = new Communicator(this);
             receipt = communicator.getLatestReceipt();
         }
         showLastReceipt(receipt);
-        
-        //ActionBar actionBar = getActionBar();
-        //actionBar.show();
-
-        // set the app icon as an action to go home
-        // we are home so we don't need it
-        //actionBar.setDisplayHomeAsUpEnabled(true);
-
-        
     }
-    
-    
-    
+
     private void showLastReceipt(final Receipt receipt)
     {
-        if(receipt != null)
+        if (receipt != null)
         {
             LinearLayout container = ((LinearLayout) findViewById(R.id.receipt_added_container));
             container.setOnClickListener(new View.OnClickListener()
@@ -75,7 +78,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
                     showDetail(receipt);
                 }
             });
-            
+
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
@@ -87,7 +90,7 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
 
     private void showDetail(Receipt receipt)
     {
-        if(mTwoPane)
+        if (mTwoPane)
         {
             // TODO Test two pane code
             Fragment fragment = new ReceiptDetailFragment(receipt);
@@ -96,7 +99,11 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         else
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
-            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4"); // TODO Refactor out these id's
+            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4"); // TODO
+                                                                           // Refactor
+                                                                           // out
+                                                                           // these
+                                                                           // id's
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
         }
@@ -109,7 +116,9 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
         if (mTwoPane)
         {
             Fragment fragment = null;
-            switch(Integer.parseInt(id)) // TODO This switch is the same as in receiptFrameActivity, refactor?
+            switch (Integer.parseInt(id))
+            // TODO This switch is the same as in receiptFrameActivity,
+            // refactor?
             {
                 case 1:
                     fragment = new ReceiptAddFragment();
@@ -121,18 +130,25 @@ public class MainActivity extends FragmentActivity implements ReceiptListFragmen
                     fragment = new ReceiptSettingsFragment();
                     break;
                 case 4:
-                    Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT); // TODO maybe the intent will be empty?
+                    Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT); // TODO
+                                                                                                       // maybe
+                                                                                                       // the
+                                                                                                       // intent
+                                                                                                       // will
+                                                                                                       // be
+                                                                                                       // empty?
                     fragment = new ReceiptDetailFragment(receipt);
                     break;
             }
-            
+
             Bundle arguments = new Bundle();
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id);
-            //ReceiptDetailFragment fragment = new ReceiptDetailFragment(null); // TODO Launch the correct fragment, remove this?
+            // ReceiptDetailFragment fragment = new ReceiptDetailFragment(null);
+            // // TODO Launch the correct fragment, remove this?
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
 
-        } 
+        }
         else
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
