@@ -29,24 +29,6 @@ public class CustomListFragment extends ListFragment
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        //setListAdapter(new ArrayAdapter<MainMenuContent.DummyItem>(getActivity(), android.R.layout.simple_list_item_activated_1,android.R.id.text1, MainMenuContent.ITEMS));
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-//        if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
-//        {
-//            setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
-//        }
-        
-    }
-
-    @Override
     public void onAttach(Activity activity)
     {
         super.onAttach(activity);
@@ -63,13 +45,6 @@ public class CustomListFragment extends ListFragment
     {
         super.onDetach();
         mCallbacks = sDummyCallbacks;
-    }
-
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id)
-    {
-        super.onListItemClick(listView, view, position, id);
-        //mCallbacks.onItemSelected(MainMenuContent.ITEMS.get(position).id);
     }
 
     @Override
