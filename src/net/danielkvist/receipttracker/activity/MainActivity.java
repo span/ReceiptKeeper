@@ -9,6 +9,7 @@ import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
+import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.util.Communicator;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -19,11 +20,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements ReceiptListFragment.Callbacks
+public class MainActivity extends FragmentActivity implements CustomListFragment.Callbacks
 {
 
     private boolean mTwoPane;
