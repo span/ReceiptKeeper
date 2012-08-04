@@ -167,8 +167,16 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     @Override
     public void onItemSelected(String id)
     {
-        // TODO Auto-generated method stub
-        Toast.makeText(this, "hello " + id, Toast.LENGTH_SHORT).show();
+        // XXX Probably nothing to do here?
+        
+    }
+
+    @Override
+    public void onItemSelected(Receipt receipt)
+    {
+        // TODO Handle item click
+        Toast.makeText(this, receipt.getName(), Toast.LENGTH_SHORT).show();
+        
     }
     
 }

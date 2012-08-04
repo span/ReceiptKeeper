@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.fragment;
 
 import net.danielkvist.receipttracker.content.MainMenuContent;
+import net.danielkvist.receipttracker.content.Receipt;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -18,14 +19,15 @@ public class CustomListFragment extends ListFragment
     public interface Callbacks
     {
         public void onItemSelected(String id);
+        public void onItemSelected(Receipt receipt);
     }
 
     private static Callbacks sDummyCallbacks = new Callbacks()
     {
         @Override
-        public void onItemSelected(String id)
-        {
-        }
+        public void onItemSelected(String id) { }
+        @Override
+        public void onItemSelected(Receipt receipt) { }
     };
 
     @Override

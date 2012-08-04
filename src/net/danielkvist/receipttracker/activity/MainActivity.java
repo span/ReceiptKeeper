@@ -147,4 +147,11 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             startActivity(detailIntent);
         }
     }
+
+    @Override
+    public void onItemSelected(Receipt receipt)
+    {
+        // TODO Handle the latest receipt click through here
+        
+    }
 }
