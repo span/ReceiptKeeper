@@ -25,6 +25,7 @@ import android.widget.TextView;
 public class ReceiptSearchFragment extends CustomListFragment
 {
     private List<Map<String, String>> data;
+    private ArrayList<Receipt> receipts;
 
     public ReceiptSearchFragment()
     {
@@ -41,8 +42,9 @@ public class ReceiptSearchFragment extends CustomListFragment
          * }
          */
         Communicator c = new Communicator(getActivity());
+        receipts = c.getReceipts(10);
         data = new ArrayList<Map<String, String>>();
-        for (Receipt receipt : c.getReceipts(10))
+        for (Receipt receipt : receipts)
         {
             Map<String, String> dataMap = new HashMap<String, String>(2);
             dataMap.put("name", receipt.getName());
@@ -76,6 +78,6 @@ public class ReceiptSearchFragment extends CustomListFragment
     public void onListItemClick(ListView listView, View view, int position, long id)
     {
         super.onListItemClick(listView, view, position, id);
-        mCallbacks.onItemSelected("the id");
+        mCallbacks.onItemSelected(receipts.get(position));
     }
 }
