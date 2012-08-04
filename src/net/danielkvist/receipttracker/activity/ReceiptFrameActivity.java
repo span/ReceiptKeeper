@@ -47,7 +47,6 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
             
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, fragmentId.toString());
             
-            
             switch(fragmentId)
             {
                 case ADD_FRAGMENT_ID:
@@ -64,8 +63,11 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
                     fragment = new ReceiptDetailFragment(receipt);
                     break;
             }
+            
+            
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().add(RECEIPT_FRAME_CONTAINER, fragment).commit();
+           
         }
     }
     
@@ -143,6 +145,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     @Override
     public void onBackPressed()
     {
+        // FIXME On back pressed after coming back to search after watching details ends up with empty detail view, should be main
         super.onBackPressed();
         if(fragmentId == DETAIL_FRAGMENT_ID)
         {
@@ -174,9 +177,13 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        // TODO Handle item click
-        Toast.makeText(this, receipt.getName(), Toast.LENGTH_SHORT).show();
-        
+        // TODO Refactor adding/replacing fragments if possible
+        Bundle arguments = new Bundle();
+        Toast.makeText(this, "hmm" + receipt.getName(), Toast.LENGTH_SHORT).show();
+        fragment = new ReceiptDetailFragment(receipt);
+        arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction().replace(RECEIPT_FRAME_CONTAINER, fragment).addToBackStack(null).commit();
     }
     
 }
