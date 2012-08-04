@@ -2,6 +2,7 @@ package net.danielkvist.receipttracker.activity;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
@@ -17,7 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class ReceiptFrameActivity extends FragmentActivity
+public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks
 {
 
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
@@ -161,6 +162,13 @@ public class ReceiptFrameActivity extends FragmentActivity
     {
         super.onResume();
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onItemSelected(String id)
+    {
+        // TODO Auto-generated method stub
+        Toast.makeText(this, "hello " + id, Toast.LENGTH_SHORT).show();
     }
     
 }
