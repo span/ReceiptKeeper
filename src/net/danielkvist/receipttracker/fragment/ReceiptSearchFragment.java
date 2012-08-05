@@ -24,23 +24,14 @@ import android.widget.TextView;
 
 public class ReceiptSearchFragment extends CustomListFragment
 {
+    // FIXME Add search for name and date and date interval as tabs
     private List<Map<String, String>> data;
     private ArrayList<Receipt> receipts;
-
-    public ReceiptSearchFragment()
-    {
-
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        /*
-         * if (getArguments().containsKey(ARG_ITEM_ID)) { mItem =
-         * MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-         * }
-         */
         Communicator c = new Communicator(getActivity());
         receipts = c.getReceipts(10);
         data = new ArrayList<Map<String, String>>();
@@ -64,14 +55,6 @@ public class ReceiptSearchFragment extends CustomListFragment
         ((TextView) rootView.findViewById(R.id.receipt_search_title)).setText("This is the receipt search fragment.");
 
         return rootView;
-    }
-
-    private void showReceiptDetails(int position)
-    {
-        // FIXME Tell the main activity to launch the detail fragment
-        // recommended way is to create an interface which the activity implements. See
-        // ReceiptListFragment and MainActivity for example
-        Receipt receipt = (Receipt) data.get(position);
     }
     
     @Override

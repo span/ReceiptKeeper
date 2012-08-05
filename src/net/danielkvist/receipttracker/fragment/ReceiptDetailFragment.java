@@ -40,10 +40,7 @@ public class ReceiptDetailFragment extends Fragment
     private TextView timeView;
     private MenuItem editItem;
 
-    public ReceiptDetailFragment(Receipt receipt)
-    {
-        this.receipt = receipt;
-    }
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -54,6 +51,7 @@ public class ReceiptDetailFragment extends Fragment
         // mItem =
         // MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         // }
+        this.receipt = (Receipt) savedInstanceState.getParcelable(Receipt.EXTRA_RECEIPT);
     }
 
     @Override
