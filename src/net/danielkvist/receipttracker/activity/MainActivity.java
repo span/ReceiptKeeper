@@ -74,7 +74,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
                 @Override
                 public void onClick(View v)
                 {
-                    showDetail(receipt);
+                    showDetail(receipt); // FIXME Call onItemSelected(Receipt receipt) instead for cleaner solution?
                 }
             });
 
@@ -92,7 +92,10 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
         if (mTwoPane)
         {
             // XXX Test two pane code
-            Fragment fragment = new ReceiptDetailFragment(receipt);
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+            Fragment fragment = new ReceiptDetailFragment();
+            fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
         }
         else
@@ -112,6 +115,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
         if (mTwoPane)
         {
             Fragment fragment = null;
+            Bundle arguments = new Bundle();
             switch (Integer.parseInt(id))
             // XXX This switch is the same as in receiptFrameActivity,
             // refactor?
@@ -128,11 +132,12 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
                 case 4:
                     Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
                     // XXX maybe the intent will be empty?
-                    fragment = new ReceiptDetailFragment(receipt);
+                    fragment = new ReceiptDetailFragment();
+                    arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
                     break;
             }
 
-            Bundle arguments = new Bundle();
+
             arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id);
             // ReceiptDetailFragment fragment = new ReceiptDetailFragment(null);
             // // XXX Launch the correct fragment, remove this?
@@ -151,7 +156,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        // TODO Handle the latest receipt click through here
+        // FIXME Handle the latest receipt click through here instead of
         
     }
 }

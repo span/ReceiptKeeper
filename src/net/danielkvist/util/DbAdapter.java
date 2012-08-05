@@ -80,7 +80,7 @@ public class DbAdapter
             "('" + Setting.SETTING_FIELD_LOCATION + "',0" +
         ");";
     
-    // FIXME Add accounts table with CRUD and read file with accounts for initial values (uk, se)
+    // XXX Add accounts table with CRUD and read file with accounts for initial values (uk, se)
 
     /**
      * 

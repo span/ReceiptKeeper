@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks
 {
+    // FIXME Test passing data to fragments with Bundle
 
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
@@ -60,7 +61,8 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
                     break;
                 case DETAIL_FRAGMENT_ID:
                     receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-                    fragment = new ReceiptDetailFragment(receipt);
+                    arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+                    fragment = new ReceiptDetailFragment();
                     break;
             }
             
@@ -107,12 +109,16 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         FragmentTransaction ft;
+        Bundle arguments = new Bundle();
         // XXX Add animation to the transactions?
+        // TODO Move actionbar handling into fragments instead and communicate with Callbacks for changing them?
         switch(item.getItemId()) {
         case R.id.item_edit:
             item.setVisible(false);
             saveItem.setVisible(true);
-            fragment = new ReceiptAddFragment(receipt);
+            arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+            fragment = new ReceiptAddFragment();
+            fragment.setArguments(arguments);
             fragmentId = ADD_FRAGMENT_ID;
             ft = getSupportFragmentManager().beginTransaction(); 
             ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
@@ -124,7 +130,9 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
             receipt = f.saveReceipt();
             if(receipt != null)
             {
-                fragment = new ReceiptDetailFragment(receipt);
+                arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+                fragment = new ReceiptDetailFragment();
+                fragment.setArguments(arguments);
                 fragmentId = DETAIL_FRAGMENT_ID;
                 ft = getSupportFragmentManager().beginTransaction(); 
                 ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
@@ -180,8 +188,8 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         // TODO Refactor adding/replacing fragments if possible
         Bundle arguments = new Bundle();
         Toast.makeText(this, "hmm" + receipt.getName(), Toast.LENGTH_SHORT).show();
-        fragment = new ReceiptDetailFragment(receipt);
         arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+        fragment = new ReceiptDetailFragment();
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction().replace(RECEIPT_FRAME_CONTAINER, fragment).addToBackStack(null).commit();
     }

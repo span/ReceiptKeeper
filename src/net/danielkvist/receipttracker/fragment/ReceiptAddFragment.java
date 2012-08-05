@@ -61,27 +61,12 @@ public class ReceiptAddFragment extends Fragment
     private Receipt receipt;
     private ImageView imageView;
     private Communicator communicator;
-    
-    public ReceiptAddFragment()
-    {
-        this(new Receipt());
-    }
-
-    public ReceiptAddFragment(Receipt receipt)
-    {
-        this.receipt = receipt;
-        
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        /*
-         * if (getArguments().containsKey(ARG_ITEM_ID)) { mItem =
-         * MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-         * }
-         */
+        this.receipt = (Receipt) savedInstanceState.getParcelable(Receipt.EXTRA_RECEIPT);
         communicator = new Communicator(getActivity());
     }
 
@@ -127,7 +112,7 @@ public class ReceiptAddFragment extends Fragment
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
         
-        // FIXME Add account selector and get accounts
+        // XXX Add account selector and get accounts
         
         commentView = (EditText) rootView.findViewById(R.id.add_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
