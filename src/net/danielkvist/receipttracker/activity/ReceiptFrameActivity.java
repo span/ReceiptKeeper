@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks
 {
-    // FIXME Test passing data to fragments with Bundle
-
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
     private static final int SEARCH_FRAGMENT_ID = 2;
@@ -43,33 +41,9 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
 
         if (savedInstanceState == null)
         {
-            Bundle arguments = new Bundle();
-            fragmentId = Integer.parseInt(getIntent().getStringExtra(ReceiptDetailFragment.ARG_ITEM_ID));
-            
-            arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, fragmentId.toString());
-            
-            switch(fragmentId)
-            {
-                case ADD_FRAGMENT_ID:
-                    fragment = new ReceiptAddFragment();
-                    break;
-                case SEARCH_FRAGMENT_ID:
-                    fragment = new ReceiptSearchFragment();
-                    break;
-                case SETTINGS_FRAGMENT_ID:
-                    fragment = new ReceiptSettingsFragment();
-                    break;
-                case DETAIL_FRAGMENT_ID:
-                    receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-                    arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
-                    fragment = new ReceiptDetailFragment();
-                    break;
-            }
-            
-            
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().add(RECEIPT_FRAME_CONTAINER, fragment).commit();
-           
+            Receipt r = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
+            int fid = Integer.parseInt(getIntent().getStringExtra(ReceiptDetailFragment.ARG_ITEM_ID));
+            replaceFragment(fid, r);
         }
     }
     
@@ -108,40 +82,22 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        FragmentTransaction ft;
-        Bundle arguments = new Bundle();
-        // XXX Add animation to the transactions?
-        // TODO Move actionbar handling into fragments instead and communicate with Callbacks for changing them?
-        switch(item.getItemId()) {
-        case R.id.item_edit:
-            item.setVisible(false);
-            saveItem.setVisible(true);
-            arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
-            fragment = new ReceiptAddFragment();
-            fragment.setArguments(arguments);
-            fragmentId = ADD_FRAGMENT_ID;
-            ft = getSupportFragmentManager().beginTransaction(); 
-            ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
-            ft.addToBackStack(null); 
-            ft.commit();
-            return true;
-        case R.id.item_save:
-            ReceiptAddFragment f = (ReceiptAddFragment) fragment;
-            receipt = f.saveReceipt();
-            if(receipt != null)
-            {
-                arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
-                fragment = new ReceiptDetailFragment();
-                fragment.setArguments(arguments);
-                fragmentId = DETAIL_FRAGMENT_ID;
-                ft = getSupportFragmentManager().beginTransaction(); 
-                ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
-                ft.commit();
-            }
-            return true;
-        case android.R.id.home:
-            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
-            return true;
+        switch(item.getItemId()) 
+        {
+            case R.id.item_edit:
+                replaceFragment(ADD_FRAGMENT_ID, receipt);
+                return true;
+            case R.id.item_save:
+                ReceiptAddFragment f = (ReceiptAddFragment) fragment;
+                Receipt r = f.saveReceipt();
+                if(r != null)
+                {
+                    replaceFragment(DETAIL_FRAGMENT_ID, r);
+                }
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -178,20 +134,47 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     @Override
     public void onItemSelected(String id)
     {
-        // XXX Probably nothing to do here?
-        
+        /* Nothing to do here at this time */
     }
 
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        // TODO Refactor adding/replacing fragments if possible
+        replaceFragment(DETAIL_FRAGMENT_ID, receipt);
+    }
+    
+    private void replaceFragment(int fid, Receipt r)
+    {
+        // TODO Fix animations in the transactions
         Bundle arguments = new Bundle();
-        Toast.makeText(this, "hmm" + receipt.getName(), Toast.LENGTH_SHORT).show();
-        arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
-        fragment = new ReceiptDetailFragment();
+        arguments.putParcelable(Receipt.EXTRA_RECEIPT, r);
+        
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        
+        receipt = r;
+        
+        switch(fid)
+        {
+            case ADD_FRAGMENT_ID:
+                fragment = new ReceiptAddFragment();
+                break;
+            case SEARCH_FRAGMENT_ID:
+                fragment = new ReceiptSearchFragment();
+                break;
+            case SETTINGS_FRAGMENT_ID:
+                fragment = new ReceiptSettingsFragment();
+                break;
+            case DETAIL_FRAGMENT_ID:
+                fragment = new ReceiptDetailFragment();
+                break;
+        }
+        
         fragment.setArguments(arguments);
-        getSupportFragmentManager().beginTransaction().replace(RECEIPT_FRAME_CONTAINER, fragment).addToBackStack(null).commit();
+        ft.replace(RECEIPT_FRAME_CONTAINER, fragment).addToBackStack(null).commit();
+        
+        fragmentId = fid;
+        invalidateOptionsMenu();
     }
     
 }
