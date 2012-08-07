@@ -11,6 +11,7 @@ import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient.CustomViewCallback;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +42,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
         {
             mTwoPane = true;
             ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true);
-            // XXX Take this out if possible, it's just setting a default value
-            // which is set anyway... maybe
+            // XXX Take this out if possible, it's just setting a default value which probably is set anyway
         }
     }
 
@@ -74,10 +75,13 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
                 @Override
                 public void onClick(View v)
                 {
-                    showDetail(receipt); // FIXME Call onItemSelected(Receipt receipt) instead for cleaner solution?
+                    showDetail(receipt);
                 }
             });
 
+            ImageView receiptImage = (ImageView) findViewById(R.id.receipt_image);
+            ScaleBitmapFileTask worker = new ScaleBitmapFileTask(receiptImage, receipt.getPhoto());
+            worker.execute(150, 150);
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
@@ -102,7 +106,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
             detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4");
-            // XXX Refactor out these id's
+            // XXX Refactor out these id's and replace with something more semantic?
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
         }
@@ -117,8 +121,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             Fragment fragment = null;
             Bundle arguments = new Bundle();
             switch (Integer.parseInt(id))
-            // XXX This switch is the same as in receiptFrameActivity,
-            // refactor?
+            // XXX This switch is the same as in receiptFrameActivity, refactor if tablet version
             {
                 case 1:
                     fragment = new ReceiptAddFragment();

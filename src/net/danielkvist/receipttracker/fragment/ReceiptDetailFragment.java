@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ReceiptDetailFragment extends Fragment
@@ -51,19 +52,21 @@ public class ReceiptDetailFragment extends Fragment
         // mItem =
         // MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         // }
-        this.receipt = (Receipt) savedInstanceState.getParcelable(Receipt.EXTRA_RECEIPT);
+        
+        
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // TODO Add option to share image/receipt
+        this.receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
         Communicator communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);
         ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_receipt_photo_image_view);
         ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, receipt.getPhoto());
-        worker.execute(250, 250);
+        worker.execute(150, 150);
         imageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -71,7 +74,7 @@ public class ReceiptDetailFragment extends Fragment
             {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(receipt.getPhoto()), "image/*");
+                intent.setDataAndType(Uri.parse("file://" + receipt.getPhoto()), "image/*");
                 startActivity(intent);
             }
         });
@@ -96,4 +99,5 @@ public class ReceiptDetailFragment extends Fragment
 
         return rootView;
     }
+    
 }

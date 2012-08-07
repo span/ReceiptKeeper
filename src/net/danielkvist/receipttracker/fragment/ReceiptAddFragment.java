@@ -66,13 +66,17 @@ public class ReceiptAddFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        this.receipt = (Receipt) savedInstanceState.getParcelable(Receipt.EXTRA_RECEIPT);
         communicator = new Communicator(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
+        if(receipt == null)
+        {
+            receipt = new Receipt();
+        }
         
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         
@@ -99,6 +103,8 @@ public class ReceiptAddFragment extends Fragment
                 
             }
         });
+        
+        
         showBitmap();
         
         nameView = (EditText) rootView.findViewById(R.id.add_receipt_name);
