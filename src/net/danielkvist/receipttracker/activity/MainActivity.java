@@ -31,6 +31,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
 {
 
     private boolean mTwoPane;
+    private Receipt latestReceipt = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -134,7 +135,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
                     break;
                 case 4:
                     Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-                    // XXX maybe the intent will be empty?
+                    // XXX maybe the intent will be empty? Make a field out of it instead
                     fragment = new ReceiptDetailFragment();
                     arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
                     break;
@@ -159,7 +160,6 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        // FIXME Handle the latest receipt click through here instead of
-        
+        /* Nothing to do here yet */
     }
 }
