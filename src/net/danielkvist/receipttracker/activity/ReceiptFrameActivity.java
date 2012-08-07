@@ -28,7 +28,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     private Fragment fragment = null;
     private MenuItem saveItem;
     private MenuItem editItem;
-    private Receipt receipt;
+    private Receipt currentReceipt;
     private Integer fragmentId = -1;
 
     @Override
@@ -85,7 +85,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         switch(item.getItemId()) 
         {
             case R.id.item_edit:
-                replaceFragment(ADD_FRAGMENT_ID, receipt);
+                replaceFragment(ADD_FRAGMENT_ID, currentReceipt);
                 return true;
             case R.id.item_save:
                 ReceiptAddFragment f = (ReceiptAddFragment) fragment;
@@ -152,7 +152,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         
-        receipt = r;
+        currentReceipt = r;
         
         switch(fid)
         {
