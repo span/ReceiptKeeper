@@ -13,18 +13,13 @@
         android:padding="16dp"
         tools:context=".ReceiptDetailFragment" >
 
-        <TextView
-            android:id="@+id/receipt_detail_title"
-            style="?android:attr/textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/receipt_details" />
-
         <ImageView
             android:id="@+id/detail_receipt_photo_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image_of_the_receipt" />
+            
+             
 
         <TextView
             android:id="@+id/detail_receipt_name"

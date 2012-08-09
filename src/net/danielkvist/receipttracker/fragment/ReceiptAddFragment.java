@@ -34,6 +34,8 @@ import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -67,6 +69,15 @@ public class ReceiptAddFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         communicator = new Communicator(getActivity());
+        setHasOptionsMenu(true);
+    }
+    
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) 
+    {
+        MenuItem item = menu.findItem(R.id.item_save);
+        item.setVisible(true);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

@@ -26,10 +26,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     private static final int SETTINGS_FRAGMENT_ID = 3;
     private static final int DETAIL_FRAGMENT_ID = 4;
     private Fragment fragment = null;
-    private MenuItem saveItem;
-    private MenuItem editItem;
     private Receipt currentReceipt;
-    private Integer fragmentId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,57 +40,32 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         {
             Receipt r = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
             int fid = Integer.parseInt(getIntent().getStringExtra(ReceiptDetailFragment.ARG_ITEM_ID));
-            replaceFragment(fid, r);
+            replaceFragment(fid, r, false);
         }
     }
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
         // XXX Add this and opOptionsIte... for two pane in MainActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-        editItem = menu.findItem(R.id.item_edit);
-        saveItem = menu.findItem(R.id.item_save);
-
-        switch(fragmentId)
-        {
-            case ADD_FRAGMENT_ID:
-                editItem.setVisible(false);
-                saveItem.setVisible(true);
-                break;
-            case SEARCH_FRAGMENT_ID:
-                editItem.setVisible(false);
-                saveItem.setVisible(false);
-                break;
-            case SETTINGS_FRAGMENT_ID:
-                editItem.setVisible(false);
-                saveItem.setVisible(false);
-                break;
-            case DETAIL_FRAGMENT_ID:
-                editItem.setVisible(true);
-                saveItem.setVisible(false);
-                break;
-        }
         
         return true;
     }
     
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch(item.getItemId()) 
         {
             case R.id.item_edit:
-                replaceFragment(ADD_FRAGMENT_ID, currentReceipt);
+                replaceFragment(ADD_FRAGMENT_ID, currentReceipt, true);
                 return true;
             case R.id.item_save:
                 ReceiptAddFragment f = (ReceiptAddFragment) fragment;
-                Receipt r = f.saveReceipt();
-                if(r != null)
-                {
-                    replaceFragment(DETAIL_FRAGMENT_ID, r);
-                }
+                f.saveReceipt();
                 return true;
             case android.R.id.home:
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
@@ -101,34 +73,6 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /* (non-Javadoc)
-     * @see android.support.v4.app.FragmentActivity#onBackPressed()
-     */
-    @Override
-    public void onBackPressed()
-    {
-        // FIXME On back pressed after coming back to search after watching details ends up with empty detail view, should be main
-        super.onBackPressed();
-        if(fragmentId == DETAIL_FRAGMENT_ID)
-        {
-            // If we're on the detail view we might as well finish the activity since we are going back
-            finish();
-        }
-        else if(fragmentId == ADD_FRAGMENT_ID)
-        {
-            // Change the current fragment id so that the options menu knows what to draw
-            fragmentId = DETAIL_FRAGMENT_ID;
-        }
-        invalidateOptionsMenu();
-    }
-    
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -140,21 +84,21 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        replaceFragment(DETAIL_FRAGMENT_ID, receipt);
+        replaceFragment(DETAIL_FRAGMENT_ID, receipt, true);
     }
     
-    private void replaceFragment(int fid, Receipt r)
+    private void replaceFragment(int newFragmentId, Receipt newReceipt, boolean addToBackStack)
     {
         // TODO Fix animations in the transactions
         Bundle arguments = new Bundle();
-        arguments.putParcelable(Receipt.EXTRA_RECEIPT, r);
+        arguments.putParcelable(Receipt.EXTRA_RECEIPT, newReceipt);
         
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         
-        currentReceipt = r;
+        currentReceipt = newReceipt;
         
-        switch(fid)
+        switch(newFragmentId)
         {
             case ADD_FRAGMENT_ID:
                 fragment = new ReceiptAddFragment();
@@ -170,10 +114,14 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
                 break;
         }
         
-        fragment.setArguments(arguments);
-        ft.replace(RECEIPT_FRAME_CONTAINER, fragment).addToBackStack(null).commit();
+        if(addToBackStack)
+        {
+            ft.addToBackStack(null);
+        }
         
-        fragmentId = fid;
+        fragment.setArguments(arguments);
+        ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
+        ft.commit();
         invalidateOptionsMenu();
     }
     
