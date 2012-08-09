@@ -43,7 +43,7 @@
     <string name="cloud_storage">Cloud storage</string>
     <string name="last_receipt_to_be_added_">Last receipt to be added:</string>
     <string name="last_added_">"Last added: "</string>
-    <string name="receipt_details">Receipt details</string>
+    <!-- <string name="receipt_details">Receipt details</string>  -->
     <string name="you_have_not_added_any_receipts_yet_">You have not added any receipts yet.</string>
     <string name="tag_receipttracker">ReceiptTracker</string>
     <string name="image_of_last_receipt">Image of last receipt</string>

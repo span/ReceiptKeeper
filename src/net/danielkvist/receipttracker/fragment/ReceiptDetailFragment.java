@@ -47,13 +47,14 @@ public class ReceiptDetailFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        // if (getArguments().containsKey(ARG_ITEM_ID))
-        // {
-        // mItem =
-        // MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-        // }
-        
-        
+        setHasOptionsMenu(true);
+    }
+    
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.item_edit);
+        item.setVisible(true);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

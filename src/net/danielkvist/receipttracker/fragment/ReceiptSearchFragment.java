@@ -52,8 +52,7 @@ public class ReceiptSearchFragment extends CustomListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_receipt_search, container, false);
-        ((TextView) rootView.findViewById(R.id.receipt_search_title)).setText("This is the receipt search fragment.");
-
+        
         return rootView;
     }
     

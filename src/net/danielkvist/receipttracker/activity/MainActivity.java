@@ -31,7 +31,6 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
 {
 
     private boolean mTwoPane;
-    private Receipt latestReceipt = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
