@@ -13,12 +13,12 @@ import android.util.Log;
 
 public class DbAdapter
 {
-    
+
     private final Context context;
     private static final String DATABASE_NAME = "data";
     private static final String TAG = "ReceiptTracker";
     private static final int DATABASE_VERSION = 1;
-    
+
     public static String SELECTED_TABLE;
     public static final String DATABASE_TABLE_RECEIPTS = "receipts";
     public static final String DATABASE_TABLE_SETTINGS = "settings";
@@ -33,61 +33,42 @@ public class DbAdapter
     public static final String KEY_TAX = "tax";
     public static final String KEY_COMMENT = "comment";
     public static final String KEY_SETTING_VALUE = "setting_value";
-    
+
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
-    
-    private static final String DATABASE_CREATE_TABLE_RECEIPTS = "CREATE TABLE " + DATABASE_TABLE_RECEIPTS + " (" + 
-                        KEY_ROWID + " integer primary key autoincrement, " +
-                        KEY_NAME + " text not null, " +
-                        KEY_PHOTO + " text not null," +
-                        KEY_DATE + " text not null," +
-                        KEY_TIME + " text not null," +
-                        KEY_LOCATION_LAT + " text not null," +
-                        KEY_LOCATION_LONG + " text not null," +
-                        KEY_SUM + " text not null," +
-                        KEY_TAX + " text not null," +
-                        KEY_COMMENT + " text not null" +
-            		");";
-    
-    private static final String DATABASE_CREATE_TABLE_SETTINGS = "CREATE TABLE " + DATABASE_TABLE_SETTINGS + " (" + 
-                        KEY_ROWID + " integer primary key autoincrement, " +            
-                        KEY_NAME + " text not null, " +
-                        KEY_SETTING_VALUE + " integer not null" +
-                    ");";
-    
-    private static final String DATABASE_INIT_SETTING_SUM = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
-    		            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
-    		            "values " +
-    		            "('" + Setting.SETTING_FIELD_SUM + "',0" +
-    		        ");";
-    
-    private static final String DATABASE_INIT_SETTING_TAX = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
-            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
-            "values " +
-            "('" + Setting.SETTING_FIELD_TAX + "',0" +
-        ");";
-    
-    private static final String DATABASE_INIT_SETTING_COMMENT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
-            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
-            "values " +
-            "('" + Setting.SETTING_FIELD_COMMENT + "',0" +
-        ");";
-    
-    private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" +
-            KEY_NAME + "," + KEY_SETTING_VALUE + ") " +
-            "values " +
-            "('" + Setting.SETTING_FIELD_LOCATION + "',0" +
-        ");";
-    
-    // XXX Add accounts table with CRUD and read file with accounts for initial values (uk, se)
+
+    private static final String DATABASE_CREATE_TABLE_RECEIPTS = "CREATE TABLE " + DATABASE_TABLE_RECEIPTS + " (" + KEY_ROWID
+            + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_PHOTO + " text not null," + KEY_DATE
+            + " text not null," + KEY_TIME + " text not null," + KEY_LOCATION_LAT + " text not null," + KEY_LOCATION_LONG
+            + " text not null," + KEY_SUM + " text not null," + KEY_TAX + " text not null," + KEY_COMMENT + " text not null" + ");";
+
+    private static final String DATABASE_CREATE_TABLE_SETTINGS = "CREATE TABLE " + DATABASE_TABLE_SETTINGS + " (" + KEY_ROWID
+            + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_SETTING_VALUE + " integer not null" + ");";
+
+    private static final String DATABASE_INIT_SETTING_SUM = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
+            + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_SUM + "',0" + ");";
+
+    private static final String DATABASE_INIT_SETTING_TAX = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
+            + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_TAX + "',0" + ");";
+
+    private static final String DATABASE_INIT_SETTING_COMMENT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
+            + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_COMMENT + "',0" + ");";
+
+    private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
+            + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_LOCATION + "',0" + ");";
+
+    // XXX Add accounts table with CRUD and read file with accounts for initial
+    // values (uk, se)
 
     /**
      * 
      * @param context
      *            the Context within which to work
      */
-    public DbAdapter(Context context) { this.context = context; }
+    public DbAdapter(Context context)
+    {
+        this.context = context;
+    }
 
     /**
      * 
@@ -103,22 +84,26 @@ public class DbAdapter
         return this;
     }
 
-    public void close() { dbHelper.close(); }
+    public void close()
+    {
+        dbHelper.close();
+    }
 
     /**
      * 
-     * @param tax 
-     * @param sum 
-     * @param date 
-     * @param time 
-     * @param location 
+     * @param tax
+     * @param sum
+     * @param date
+     * @param time
+     * @param location
      * @param title
      *            the title
      * @param body
      *            the body
      * @return rowId or -1 if failed
      */
-    public boolean createReceipt(String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
+    public boolean createReceipt(String name, String photo, String date, String time, String locLat, String locLong, String sum,
+            String tax, String comment)
     {
         ContentValues values = putReceiptValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
         return db.insert(DATABASE_TABLE_RECEIPTS, null, values) > 0;
@@ -129,20 +114,20 @@ public class DbAdapter
      *            id to delete
      * @return true if deleted, false otherwise
      */
-    public boolean deleteItem(long rowId) 
-    { 
-        if(SELECTED_TABLE.equals(""))
+    public boolean deleteItem(long rowId)
+    {
+        if (SELECTED_TABLE.equals(""))
             throw new IllegalAccessError("Unknown database to delete row from, please select a table.");
-        return db.delete(SELECTED_TABLE, KEY_ROWID + "=" + rowId, null) > 0; 
+        return db.delete(SELECTED_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
-    
+
     /**
      * @param rowId
      *            id to delete
      * @return true if deleted, false otherwise
      */
-    public boolean deleteReceipt(long rowId) 
-    { 
+    public boolean deleteReceipt(long rowId)
+    {
         SELECTED_TABLE = DATABASE_TABLE_RECEIPTS;
         return deleteItem(rowId);
     }
@@ -152,40 +137,37 @@ public class DbAdapter
      * 
      * @return Cursor over all notes
      */
-    public Cursor fetchReceipts(int limit) 
-    { 
+    public Cursor fetchReceipts(int limit)
+    {
         Cursor cursor;
-        if(limit > 0)
+        if (limit > 0)
         {
-            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] 
-                    {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
-                    null, null, null, null, KEY_DATE + " DESC," + KEY_TIME + " DESC", String.valueOf(limit));
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT,
+                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_DATE + " DESC," + KEY_TIME + " DESC",
+                    String.valueOf(limit));
         }
         else
         {
-            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] 
-                    {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
-                    null, null, null, null, null);
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT,
+                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, null);
         }
-        
-        
+
         if (cursor != null)
         {
             cursor.moveToFirst();
         }
         return cursor;
     }
-    
+
     /**
      * Return a Cursor over the list of all entries in the settings table
      * 
      * @return Cursor over all notes
      */
-    public Cursor fetchAllSettings() 
-    { 
-        Cursor cursor = db.query(DATABASE_TABLE_SETTINGS, new String[] 
-                                {KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE}, 
-                                null, null, null, null, null);
+    public Cursor fetchAllSettings()
+    {
+        Cursor cursor = db.query(DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, null, null, null, null,
+                null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -205,9 +187,9 @@ public class DbAdapter
     public Cursor fetchReceipt(long rowId) throws SQLException
     {
 
-        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] 
-                                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
-                                KEY_ROWID + "=" + rowId, null, null, null, null, null);
+        Cursor cursor = db
+                .query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT,
+                        KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_ROWID + "=" + rowId, null, null, null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -215,19 +197,18 @@ public class DbAdapter
         return cursor;
 
     }
-    
+
     public Cursor fetchLastReceipt()
     {
-        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] 
-                {KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT}, 
-                null, null, null, null, KEY_ROWID + " DESC", "1");
+        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME,
+                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_ROWID + " DESC", "1");
         if (cursor != null)
         {
             cursor.moveToFirst();
         }
         return cursor;
     }
-    
+
     /**
      * Return a Cursor positioned at the setting that matches the given rowId
      * 
@@ -240,15 +221,26 @@ public class DbAdapter
     public Cursor fetchSetting(String name) throws SQLException
     {
 
-        Cursor cursor = db.query(true, DATABASE_TABLE_SETTINGS, new String[] 
-                                {KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE}, 
-                                KEY_NAME + "='" + name + "'", null, null, null, null, null);
+        Cursor cursor = db.query(true, DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, KEY_NAME + "='"
+                + name + "'", null, null, null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
         }
         return cursor;
 
+    }
+
+    public Cursor searchReceiptName(String query)
+    {
+        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME,
+                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_NAME + " LIKE ?", new String[] { "%" + query
+                + "%" }, null, null, null);
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
     }
 
     /**
@@ -261,12 +253,13 @@ public class DbAdapter
      *            value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateReceipt(long rowId, String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
+    public boolean updateReceipt(long rowId, String name, String photo, String date, String time, String locLat, String locLong,
+            String sum, String tax, String comment)
     {
         ContentValues values = putReceiptValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
         return db.update(DATABASE_TABLE_RECEIPTS, values, KEY_ROWID + "=" + rowId, null) > 0;
     }
-    
+
     /**
      * 
      * @param rowId
@@ -280,7 +273,7 @@ public class DbAdapter
         values.put(KEY_SETTING_VALUE, value);
         return db.update(DATABASE_TABLE_SETTINGS, values, KEY_NAME + "='" + name + "'", null) > 0;
     }
-    
+
     /**
      * 
      * @param name
@@ -294,7 +287,8 @@ public class DbAdapter
      * @param comment
      * @return
      */
-    private ContentValues putReceiptValues(String name, String photo, String date, String time, String locLat, String locLong, String sum, String tax, String comment)
+    private ContentValues putReceiptValues(String name, String photo, String date, String time, String locLat, String locLong, String sum,
+            String tax, String comment)
     {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, name);
@@ -308,17 +302,19 @@ public class DbAdapter
         values.put(KEY_COMMENT, comment);
         return values;
     }
-    
+
     private static class DatabaseHelper extends SQLiteOpenHelper
     {
 
-
-        DatabaseHelper(Context context) { super(context, DATABASE_NAME, null, DATABASE_VERSION); }
+        DatabaseHelper(Context context)
+        {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
 
         @Override
-        public void onCreate(SQLiteDatabase db) 
-        { 
-            db.execSQL(DATABASE_CREATE_TABLE_RECEIPTS); 
+        public void onCreate(SQLiteDatabase db)
+        {
+            db.execSQL(DATABASE_CREATE_TABLE_RECEIPTS);
             db.execSQL(DATABASE_CREATE_TABLE_SETTINGS);
             db.execSQL(DATABASE_INIT_SETTING_SUM);
             db.execSQL(DATABASE_INIT_SETTING_TAX);
@@ -329,8 +325,8 @@ public class DbAdapter
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
         {
-            Log.w(TAG, "Upgrading " + DATABASE_TABLE_RECEIPTS + " and " + DATABASE_CREATE_TABLE_SETTINGS + " database from version " + oldVersion + " to " + newVersion
-                    + ", which will destroy all old data");
+            Log.w(TAG, "Upgrading " + DATABASE_TABLE_RECEIPTS + " and " + DATABASE_CREATE_TABLE_SETTINGS + " database from version "
+                    + oldVersion + " to " + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_RECEIPTS);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_SETTINGS);
             onCreate(db);

@@ -26,15 +26,14 @@ public class Communicator
     {
         this.context = context;
     }
-    
+
     public ArrayList<Receipt> getAllReceipts()
     {
         return getReceipts(0);
     }
-    
+
     public ArrayList<Receipt> getReceipts(int limit)
     {
-        Receipt receipt;
         ArrayList<Receipt> receiptList = null;
         DbAdapter dbAdapter = new DbAdapter(context);
 
@@ -42,28 +41,15 @@ public class Communicator
         {
             dbAdapter.open();
             Cursor cursor = dbAdapter.fetchReceipts(limit);
-            receiptList = new ArrayList<Receipt>();
+
             if (cursor != null)
             {
-                while (!cursor.isAfterLast())
-                {
-                    receipt = new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
-                            cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_PHOTO)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_DATE)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_TIME)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_LOCATION_LAT)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_TAX)), cursor.getString(cursor
-                                    .getColumnIndex(DbAdapter.KEY_COMMENT)));
-                    receiptList.add(receipt);
-                    cursor.moveToNext();
-                }
+                receiptList = buildReceiptList(cursor);
             }
 
             dbAdapter.close();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
@@ -91,7 +77,8 @@ public class Communicator
             }
 
             dbAdapter.close();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
@@ -115,7 +102,8 @@ public class Communicator
             }
 
             dbAdapter.close();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
             showToast(MESSAGE_COULD_NOT_OPEN);
@@ -135,20 +123,11 @@ public class Communicator
             cursor = dbAdapter.fetchLastReceipt();
             if (cursor != null)
             {
-                receipt = new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
-                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_PHOTO)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_DATE)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_TIME)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_LOCATION_LAT)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_TAX)), cursor.getString(cursor
-                                .getColumnIndex(DbAdapter.KEY_COMMENT)));
+                receipt = buildReceipt(cursor);
             }
 
             dbAdapter.close();
-        } 
+        }
         catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
@@ -159,20 +138,46 @@ public class Communicator
 
     public boolean saveReceipt(Receipt receipt)
     {
-        if(receipt.getId() > 0)
+        if (receipt.getId() > 0)
         {
             return updateReceipt(receipt);
         }
         else
         {
-            return insertReceipt(receipt); 
+            return insertReceipt(receipt);
         }
-        
+
     }
 
     public void saveSetting(Setting setting)
     {
         updateSetting(setting);
+    }
+
+    public ArrayList<Receipt> searchReceipts(String query)
+    {
+        ArrayList<Receipt> receiptList = null;
+        DbAdapter dbAdapter = new DbAdapter(context);
+
+        try
+        {
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.searchReceiptName(query);
+
+            if (cursor != null)
+            {
+                receiptList = buildReceiptList(cursor);
+            }
+
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+
+        return receiptList;
     }
 
     public boolean updateReceipt(Receipt receipt)
@@ -182,12 +187,11 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getDate(),
-                    receipt.getTime(), receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(),
-                    receipt.getTax(), receipt.getComment());
+            result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getDate(), receipt.getTime(),
+                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
             showResult(result);
             dbAdapter.close();
-        } 
+        }
         catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
@@ -196,11 +200,6 @@ public class Communicator
         return result;
     }
 
-    public void showToast(String message)
-    {
-        Toast.makeText(context,message,Toast.LENGTH_LONG).show();
-    }
-    
     private boolean insertReceipt(Receipt receipt)
     {
         boolean result = false;
@@ -208,12 +207,11 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getDate(),
-                    receipt.getTime(), receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(),
-                    receipt.getTax(), receipt.getComment());
+            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getDate(), receipt.getTime(),
+                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
             showResult(result);
             dbAdapter.close();
-        } 
+        }
         catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
@@ -221,7 +219,7 @@ public class Communicator
         }
         return result;
     }
-    
+
     private boolean updateSetting(Setting setting)
     {
         boolean result = false;
@@ -232,7 +230,7 @@ public class Communicator
             result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
             showResult(result);
             dbAdapter.close();
-        } 
+        }
         catch (SQLException e)
         {
             Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
@@ -240,19 +238,45 @@ public class Communicator
         }
         return result;
     }
-    
+
+    private ArrayList<Receipt> buildReceiptList(Cursor cursor)
+    {
+        Receipt receipt;
+        ArrayList<Receipt> receiptList = new ArrayList<Receipt>();
+        while (!cursor.isAfterLast())
+        {
+            receipt = buildReceipt(cursor);
+            receiptList.add(receipt);
+            cursor.moveToNext();
+        }
+        return receiptList;
+    }
+
+    private Receipt buildReceipt(Cursor cursor)
+    {
+        return new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor
+                .getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)), cursor.getString(cursor
+                .getColumnIndex(DbAdapter.KEY_DATE)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TIME)), cursor.getString(cursor
+                .getColumnIndex(DbAdapter.KEY_LOCATION_LAT)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)),
+                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
+                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)));
+    }
+
     private void showResult(boolean result)
     {
         if (result)
         {
             showToast(MESSAGE_DATA_WAS_SAVED);
-        } 
+        }
         else
         {
             showToast(MESSAGE_COULD_NOT_SAVE);
         }
     }
-
     
+    public void showToast(String message)
+    {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
 
 }
