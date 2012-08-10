@@ -9,9 +9,11 @@ import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,13 +24,14 @@ import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiptSearchFragment extends CustomListFragment
+public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener
 {
     // FIXME Add search date and date interval
     private ArrayList<Receipt> receiptList;
@@ -40,7 +43,7 @@ public class ReceiptSearchFragment extends CustomListFragment
         public boolean onQueryTextChange(String newText)
         {
             // TODO Try to implement auto update of the list when typing
-            if(newText.equals(""))
+            if (newText.equals(""))
             {
                 receiptList = communicator.getReceipts(10);
             }
@@ -56,6 +59,9 @@ public class ReceiptSearchFragment extends CustomListFragment
             return true;
         }
     };
+    private TextView dateFromView;
+    private TextView dateToView;
+    private TextView currentView;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -71,7 +77,34 @@ public class ReceiptSearchFragment extends CustomListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_receipt_search, container, false);
+        dateFromView = (TextView) rootView.findViewById(R.id.date_from);
+        dateFromView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                currentView = dateFromView;
+                showDateDialog();
+            }
+        });
+        dateToView = (TextView) rootView.findViewById(R.id.date_to);
+        dateToView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                currentView = dateToView;
+                showDateDialog();
+            }
+        });
         return rootView;
+    }
+
+    public void showDateDialog()
+    {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setCallback(this);
+        datePickerFragment.show(getFragmentManager(), null);
     }
 
     @Override
@@ -94,7 +127,8 @@ public class ReceiptSearchFragment extends CustomListFragment
         switch (item.getItemId())
         {
             case R.id.menu_search:
-                // FIXME Make sure that search works on small screen where search is in the 3-dot menu
+                // FIXME Make sure that search works on small screen where
+                // search is in the 3-dot menu
                 getActivity().onSearchRequested();
                 return true;
             default:
@@ -124,4 +158,12 @@ public class ReceiptSearchFragment extends CustomListFragment
         return new SimpleAdapter(getActivity(), data, android.R.layout.simple_list_item_2, new String[] { "name", "date" }, new int[] {
                 android.R.id.text1, android.R.id.text2 });
     }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day)
+    {
+        // FIXME Format date in a better way
+        currentView.setText(new StringBuilder().append(month + 1).append("-").append(day).append("-").append(year).append(" "));
+    }
+
 }
