@@ -77,7 +77,20 @@ public class ReceiptAddFragment extends Fragment
     {
         MenuItem item = menu.findItem(R.id.item_save);
         item.setVisible(true);
+        
         super.onPrepareOptionsMenu(menu);
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId()) 
+        {
+            case R.id.item_save:
+                saveReceipt();
+                return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
