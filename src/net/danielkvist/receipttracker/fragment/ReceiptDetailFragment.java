@@ -3,14 +3,16 @@ package net.danielkvist.receipttracker.fragment;
 import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
-import net.danielkvist.receipttracker.activity.MainActivity;
-import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
+
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment.Callbacks;
+
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,8 +42,38 @@ public class ReceiptDetailFragment extends Fragment
     private TextView dateAndTimeView;
     private TextView timeView;
     private MenuItem editItem;
-
+    private Callbacks mCallbacks;
     
+
+    public interface Callbacks
+    {
+        public void editSelected(Receipt receipt);
+    }
+    
+    private static Callbacks sDummyCallbacks = new Callbacks() 
+    {
+        @Override
+        public void editSelected(Receipt receipt) { }
+    };
+    
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+        if (!(activity instanceof Callbacks))
+        {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        mCallbacks = sDummyCallbacks;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -54,7 +86,21 @@ public class ReceiptDetailFragment extends Fragment
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.item_edit);
         item.setVisible(true);
+        
         super.onPrepareOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId()) 
+        {
+            case R.id.item_edit:
+                mCallbacks.editSelected(receipt);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

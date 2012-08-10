@@ -13,5 +13,12 @@
         android:showAsAction="ifRoom|withText"
         android:title="Save"
         android:visible="false"/>
+    
+    <item android:id="@+id/menu_search"
+          android:title="@string/menu_search"
+          android:icon="@android:drawable/ic_menu_search"
+          android:showAsAction="ifRoom"
+          android:actionViewClass="android.widget.SearchView" 
+          android:visible="false"/>
 
 </menu>

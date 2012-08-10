@@ -7,6 +7,8 @@ import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,9 +18,10 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks
+public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
 {
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
@@ -60,13 +63,9 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
     {
         switch(item.getItemId()) 
         {
-            case R.id.item_edit:
-                replaceFragment(ADD_FRAGMENT_ID, currentReceipt, true);
-                return true;
-            case R.id.item_save:
-                ReceiptAddFragment f = (ReceiptAddFragment) fragment;
-                f.saveReceipt();
-                return true;
+//            case R.id.item_edit:
+//                replaceFragment(ADD_FRAGMENT_ID, currentReceipt, true);
+//                return true;
             case android.R.id.home:
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
@@ -87,6 +86,12 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         replaceFragment(DETAIL_FRAGMENT_ID, receipt, true);
     }
     
+    @Override
+    public void editSelected(Receipt receipt)
+    {
+        replaceFragment(ADD_FRAGMENT_ID, receipt, true);
+    }
+    
     private void replaceFragment(int newFragmentId, Receipt newReceipt, boolean addToBackStack)
     {
         // TODO Fix animations in the transactions
@@ -94,8 +99,8 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         arguments.putParcelable(Receipt.EXTRA_RECEIPT, newReceipt);
         
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        
+        //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         currentReceipt = newReceipt;
         
         switch(newFragmentId)

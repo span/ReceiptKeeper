@@ -36,6 +36,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cost">Cost</string>
+    <string name="search_hint">Search receipts</string>
     
     <string name="inazaruk_debug_googlemaps_sdk_key">0dndT94moYynYoLxXf5GGq3jQmCgfy-ZjfJg4gQ</string>
     <item type="string" name="googlemaps_sdk_key">@string/inazaruk_debug_googlemaps_sdk_key</item>
@@ -47,5 +48,6 @@
     <string name="you_have_not_added_any_receipts_yet_">You have not added any receipts yet.</string>
     <string name="tag_receipttracker">ReceiptTracker</string>
     <string name="image_of_last_receipt">Image of last receipt</string>
+    <string name="menu_search">Menu search</string>
 
 </resources>
