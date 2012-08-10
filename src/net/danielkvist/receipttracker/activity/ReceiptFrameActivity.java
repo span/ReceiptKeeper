@@ -100,7 +100,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        //ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         currentReceipt = newReceipt;
         
         switch(newFragmentId)

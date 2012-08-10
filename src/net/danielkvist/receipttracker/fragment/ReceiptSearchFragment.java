@@ -30,21 +30,29 @@ import android.widget.Toast;
 
 public class ReceiptSearchFragment extends CustomListFragment
 {
-    // FIXME Add search for name and date and date interval as tabs
-    private List<Map<String, String>> data;
-    private ArrayList<Receipt> receipts;
-    
+    // FIXME Add search date and date interval
+    private ArrayList<Receipt> receiptList;
+    private Communicator communicator;
 
-    final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+    final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener()
+    {
         @Override
-        public boolean onQueryTextChange(String newText) {
-            Toast.makeText(getActivity(), "onChange: " + newText, Toast.LENGTH_SHORT).show();
+        public boolean onQueryTextChange(String newText)
+        {
+            // TODO Try to implement auto update of the list when typing
+            if(newText.equals(""))
+            {
+                receiptList = communicator.getReceipts(10);
+            }
+            setListAdapter(buildAdapter());
             return true;
         }
 
         @Override
-        public boolean onQueryTextSubmit(String query) {
-            Toast.makeText(getActivity(), "onSubmit: " + query, Toast.LENGTH_SHORT).show();
+        public boolean onQueryTextSubmit(String query)
+        {
+            receiptList = communicator.searchReceipts(query);
+            setListAdapter(buildAdapter());
             return true;
         }
     };
@@ -53,21 +61,9 @@ public class ReceiptSearchFragment extends CustomListFragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Communicator c = new Communicator(getActivity());
-        receipts = c.getReceipts(10);
-        data = new ArrayList<Map<String, String>>();
-        for (Receipt receipt : receipts)
-        {
-            Map<String, String> dataMap = new HashMap<String, String>(2);
-            dataMap.put("name", receipt.getName());
-            dataMap.put("date", receipt.getDateAndTime());
-            data.add(dataMap);
-        }
-
-        SimpleAdapter listAdapter = new SimpleAdapter(getActivity(), data, android.R.layout.simple_list_item_2, new String[] { "name",
-                "date" }, new int[] { android.R.id.text1, android.R.id.text2 });
-        setListAdapter(listAdapter);
-
+        communicator = new Communicator(getActivity());
+        receiptList = communicator.getReceipts(10);
+        setListAdapter(buildAdapter());
         setHasOptionsMenu(true);
     }
 
@@ -81,17 +77,13 @@ public class ReceiptSearchFragment extends CustomListFragment
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
-        // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         MenuItem item = menu.findItem(R.id.menu_search);
         item.setVisible(true);
 
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        
         searchView.setOnQueryTextListener(queryTextListener);
-
-        // FIXME Handle search query
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -102,10 +94,8 @@ public class ReceiptSearchFragment extends CustomListFragment
         switch (item.getItemId())
         {
             case R.id.menu_search:
-                getActivity().onSearchRequested(); // FIXME Make sure that search
-                                                   // works on small screen
-                                                   // where search is in the
-                                                   // 3-dot menu)
+                // FIXME Make sure that search works on small screen where search is in the 3-dot menu
+                getActivity().onSearchRequested();
                 return true;
             default:
                 return false;
@@ -117,6 +107,21 @@ public class ReceiptSearchFragment extends CustomListFragment
     public void onListItemClick(ListView listView, View view, int position, long id)
     {
         super.onListItemClick(listView, view, position, id);
-        mCallbacks.onItemSelected(receipts.get(position));
+        mCallbacks.onItemSelected(receiptList.get(position));
+    }
+
+    private SimpleAdapter buildAdapter()
+    {
+        ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        for (Receipt receipt : receiptList)
+        {
+            Map<String, String> dataMap = new HashMap<String, String>(2);
+            dataMap.put("name", receipt.getName());
+            dataMap.put("date", receipt.getDateAndTime());
+            data.add(dataMap);
+        }
+
+        return new SimpleAdapter(getActivity(), data, android.R.layout.simple_list_item_2, new String[] { "name", "date" }, new int[] {
+                android.R.id.text1, android.R.id.text2 });
     }
 }
