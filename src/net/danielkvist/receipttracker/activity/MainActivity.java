@@ -87,7 +87,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
             receiptName.setText(getString(R.string.name) + ": " + receipt.getName() + ", ");
             receiptSum.setText(getString(R.string.cost) + ": " + receipt.getSum());
-            receiptDateAndTime.setText(getString(R.string.date) + ": " + receipt.getDate() + " - " + receipt.getTime());
+            receiptDateAndTime.setText(getString(R.string.date) + ": " + receipt.getDateAndTime(this));
         }
     }
 

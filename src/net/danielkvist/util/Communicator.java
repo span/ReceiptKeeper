@@ -121,7 +121,8 @@ public class Communicator
         {
             dbAdapter.open();
             cursor = dbAdapter.fetchLastReceipt();
-            if (cursor != null)
+            
+            if (cursor.getCount() > 0)
             {
                 receipt = buildReceipt(cursor);
             }
@@ -187,7 +188,7 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getDate(), receipt.getTime(),
+            result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
                     receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
             showResult(result);
             dbAdapter.close();
@@ -207,8 +208,8 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getDate(), receipt.getTime(),
-                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
+            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
+                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
             showResult(result);
             dbAdapter.close();
         }
@@ -255,10 +256,10 @@ public class Communicator
     private Receipt buildReceipt(Cursor cursor)
     {
         return new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor
-                .getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)), cursor.getString(cursor
-                .getColumnIndex(DbAdapter.KEY_DATE)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TIME)), cursor.getString(cursor
-                .getColumnIndex(DbAdapter.KEY_LOCATION_LAT)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)),
-                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
+                .getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)), cursor.getLong(cursor
+                .getColumnIndex(DbAdapter.KEY_TIMESTAMP)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
+                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
+                        .getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
                 cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)));
     }
 
@@ -273,7 +274,7 @@ public class Communicator
             showToast(MESSAGE_COULD_NOT_SAVE);
         }
     }
-    
+
     public void showToast(String message)
     {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();

@@ -25,8 +25,7 @@ public class DbAdapter
     public static final String KEY_ROWID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_PHOTO = "photo";
-    public static final String KEY_DATE = "date";
-    public static final String KEY_TIME = "time";
+    public static final String KEY_TIMESTAMP = "time";
     public static final String KEY_LOCATION_LAT = "location_lat";
     public static final String KEY_LOCATION_LONG = "location_long";
     public static final String KEY_SUM = "sum";
@@ -38,9 +37,9 @@ public class DbAdapter
     private SQLiteDatabase db;
 
     private static final String DATABASE_CREATE_TABLE_RECEIPTS = "CREATE TABLE " + DATABASE_TABLE_RECEIPTS + " (" + KEY_ROWID
-            + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_PHOTO + " text not null," + KEY_DATE
-            + " text not null," + KEY_TIME + " text not null," + KEY_LOCATION_LAT + " text not null," + KEY_LOCATION_LONG
-            + " text not null," + KEY_SUM + " text not null," + KEY_TAX + " text not null," + KEY_COMMENT + " text not null" + ");";
+            + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_PHOTO + " text not null," + KEY_TIMESTAMP
+            + " numeric not null," + KEY_LOCATION_LAT + " text not null," + KEY_LOCATION_LONG + " text not null," + KEY_SUM
+            + " text not null," + KEY_TAX + " text not null," + KEY_COMMENT + " text not null" + ");";
 
     private static final String DATABASE_CREATE_TABLE_SETTINGS = "CREATE TABLE " + DATABASE_TABLE_SETTINGS + " (" + KEY_ROWID
             + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_SETTING_VALUE + " integer not null" + ");";
@@ -102,10 +101,10 @@ public class DbAdapter
      *            the body
      * @return rowId or -1 if failed
      */
-    public boolean createReceipt(String name, String photo, String date, String time, String locLat, String locLong, String sum,
-            String tax, String comment)
+    public boolean createReceipt(String name, String photo, long timestamp, String locLat, String locLong, String sum, String tax,
+            String comment)
     {
-        ContentValues values = putReceiptValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
+        ContentValues values = putReceiptValues(name, photo, timestamp, locLat, locLong, sum, tax, comment);
         return db.insert(DATABASE_TABLE_RECEIPTS, null, values) > 0;
     }
 
@@ -142,14 +141,14 @@ public class DbAdapter
         Cursor cursor;
         if (limit > 0)
         {
-            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT,
-                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_DATE + " DESC," + KEY_TIME + " DESC",
-                    String.valueOf(limit));
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+                    KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_TIMESTAMP + " DESC,"
+                    + KEY_TIMESTAMP + " DESC", String.valueOf(limit));
         }
         else
         {
-            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT,
-                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, null);
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+                    KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, null);
         }
 
         if (cursor != null)
@@ -188,8 +187,9 @@ public class DbAdapter
     {
 
         Cursor cursor = db
-                .query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME, KEY_LOCATION_LAT,
-                        KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_ROWID + "=" + rowId, null, null, null, null, null);
+                .query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+                        KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_ROWID + "=" + rowId, null, null, null,
+                        null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -200,7 +200,7 @@ public class DbAdapter
 
     public Cursor fetchLastReceipt()
     {
-        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME,
+        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
                 KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_ROWID + " DESC", "1");
         if (cursor != null)
         {
@@ -233,7 +233,7 @@ public class DbAdapter
 
     public Cursor searchReceiptName(String query)
     {
-        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_DATE, KEY_TIME,
+        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
                 KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_NAME + " LIKE ?", new String[] { "%" + query
                 + "%" }, null, null, null);
         if (cursor != null)
@@ -253,10 +253,10 @@ public class DbAdapter
      *            value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateReceipt(long rowId, String name, String photo, String date, String time, String locLat, String locLong,
-            String sum, String tax, String comment)
+    public boolean updateReceipt(long rowId, String name, String photo, long timestamp, String locLat, String locLong, String sum,
+            String tax, String comment)
     {
-        ContentValues values = putReceiptValues(name, photo, date, time, locLat, locLong, sum, tax, comment);
+        ContentValues values = putReceiptValues(name, photo, timestamp, locLat, locLong, sum, tax, comment);
         return db.update(DATABASE_TABLE_RECEIPTS, values, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
@@ -287,14 +287,13 @@ public class DbAdapter
      * @param comment
      * @return
      */
-    private ContentValues putReceiptValues(String name, String photo, String date, String time, String locLat, String locLong, String sum,
+    private ContentValues putReceiptValues(String name, String photo, long timestamp, String locLat, String locLong, String sum,
             String tax, String comment)
     {
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, name);
         values.put(KEY_PHOTO, photo);
-        values.put(KEY_DATE, date);
-        values.put(KEY_TIME, time);
+        values.put(KEY_TIMESTAMP, timestamp);
         values.put(KEY_LOCATION_LAT, locLat);
         values.put(KEY_LOCATION_LONG, locLong);
         values.put(KEY_SUM, sum);
