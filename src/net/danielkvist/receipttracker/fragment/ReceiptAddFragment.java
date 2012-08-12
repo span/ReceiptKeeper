@@ -1,8 +1,10 @@
 package net.danielkvist.receipttracker.fragment;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +22,7 @@ import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.ContentResolver;
@@ -39,6 +42,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,13 +50,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiptAddFragment extends Fragment
+public class ReceiptAddFragment extends Fragment implements OnDateSetListener
 {
     
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private String filename;
-    private TextView dateView;
     private TextView timeView;
     private EditText nameView;
     private EditText taxView;
@@ -119,7 +122,7 @@ public class ReceiptAddFragment extends Fragment
                 {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(receipt.getPhoto()), "image/*");
+                    intent.setDataAndType(Uri.parse("file:///" + receipt.getPhoto()), "image/*");
                     startActivity(intent);
                 }
                 
@@ -146,11 +149,10 @@ public class ReceiptAddFragment extends Fragment
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
         commentView.setText(receipt.getComment());
         
-        dateView = (TextView) rootView.findViewById(R.id.add_receipt_date);
-        dateView.setText(receipt.getDate(getActivity()));
         
-        timeView = (TextView) rootView.findViewById(R.id.add_receipt_time);
-        timeView.setText(receipt.getTime(getActivity()));
+        
+        timeView = (TextView) rootView.findViewById(R.id.add_receipt_timestamp);
+        timeView.setText(receipt.getDateAndTime(getActivity()));
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +160,31 @@ public class ReceiptAddFragment extends Fragment
             public void onClick(View v) { takePhoto(); }
         });
         
+        ImageButton timeButton = (ImageButton) rootView.findViewById(R.id.timestamp_button);
+        timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showDateDialog(); }
+        });
+        
         return rootView;
+    }
+    
+    private void showDateDialog()
+    {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setCallback(this);
+        datePickerFragment.show(getFragmentManager(), null);
+    }
+    
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, 0, 0, 0);
+        Date date = calendar.getTime();
+        receipt.setTimestamp(date.getTime());
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity().getApplicationContext());
+        timeView.setText(dateFormat.format(date));
     }
     
     public Receipt saveReceipt()
@@ -199,7 +225,6 @@ public class ReceiptAddFragment extends Fragment
             return false;
         }
         receipt.setName(name);
-        receipt.setTimestamp(System.currentTimeMillis()); // FIXME Make it possible to edit timestamp in add fragment and save it to db
         receipt.setLocationLat(String.valueOf(latitude));
         receipt.setLocationLong(String.valueOf(longitude));
         receipt.setSum(sumView.getText().toString());
