@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        style="@style/mainContainerPadding"
         tools:context=".AddReceiptFragment" >
 
         <LinearLayout
@@ -44,16 +44,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_gravity="center_vertical"
                         android:text="@string/take_photo" />
                 </LinearLayout>
 
-               <LinearLayout
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="6dp" >
-                    
+
                     <ImageButton
                         android:id="@+id/timestamp_button"
                         android:layout_width="wrap_content"
@@ -65,11 +65,8 @@
                         android:id="@+id/add_receipt_timestamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:paddingLeft="3dp"
-                        android:layout_marginTop="12dp" />
-
-
+                        android:layout_gravity="center_vertical"
+                        android:lines="1" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

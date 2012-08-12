@@ -50,6 +50,8 @@
     <string name="select_from_date">Select from date</string>
     <string name="to">To:</string>
     <string name="from">From:</string>
-    <string name="filter_on_date_s_">Filter on date(s)</string>
+    <string name="filter_on_date">Filter on date</string>
+    <string name="receipts">Receipts</string>
+    <string name="click_to_set_date">Click to set date</string>
 
 </resources>

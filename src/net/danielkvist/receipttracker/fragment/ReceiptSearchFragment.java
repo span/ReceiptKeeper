@@ -100,46 +100,39 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_receipt_search, container, false);
+        
         dateFromView = (TextView) rootView.findViewById(R.id.date_from);
-        dateFromView.setOnClickListener(new View.OnClickListener()
-        {
+        dateFromView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                timeToSet = TIME_FROM;
-                showDateDialog();
-            }
+            public void onClick(View v) { timeToSet = TIME_FROM; showDateDialog(); }
         });
+        
         dateToView = (TextView) rootView.findViewById(R.id.date_to);
-        dateToView.setOnClickListener(new View.OnClickListener()
-        {
+        dateToView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                timeToSet = TIME_TO;
-                showDateDialog();
-            }
+            public void onClick(View v) { timeToSet = TIME_TO; showDateDialog(); }
+        });
+        
+        rootView.findViewById(R.id.timestamp_from_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { timeToSet = TIME_FROM; showDateDialog(); }
+        });
+        
+        rootView.findViewById(R.id.timestamp_to_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { timeToSet = TIME_TO; showDateDialog(); }
         });
         
         searchButton = (Button) rootView.findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new View.OnClickListener()
-        {
-
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(!searchQuery.equals(""))
-                {
-                    filterList();
-                }
-                else
-                {
-                    receiptList = communicator.fetchReceipts(timeFrom, timeTo);
-                }
+            public void onClick(View v) {
+                if(!searchQuery.equals("")) { filterList(); }
+                else { receiptList = communicator.fetchReceipts(timeFrom, timeTo); }
                 setListAdapter(buildAdapter());
-                
             }
         });
+
         return rootView;
     }
 

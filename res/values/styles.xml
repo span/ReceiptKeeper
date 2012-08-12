@@ -5,4 +5,8 @@
     <style name="labelTextView" parent="android:Widget.Holo.Light.TextView">
         <item name="android:layout_marginRight">2dp</item>
     </style>
+   
+    <style name="mainContainerPadding">
+        <item name="android:padding">8dp</item>
+    </style>
 </resources>

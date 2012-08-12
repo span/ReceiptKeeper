@@ -58,7 +58,14 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
 
     private void showLastReceipt(final Receipt receipt)
     {
-        if (receipt != null)
+        if (receipt == null)
+        {
+            findViewById(R.id.receipt_name_label).setVisibility(View.GONE);
+            findViewById(R.id.receipt_sum_label).setVisibility(View.GONE);
+            findViewById(R.id.receipt_tax_label).setVisibility(View.GONE);
+            findViewById(R.id.receipt_date_and_time_label).setVisibility(View.GONE);
+        }
+        else
         {
             LinearLayout container = ((LinearLayout) findViewById(R.id.receipt_added_container));
             container.setOnClickListener(new View.OnClickListener()
