@@ -1,19 +1,10 @@
 package net.danielkvist.receipttracker.fragment;
 
-import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.MainMenuContent;
-import net.danielkvist.receipttracker.content.Receipt;
-import net.danielkvist.util.Communicator;
-
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class ReceiptListFragment extends CustomListFragment
 {

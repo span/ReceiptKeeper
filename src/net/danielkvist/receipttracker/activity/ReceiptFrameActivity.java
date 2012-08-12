@@ -7,8 +7,6 @@ import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,8 +16,6 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
 {

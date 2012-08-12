@@ -1,7 +1,6 @@
 package net.danielkvist.receipttracker.activity;
 
 
-import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.fragment.ActivityHostFragment;
 import android.app.Activity;
 

@@ -2,40 +2,30 @@ package net.danielkvist.receipttracker.fragment;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import net.danielkvist.receipttracker.R;
-import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient.CustomViewCallback;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener
 {

@@ -1,8 +1,5 @@
 package net.danielkvist.util;
 
-import java.security.KeyRep;
-import net.danielkvist.receipttracker.R;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
