@@ -280,4 +280,29 @@ public class Communicator
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
+    public ArrayList<Receipt> fetchReceipts(long timeFrom, long timeTo)
+    {
+        ArrayList<Receipt> receiptList = null;
+        DbAdapter dbAdapter = new DbAdapter(context);
+
+        try
+        {
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
+
+            if (cursor != null)
+            {
+                receiptList = buildReceiptList(cursor);
+            }
+
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return receiptList;
+    }
+
 }

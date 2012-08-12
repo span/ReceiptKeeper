@@ -141,14 +141,14 @@ public class DbAdapter
         Cursor cursor;
         if (limit > 0)
         {
-            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
-                    KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_TIMESTAMP + " DESC,"
-                    + KEY_TIMESTAMP + " DESC", String.valueOf(limit));
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
+                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, KEY_TIMESTAMP + " DESC," + KEY_TIMESTAMP
+                    + " DESC", String.valueOf(limit));
         }
         else
         {
-            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
-                    KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, null);
+            cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
+                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, null, null, null, null, null);
         }
 
         if (cursor != null)
@@ -187,15 +187,26 @@ public class DbAdapter
     {
 
         Cursor cursor = db
-                .query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
-                        KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_ROWID + "=" + rowId, null, null, null,
-                        null, null);
+                .query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
+                        KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_ROWID + "=" + rowId, null, null, null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
         }
         return cursor;
 
+    }
+
+    public Cursor fetchReceipts(long timeFrom, long timeTo)
+    {
+        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_TIMESTAMP + ">" + timeFrom + " AND "
+                + KEY_TIMESTAMP + "<" + timeTo, null, null, null, KEY_TIMESTAMP + " DESC", null);
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
     }
 
     public Cursor fetchLastReceipt()
@@ -233,9 +244,9 @@ public class DbAdapter
 
     public Cursor searchReceiptName(String query)
     {
-        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
-                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_NAME + " LIKE ?", new String[] { "%" + query
-                + "%" }, null, null, null);
+        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
+                KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT }, KEY_NAME + " LIKE ?", new String[] { "%" + query + "%" }, null, null,
+                null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -331,4 +342,5 @@ public class DbAdapter
             onCreate(db);
         }
     }
+
 }

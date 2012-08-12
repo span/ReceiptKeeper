@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -37,17 +39,27 @@ import android.widget.Toast;
 
 public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener
 {
-    // FIXME Add search date and date interval
+    private static final int TIME_NOT_SET = -1;
+    private static final int TIME_FROM = 0;
+    private static final int TIME_TO = 1;
+    private int timeToSet = TIME_NOT_SET;
     private ArrayList<Receipt> receiptList;
     private Communicator communicator;
+    private String searchQuery = "";
+    private TextView dateFromView;
+    private TextView dateToView;
+    private Button searchButton;
+    private SearchView searchView;
+    private long timeFrom = 0;
+    private long timeTo = System.currentTimeMillis();
 
-    final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener()
+    private final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener()
     {
-        // FIXME If a date has been selected, perform search on the dates
         @Override
         public boolean onQueryTextChange(String newText)
         {
             // TODO Try to implement auto update of the list when typing
+            searchQuery = newText;
             if (newText.equals(""))
             {
                 receiptList = communicator.getReceipts(10);
@@ -59,14 +71,16 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         @Override
         public boolean onQueryTextSubmit(String query)
         {
+            // FIXME If dates have been set, perform a search as normal and then filter it (make a method to filter from existing code)
             receiptList = communicator.searchReceipts(query);
+            if(timeToSet != TIME_NOT_SET)
+            {
+                filterList();
+            }
             setListAdapter(buildAdapter());
             return true;
         }
     };
-    private TextView dateFromView;
-    private TextView dateToView;
-    private TextView currentView;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -76,6 +90,20 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         receiptList = communicator.getReceipts(10);
         setListAdapter(buildAdapter());
         setHasOptionsMenu(true);
+    }
+
+    private void filterList()
+    {
+        Iterator<Receipt> iterator = receiptList.iterator();
+        while(iterator.hasNext())
+        {
+            Receipt r = iterator.next();
+            long timestamp = r.getTimestamp();
+            if(timestamp < timeFrom || timestamp > timeTo)
+            {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
@@ -88,7 +116,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             @Override
             public void onClick(View v)
             {
-                currentView = dateFromView;
+                timeToSet = TIME_FROM;
                 showDateDialog();
             }
         });
@@ -98,14 +126,35 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             @Override
             public void onClick(View v)
             {
-                currentView = dateToView;
+                timeToSet = TIME_TO;
                 showDateDialog();
+            }
+        });
+        
+        searchButton = (Button) rootView.findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener()
+        {
+
+            @Override
+            public void onClick(View v)
+            {
+                if(!searchQuery.equals(""))
+                {
+                    filterList();
+                }
+                else
+                {
+                    // FIXME Perform a fetch on the dates if no query has been made (test this!)
+                    receiptList = communicator.fetchReceipts(timeFrom, timeTo);
+                }
+                setListAdapter(buildAdapter());
+                
             }
         });
         return rootView;
     }
 
-    public void showDateDialog()
+    private void showDateDialog()
     {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setCallback(this);
@@ -119,7 +168,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         MenuItem item = menu.findItem(R.id.menu_search);
         item.setVisible(true);
 
-        SearchView searchView = (SearchView) item.getActionView();
+        searchView = (SearchView) item.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
 
@@ -167,16 +216,24 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day)
     {
-        // FIXME Perform filter on data in list if a search query has been made
-        // FIXME Perform a fetch on the dates if no query has been made
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
         
-        Date date = calendar.getTime();
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity().getApplicationContext());
-        currentView.setText(dateFormat.format(date));
+        if(timeToSet == TIME_FROM)
+        {
+            calendar.set(year, month, day, 0, 0, 0);
+            Date date = calendar.getTime();
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity().getApplicationContext());
+            timeFrom = date.getTime();
+            dateFromView.setText(dateFormat.format(date));
+        }
+        else
+        {
+            calendar.set(year, month, day, 23, 59, 59);
+            Date date = calendar.getTime();
+            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity().getApplicationContext());
+            timeTo = date.getTime();
+            dateToView.setText(dateFormat.format(date));
+        }
     }
 
 }
