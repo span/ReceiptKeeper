@@ -2,4 +2,7 @@
 
     <style name="AppTheme" parent="android:Theme.Light" />
 
+    <style name="labelTextView" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
 </resources>
