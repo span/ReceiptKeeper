@@ -3,35 +3,26 @@ package net.danielkvist.receipttracker.fragment;
 import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
-
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
-import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment.Callbacks;
-
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class ReceiptDetailFragment extends Fragment
 {
-    // FIXME Move details to right of image as layout
     public static final String ARG_ITEM_ID = "item_id";
     MainMenuContent.DummyItem mItem;
     private Receipt receipt;

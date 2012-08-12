@@ -2,10 +2,7 @@ package net.danielkvist.util.task;
 
 import java.lang.ref.WeakReference;
 
-import net.danielkvist.receipttracker.R;
 import net.danielkvist.util.BitmapScaler;
-
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;

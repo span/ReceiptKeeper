@@ -3,10 +3,8 @@ package net.danielkvist.util;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
 import net.danielkvist.receipttracker.R;
-
-import com.google.android.maps.GeoPoint;
-
 import android.content.Context;
 import android.location.Address;
 import android.location.Criteria;
@@ -16,6 +14,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
 
 public class LocationParser implements LocationListener
 {

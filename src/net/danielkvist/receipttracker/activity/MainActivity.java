@@ -1,36 +1,26 @@
 package net.danielkvist.receipttracker.activity;
 
-import org.w3c.dom.Text;
-
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
-import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements CustomListFragment.Callbacks
 {
-    // TODO Add comment text to last receipt segment
-    // FIXME Pull out the last receipt as a layout
     private boolean mTwoPane;
 
     @Override
