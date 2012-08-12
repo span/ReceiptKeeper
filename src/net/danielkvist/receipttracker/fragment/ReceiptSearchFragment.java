@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener
 {
+    // TODO Add receipt thumbnail to ListView
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
     private static final int TIME_TO = 1;
@@ -71,7 +72,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         @Override
         public boolean onQueryTextSubmit(String query)
         {
-            // FIXME If dates have been set, perform a search as normal and then filter it (make a method to filter from existing code)
             receiptList = communicator.searchReceipts(query);
             if(timeToSet != TIME_NOT_SET)
             {
@@ -144,7 +144,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
                 }
                 else
                 {
-                    // FIXME Perform a fetch on the dates if no query has been made (test this!)
                     receiptList = communicator.fetchReceipts(timeFrom, timeTo);
                 }
                 setListAdapter(buildAdapter());

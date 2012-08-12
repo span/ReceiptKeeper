@@ -31,7 +31,7 @@ import android.widget.TextView;
 
 public class ReceiptDetailFragment extends Fragment
 {
-
+    // FIXME Move details to right of image as layout
     public static final String ARG_ITEM_ID = "item_id";
     MainMenuContent.DummyItem mItem;
     private Receipt receipt;
@@ -40,8 +40,6 @@ public class ReceiptDetailFragment extends Fragment
     private TextView taxView;
     private TextView commentView;
     private TextView dateAndTimeView;
-    private TextView timeView;
-    private MenuItem editItem;
     private Callbacks mCallbacks;
     
 
@@ -111,7 +109,7 @@ public class ReceiptDetailFragment extends Fragment
         Communicator communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_receipt_photo_image_view);
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.receipt_image);
         ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, receipt.getPhoto());
         worker.execute(150, 150);
         imageView.setOnClickListener(new View.OnClickListener()
@@ -126,14 +124,14 @@ public class ReceiptDetailFragment extends Fragment
             }
         });
 
-        nameView = (TextView) rootView.findViewById(R.id.detail_receipt_name);
+        nameView = (TextView) rootView.findViewById(R.id.receipt_name);
         nameView.setText(receipt.getName());
 
-        sumView = (TextView) rootView.findViewById(R.id.detail_receipt_sum);
+        sumView = (TextView) rootView.findViewById(R.id.receipt_sum);
         sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
         sumView.setText(receipt.getSum());
 
-        taxView = (TextView) rootView.findViewById(R.id.detail_receipt_tax);
+        taxView = (TextView) rootView.findViewById(R.id.receipt_tax);
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
 
@@ -141,7 +139,7 @@ public class ReceiptDetailFragment extends Fragment
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
         commentView.setText(receipt.getComment());
 
-        dateAndTimeView = (TextView) rootView.findViewById(R.id.detail_receipt_date_and_time);
+        dateAndTimeView = (TextView) rootView.findViewById(R.id.receipt_date_and_time);
         dateAndTimeView.setText(receipt.getDateAndTime(getActivity()));
 
         return rootView;

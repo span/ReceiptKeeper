@@ -13,37 +13,7 @@
         android:padding="16dp"
         tools:context=".ReceiptDetailFragment" >
 
-        <ImageView
-            android:id="@+id/detail_receipt_photo_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/image_of_the_receipt" />
-            
-             
-
-        <TextView
-            android:id="@+id/detail_receipt_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
-
-        <TextView
-            android:id="@+id/detail_receipt_date_and_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
-
-        <TextView
-            android:id="@+id/detail_receipt_sum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
-
-        <TextView
-            android:id="@+id/detail_receipt_tax"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
+        <include layout="@layout/receipt_info" />
 
         <TextView
             android:id="@+id/detail_receipt_comment"

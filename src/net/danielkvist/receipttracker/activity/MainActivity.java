@@ -29,7 +29,8 @@ import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements CustomListFragment.Callbacks
 {
-
+    // TODO Add comment text to last receipt segment
+    // FIXME Pull out the last receipt as a layout
     private boolean mTwoPane;
 
     @Override
@@ -85,9 +86,9 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
-            receiptName.setText(getString(R.string.name) + ": " + receipt.getName() + ", ");
-            receiptSum.setText(getString(R.string.cost) + ": " + receipt.getSum());
-            receiptDateAndTime.setText(getString(R.string.date) + ": " + receipt.getDateAndTime(this));
+            receiptName.setText(receipt.getName());
+            receiptSum.setText(receipt.getSum());
+            receiptDateAndTime.setText(receipt.getDateAndTime(this));
         }
     }
 
