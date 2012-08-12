@@ -149,10 +149,10 @@ public class ReceiptAddFragment extends Fragment
         commentView.setText(receipt.getComment());
         
         dateView = (TextView) rootView.findViewById(R.id.add_receipt_date);
-        dateView.setText(receipt.getDate());
+        dateView.setText(receipt.getDate(getActivity()));
         
         timeView = (TextView) rootView.findViewById(R.id.add_receipt_time);
-        timeView.setText(receipt.getTime());
+        timeView.setText(receipt.getTime(getActivity()));
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -213,8 +213,7 @@ public class ReceiptAddFragment extends Fragment
             return false;
         }
         receipt.setName(name);
-        receipt.setDate(dateView.getText().toString());
-        receipt.setTime(timeView.getText().toString());
+        receipt.setTimestamp(System.currentTimeMillis()); // FIXME Make it possible to edit timestamp in add fragment and save it to db
         receipt.setLocationLat(String.valueOf(latitude));
         receipt.setLocationLong(String.valueOf(longitude));
         receipt.setSum(sumView.getText().toString());

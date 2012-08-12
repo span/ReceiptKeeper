@@ -156,7 +156,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         {
             Map<String, String> dataMap = new HashMap<String, String>(2);
             dataMap.put("name", receipt.getName());
-            dataMap.put("date", receipt.getDateAndTime());
+            dataMap.put("date", receipt.getDateAndTime(getActivity()));
             data.add(dataMap);
         }
 

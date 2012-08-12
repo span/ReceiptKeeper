@@ -1,9 +1,12 @@
 package net.danielkvist.receipttracker.content;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import net.danielkvist.receipttracker.R;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,8 +17,7 @@ public class Receipt implements Parcelable
     private int id;
     private String name;
     private String photo;
-    private String date;
-    private String time;
+    private long timestamp;
     private String locationLat;
     private String locationLong;
     private String sum;
@@ -27,8 +29,7 @@ public class Receipt implements Parcelable
         id = -1;
         name = "";
         photo = "";
-        date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        timestamp = System.currentTimeMillis();
         locationLat = "";
         locationLong = "";
         sum = "";
@@ -39,29 +40,27 @@ public class Receipt implements Parcelable
     public Receipt(Parcel in)
     {
         this.id = in.readInt();
+        this.timestamp = in.readLong();
         
-        String[] stringData = new String[9];
+        String[] stringData = new String[7];
         in.readStringArray(stringData);
 
         this.name = stringData[0];
         this.photo = stringData[1];
-        this.date = stringData[2];
-        this.time = stringData[3];
-        this.locationLat = stringData[4];
-        this.locationLong = stringData[5];
-        this.sum = stringData[6];
-        this.tax = stringData[7];
-        this.comment = stringData[8];
+        this.locationLat = stringData[2];
+        this.locationLong = stringData[3];
+        this.sum = stringData[4];
+        this.tax = stringData[5];
+        this.comment = stringData[6];
     }
 
-    public Receipt(int id, String name, String photo, String date, String time, String locationLat,
+    public Receipt(int id, String name, String photo, long timestamp, String locationLat,
             String locationLong, String sum, String tax, String comment)
     {
         this.id = id;
         this.name = name;
         this.photo = photo;
-        this.date = date;
-        this.time = time;
+        this.timestamp = timestamp;
         this.locationLat = locationLat;
         this.locationLong = locationLong;
         this.sum = sum;
@@ -123,37 +122,47 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @return the date
+     * @return the timestamp
      */
-    public String getDate()
+    public long getTimestamp()
     {
-        return date;
+        return timestamp;
+    }
+    
+    public String getDate(Context context)
+    {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date(timestamp);
+        calendar.setTime(date);
+        
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context.getApplicationContext());
+        return dateFormat.format(date);
+    }
+    
+    public String getTime(Context context)
+    {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date(timestamp);
+        calendar.setTime(date);
+        
+        DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(context.getApplicationContext());
+        return timeFormat.format(date);
+    }
+    
+    public String getDateAndTime(Context context)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getDate(context)).append(" - ").append(getTime(context));
+        return sb.toString();
     }
 
     /**
-     * @param date
-     *            the date to set
+     * @param timestamp
+     *            the timestamp to set
      */
-    public void setDate(String date)
+    public void setTimestamp(long timestamp)
     {
-        this.date = date;
-    }
-
-    /**
-     * @return the time
-     */
-    public String getTime()
-    {
-        return time;
-    }
-
-    /**
-     * @param time
-     *            the time to set
-     */
-    public void setTime(String time)
-    {
-        this.time = time;
+        this.timestamp = timestamp;
     }
 
     /**
@@ -241,13 +250,9 @@ public class Receipt implements Parcelable
         this.comment = comment;
     }
     
-    public String getDateAndTime()
+    private String getDateAndTime()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getDate());
-        sb.append(" ");
-        sb.append(getTime());
-        return sb.toString();
+        return String.valueOf(timestamp);
     }
     
     /* (non-Javadoc)
@@ -259,9 +264,7 @@ public class Receipt implements Parcelable
         StringBuilder sb = new StringBuilder();
         sb.append(getName());
         sb.append(" ");
-        sb.append(getDate());
-        sb.append(" ");
-        sb.append(getTime());
+        sb.append(getDateAndTime());
         return sb.toString();
     }
 
@@ -275,7 +278,8 @@ public class Receipt implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(id);
-        dest.writeStringArray(new String[] { name, photo, date, time, locationLat, locationLong, sum, tax, comment });
+        dest.writeLong(timestamp);
+        dest.writeStringArray(new String[] { name, photo, locationLat, locationLong, sum, tax, comment });
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

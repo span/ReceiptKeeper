@@ -142,7 +142,7 @@ public class ReceiptDetailFragment extends Fragment
         commentView.setText(receipt.getComment());
 
         dateAndTimeView = (TextView) rootView.findViewById(R.id.detail_receipt_date_and_time);
-        dateAndTimeView.setText(receipt.getDate());
+        dateAndTimeView.setText(receipt.getDateAndTime(getActivity()));
 
         return rootView;
     }
