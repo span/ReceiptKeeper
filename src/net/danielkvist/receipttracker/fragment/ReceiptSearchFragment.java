@@ -1,6 +1,10 @@
 package net.danielkvist.receipttracker.fragment;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
 
     final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener()
     {
+        // FIXME If a date has been selected, perform search on the dates
         @Override
         public boolean onQueryTextChange(String newText)
         {
@@ -162,8 +167,16 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day)
     {
-        // FIXME Format date in a better way
-        currentView.setText(new StringBuilder().append(month + 1).append("-").append(day).append("-").append(year).append(" "));
+        // FIXME Perform filter on data in list if a search query has been made
+        // FIXME Perform a fetch on the dates if no query has been made
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        
+        Date date = calendar.getTime();
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity().getApplicationContext());
+        currentView.setText(dateFormat.format(date));
     }
 
 }
