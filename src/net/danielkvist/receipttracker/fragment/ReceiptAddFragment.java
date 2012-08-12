@@ -54,8 +54,6 @@ public class ReceiptAddFragment extends Fragment
     private String filename;
     private TextView dateView;
     private TextView timeView;
-    private Button cancelButton;
-    private Button saveButton;
     private EditText nameView;
     private EditText taxView;
     private EditText commentView;
@@ -160,18 +158,6 @@ public class ReceiptAddFragment extends Fragment
             public void onClick(View v) { takePhoto(); }
         });
         
-        cancelButton = (Button) rootView.findViewById(R.id.cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { cancel(); }
-        });
-        
-        saveButton = (Button) rootView.findViewById(R.id.save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { saveReceipt(); }
-        });
-        
         return rootView;
     }
     
@@ -221,25 +207,6 @@ public class ReceiptAddFragment extends Fragment
         receipt.setComment(commentView.getText().toString());
         
         return true;
-    }
-   
-    public void cancel()
-    {
-        new AlertDialog.Builder(getActivity())
-        .setTitle(R.string.cancel)
-        .setMessage(R.string.cancel_prompt_data_loss)
-        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                // FIXME Return something else here, not always going back to main (saving edits after details launched from search for example)
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-                
-                getActivity().finish();
-            }
-        })
-        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) { /* Nothing to do here */ }
-        }).show();
     }
 
     private void takePhoto()
