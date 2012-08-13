@@ -10,58 +10,68 @@
     <TextView
         android:id="@+id/filter_header"
         style="?android:attr/listSeparatorTextViewStyle"
-        android:text="@string/filter_on_date" />
+        android:drawableLeft="@android:drawable/ic_input_add"
+        android:text="@string/add_filter" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageButton
-            android:id="@+id/timestamp_from_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/click_to_take_a_picture_of_the_receipt"
-            android:src="@android:drawable/ic_menu_my_calendar" />
-
-        <TextView
-            android:id="@+id/date_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/select_from_date" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageButton
-            android:id="@+id/timestamp_to_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/click_to_take_a_picture_of_the_receipt"
-            android:src="@android:drawable/ic_menu_my_calendar" />
-
-        <TextView
-            android:id="@+id/date_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/select_to_date" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="match_parent"
+        android:id="@+id/filter_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/filter_on_date" />
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/timestamp_from_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/click_to_take_a_picture_of_the_receipt"
+                android:src="@android:drawable/ic_menu_my_calendar" />
+
+            <TextView
+                android:id="@+id/date_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/select_from_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/timestamp_to_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/click_to_take_a_picture_of_the_receipt"
+                android:src="@android:drawable/ic_menu_my_calendar" />
+
+            <TextView
+                android:id="@+id/date_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/select_to_date" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_filter" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/list_header"
         style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/receipts" />
+        android:text="@string/receipts"
+        android:layout_marginTop="12dp" />
 
     <ListView
         android:id="@android:id/list"
