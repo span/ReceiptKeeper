@@ -24,13 +24,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener, View.OnClickListener
 {
-    // FIXME Prevent redraw of list when typing in searchview
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
     private static final int TIME_TO = 1;
@@ -52,10 +52,9 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         {
             // TODO Try to implement auto update of the list when typing
             searchQuery = newText;
-            if (newText.equals(""))
+            if(!newText.equals(""))
             {
-                receiptList = communicator.getReceipts(10);
-                setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+                populateList();
             }
             
             return true;
@@ -64,25 +63,22 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         @Override
         public boolean onQueryTextSubmit(String query)
         {
-            receiptList = communicator.searchReceipts(query);
-            if (timeToSet != TIME_NOT_SET)
-            {
-                filterList();
-            }
-            setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+            searchQuery = query;
+            populateList();
             return true;
         }
     };
     private ImageButton timeStampFromButton;
     private ImageButton timeStampToButton;
+    private LinearLayout filterContainer;
+    private TextView filterHeader;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         communicator = new Communicator(getActivity());
-        receiptList = communicator.getReceipts(10);
-        setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+        populateList();
         setHasOptionsMenu(true);
     }
 
@@ -103,8 +99,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        // FIXME Hide filter options from start, add button to display them
-        // FIXME Implement onClickListener as interface instead of inline code
         View rootView = inflater.inflate(R.layout.fragment_receipt_search, container, false);
 
         dateFromView = (TextView) rootView.findViewById(R.id.date_from);
@@ -121,6 +115,10 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
 
         searchButton = (Button) rootView.findViewById(R.id.search_button);
         searchButton.setOnClickListener(this);
+        
+        filterHeader = (TextView) rootView.findViewById(R.id.filter_header);
+        filterHeader.setOnClickListener(this);
+        filterContainer = (LinearLayout) rootView.findViewById(R.id.filter_container);
 
         return rootView;
     }
@@ -192,6 +190,28 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         }
     }
 
+    private void populateList()
+    {
+        if (searchQuery.equals("") && timeToSet == TIME_NOT_SET)
+        {
+            receiptList = communicator.getReceipts(10);
+        }
+        else if(searchQuery.equals(""))
+        {
+            receiptList = communicator.fetchReceipts(timeFrom, timeTo);
+        }
+        else if(timeToSet == TIME_NOT_SET)
+        {
+            receiptList = communicator.searchReceipts(searchQuery);
+        }
+        else
+        {
+            receiptList = communicator.searchReceipts(searchQuery);
+            filterList();
+        }
+        setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+    }
+
     private class ReceiptAdapter extends ArrayAdapter<Receipt>
     {
 
@@ -255,15 +275,27 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         }
         else if(v.getId() == searchButton.getId())
         {
-            if (!searchQuery.equals(""))
+            populateList();
+        }
+        else if(v.getId() == filterHeader.getId())
+        {
+            if(filterContainer.getVisibility() == View.VISIBLE)
             {
-                filterList();
+                filterContainer.setVisibility(View.GONE);
+                filterHeader.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_input_add, 0, 0, 0);
+                timeToSet = TIME_NOT_SET;
+                timeFrom = 0;
+                timeTo = System.currentTimeMillis();
+                dateFromView.setText(getString(R.string.select_from_date));
+                dateToView.setText(getString(R.string.select_to_date));
+                populateList();
             }
             else
             {
-                receiptList = communicator.fetchReceipts(timeFrom, timeTo);
+                filterContainer.setVisibility(View.VISIBLE);
+                filterHeader.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_close_clear_cancel, 0, 0, 0);
             }
-            setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+            
         }
         
     }
