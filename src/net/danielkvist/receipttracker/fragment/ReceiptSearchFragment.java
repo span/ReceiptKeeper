@@ -272,12 +272,15 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             if (filterContainer.getVisibility() == View.VISIBLE)
             {
                 filterHeader.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_input_add, 0, 0, 0);
-                timeToSet = TIME_NOT_SET;
-                timeFrom = 0;
-                timeTo = System.currentTimeMillis();
                 dateFromView.setText(getString(R.string.select_from_date));
                 dateToView.setText(getString(R.string.select_to_date));
-                populateList();
+                timeFrom = 0;
+                timeTo = System.currentTimeMillis();
+                if(timeToSet != TIME_NOT_SET)
+                {
+                    timeToSet = TIME_NOT_SET;
+                    populateList();
+                }
             }
             else
             {
