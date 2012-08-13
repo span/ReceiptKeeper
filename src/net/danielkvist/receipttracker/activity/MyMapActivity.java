@@ -19,7 +19,8 @@ public class MyMapActivity extends MapActivity
 
     @Override
     protected void onCreate(Bundle icicle)
-    {
+    {   
+        // FIXME Only use location from receipt, not my location
         super.onCreate(icicle);
         setContentView(R.layout.my_map_activity);
 
