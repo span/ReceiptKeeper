@@ -55,8 +55,9 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             if (newText.equals(""))
             {
                 receiptList = communicator.getReceipts(10);
+                setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
             }
-            setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+            
             return true;
         }
 
