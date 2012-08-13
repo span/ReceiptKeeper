@@ -4,9 +4,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
@@ -24,15 +22,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener
+public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener, View.OnClickListener
 {
-    // FIXME Add receipt thumbnail to ListView
+    // FIXME Prevent redraw of list when typing in searchview
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
     private static final int TIME_TO = 1;
@@ -58,7 +56,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             {
                 receiptList = communicator.getReceipts(10);
             }
-            // setListAdapter(buildAdapter());
+            setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
             return true;
         }
 
@@ -70,10 +68,12 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             {
                 filterList();
             }
-            // Adapter(buildAdapter());
+            setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
             return true;
         }
     };
+    private ImageButton timeStampFromButton;
+    private ImageButton timeStampToButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -81,7 +81,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         super.onCreate(savedInstanceState);
         communicator = new Communicator(getActivity());
         receiptList = communicator.getReceipts(10);
-        // setListAdapter(buildAdapter());
         setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
         setHasOptionsMenu(true);
     }
@@ -104,67 +103,23 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // FIXME Hide filter options from start, add button to display them
+        // FIXME Implement onClickListener as interface instead of inline code
         View rootView = inflater.inflate(R.layout.fragment_receipt_search, container, false);
 
         dateFromView = (TextView) rootView.findViewById(R.id.date_from);
-        dateFromView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                timeToSet = TIME_FROM;
-                showDateDialog();
-            }
-        });
+        dateFromView.setOnClickListener(this);
 
         dateToView = (TextView) rootView.findViewById(R.id.date_to);
-        dateToView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                timeToSet = TIME_TO;
-                showDateDialog();
-            }
-        });
+        dateToView.setOnClickListener(this);
 
-        rootView.findViewById(R.id.timestamp_from_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                timeToSet = TIME_FROM;
-                showDateDialog();
-            }
-        });
+        timeStampFromButton = (ImageButton) rootView.findViewById(R.id.timestamp_from_button);
+        timeStampFromButton.setOnClickListener(this);
 
-        rootView.findViewById(R.id.timestamp_to_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                timeToSet = TIME_TO;
-                showDateDialog();
-            }
-        });
+        timeStampToButton = (ImageButton) rootView.findViewById(R.id.timestamp_to_button);
+        timeStampToButton.setOnClickListener(this);
 
         searchButton = (Button) rootView.findViewById(R.id.search_button);
-        searchButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (!searchQuery.equals(""))
-                {
-                    filterList();
-                }
-                else
-                {
-                    receiptList = communicator.fetchReceipts(timeFrom, timeTo);
-                }
-                // setListAdapter(buildAdapter());
-            }
-        });
+        searchButton.setOnClickListener(this);
 
         return rootView;
     }
@@ -211,21 +166,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     {
         super.onListItemClick(listView, view, position, id);
         mCallbacks.onItemSelected(receiptList.get(position));
-    }
-
-    private SimpleAdapter buildAdapter()
-    {
-        ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
-        for (Receipt receipt : receiptList)
-        {
-            Map<String, String> dataMap = new HashMap<String, String>(2);
-            dataMap.put("name", receipt.getName());
-            dataMap.put("date", receipt.getDateAndTime(getActivity()));
-            data.add(dataMap);
-        }
-
-        return new SimpleAdapter(getActivity(), data, android.R.layout.simple_list_item_2, new String[] { "name", "date" }, new int[] {
-                android.R.id.text1, android.R.id.text2 });
     }
 
     @Override
@@ -286,6 +226,45 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             }
             return view;
         }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        
+        if(v.getId() == dateFromView.getId())
+        {
+            timeToSet = TIME_FROM;
+            showDateDialog();
+        }
+        else if(v.getId() == dateToView.getId())
+        {
+            timeToSet = TIME_TO;
+            showDateDialog();
+        }
+        else if(v.getId() == timeStampFromButton.getId())
+        {
+            timeToSet = TIME_FROM;
+            showDateDialog();
+        }
+        else if(v.getId() == timeStampToButton.getId())
+        {
+            timeToSet = TIME_TO;
+            showDateDialog();
+        }
+        else if(v.getId() == searchButton.getId())
+        {
+            if (!searchQuery.equals(""))
+            {
+                filterList();
+            }
+            else
+            {
+                receiptList = communicator.fetchReceipts(timeFrom, timeTo);
+            }
+            setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+        }
+        
     }
 
 }
