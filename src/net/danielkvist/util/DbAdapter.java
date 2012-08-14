@@ -58,8 +58,6 @@ public class DbAdapter
     private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_LOCATION + "',0" + ");";
 
-    // FIXME Add accounts CRUD
-
     /**
      * 
      * @param context
@@ -72,8 +70,7 @@ public class DbAdapter
 
     /**
      * 
-     * @return this (self reference, allowing this to be chained in an
-     *         initialization call)
+     * @return this (self reference, allowing this to be chained in an initialization call)
      * @throws SQLException
      *             if the database could be neither opened or created
      */
@@ -108,14 +105,14 @@ public class DbAdapter
         ContentValues values = putReceiptValues(name, photo, timestamp, locLat, locLong, sum, tax, comment);
         return db.insert(DATABASE_TABLE_RECEIPTS, null, values) > 0;
     }
-    
+
     /**
      * 
      * @param code
      * @param name
      * @return
      */
-    public boolean createAccount(long code, String name)
+    public boolean createReceiptAccount(long code, String name)
     {
         ContentValues values = new ContentValues();
         values.put(KEY_ROWID, code);
@@ -145,19 +142,19 @@ public class DbAdapter
         SELECTED_TABLE = DATABASE_TABLE_RECEIPTS;
         return deleteItem(rowId);
     }
-    
+
     /**
      * 
      * @param rowId
      * @return
      */
-    public boolean deleteAccount(long rowId)
+    public boolean deleteReceiptAccount(long rowId)
     {
         SELECTED_TABLE = DATABASE_TABLE_ACCOUNTS;
         return deleteItem(rowId);
     }
-    
-    public Cursor fetchAccounts()
+
+    public Cursor fetchReceiptAccounts()
     {
         Cursor cursor;
         cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, KEY_NAME + " ASC");
@@ -290,14 +287,14 @@ public class DbAdapter
         }
         return cursor;
     }
-    
+
     /**
      * 
      * @param name
      * @param code
      * @return
      */
-    public boolean updateAccount(long code, String name)
+    public boolean updateReceiptAccount(long code, String name)
     {
         ContentValues values = new ContentValues();
         values.put(KEY_ROWID, code);
@@ -386,26 +383,37 @@ public class DbAdapter
             db.execSQL(DATABASE_INIT_SETTING_LOCATION);
             initDatabaseData(db);
         }
-        
-        private void initDatabaseData(SQLiteDatabase db) {
+
+        private void initDatabaseData(SQLiteDatabase db)
+        {
             BufferedReader br = null;
-            try {
-                
+            try
+            {
+
                 br = new BufferedReader(new InputStreamReader(context.getAssets().open("accounts.sql")), 1024 * 4);
                 String line = null;
                 db.beginTransaction();
-                while ((line = br.readLine()) != null) {
+                while ((line = br.readLine()) != null)
+                {
                     db.execSQL(line);
                 }
                 db.setTransactionSuccessful();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 Log.e("test", "read database init file error");
-            } finally {
+            }
+            finally
+            {
                 db.endTransaction();
-                if (br != null) {
-                    try {
+                if (br != null)
+                {
+                    try
+                    {
                         br.close();
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e)
+                    {
                         Log.e("test", "buffer reader close error");
                     }
                 }
