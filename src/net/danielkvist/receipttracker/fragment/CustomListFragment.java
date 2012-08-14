@@ -26,6 +26,13 @@ public class CustomListFragment extends ListFragment
         @Override
         public void onItemSelected(Receipt receipt) { }
     };
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) 
+    {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    };
 
     @Override
     public void onAttach(Activity activity)

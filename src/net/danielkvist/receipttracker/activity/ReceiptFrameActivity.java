@@ -126,4 +126,8 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         invalidateOptionsMenu();
     }
     
+    public Receipt getReceipt()
+    {
+        return currentReceipt;
+    }
 }

@@ -69,6 +69,7 @@ public class ReceiptDetailFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
     
     @Override

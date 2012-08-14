@@ -1,7 +1,6 @@
 package net.danielkvist.receipttracker.fragment;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,18 +9,23 @@ import java.util.HashMap;
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
+import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,12 +34,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ReceiptAddFragment extends Fragment implements OnDateSetListener
+public class ReceiptAddFragment extends Fragment implements OnDateSetListener, DialogInterface.OnClickListener
 {
     
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -49,6 +54,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
     private Receipt receipt;
     private ImageView imageView;
     private Communicator communicator;
+    private Context applicationContext;
+    private DatePickerFragment datePickerFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -56,6 +63,12 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
         super.onCreate(savedInstanceState);
         communicator = new Communicator(getActivity());
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+        applicationContext = getActivity().getApplicationContext();
+        if(savedInstanceState != null)
+            receipt = (Receipt) savedInstanceState.getParcelable(Receipt.EXTRA_RECEIPT);
+        else
+            receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
     }
     
     @Override
@@ -82,7 +95,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
+        
         if(receipt == null)
         {
             receipt = new Receipt();
@@ -137,7 +150,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
         
         
         timeView = (TextView) rootView.findViewById(R.id.add_receipt_timestamp);
-        timeView.setText(receipt.getDateAndTime(getActivity()));
+        timeView.setText(receipt.getDateAndTime(applicationContext));
 
         ImageButton cameraButton = (ImageButton) rootView.findViewById(R.id.camera_button);
         cameraButton.setOnClickListener(new View.OnClickListener() {
@@ -151,16 +164,32 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
             public void onClick(View v) { showDateDialog(); }
         });
         
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+        
+        Fragment fr = new MyMapFragmentActivity();
+        fr.setArguments(arguments);
+        
+        FrameLayout f = (FrameLayout) rootView.findViewById(R.id.map_container);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.map_container, fr);
+        ft.commit();
+        
         return rootView;
     }
     
     private void showDateDialog()
     {
-        DatePickerFragment datePickerFragment = new DatePickerFragment();
-        datePickerFragment.setCallback(this);
+        datePickerFragment = DatePickerFragment.newInstance();
+        
+        // WORKAROUND Due to bug detailed in DatePickerFragment we do not use the onDateSet listener
+        // keeping the code around for the future though as it is the preferred way to handle selections
+        // datePickerFragment.setCallback(this);
+        datePickerFragment.setAcceptDateListener(this);
         datePickerFragment.show(getFragmentManager(), null);
     }
     
+    // WORKAROUND this listener is not currently being used because of system bug detailed in DatePickerFragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day)
     {
@@ -168,10 +197,21 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
         calendar.set(year, month, day, 0, 0, 0);
         Date date = calendar.getTime();
         receipt.setTimestamp(date.getTime());
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getActivity().getApplicationContext());
-        timeView.setText(dateFormat.format(date));
+        timeView.setText(receipt.getDateAndTime(applicationContext));
     }
     
+    @Override
+    public void onClick(DialogInterface dialog, int which)
+    {
+        DatePicker picker = ((DatePickerDialog) dialog).getDatePicker();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth(), 0, 0, 0);
+        Date date = calendar.getTime();
+        receipt.setTimestamp(date.getTime());
+        timeView.setText(receipt.getDateAndTime(applicationContext));
+        
+    }
+
     public Receipt saveReceipt()
     {
         
@@ -262,4 +302,6 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener
         worker.execute(150, 150);
     }
 
+
+    
 }
