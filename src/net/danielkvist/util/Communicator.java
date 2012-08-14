@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class Communicator
 {
-    // XXX Add CRUD handling for accounts
+    // FIXME Add CRUD handling for accounts
     private static final String MESSAGE_DATA_WAS_SAVED = "Data was saved to database!";
     private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
     private static final String MESSAGE_COULD_NOT_OPEN = "Could not open database... try again and please report it to the developer!";

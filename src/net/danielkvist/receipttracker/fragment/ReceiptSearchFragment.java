@@ -177,7 +177,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         switch (item.getItemId())
         {
             case R.id.menu_search:
-                // FIXME Make sure that search works on small screen where
+                // TODO Make sure that search works on small screen where
                 // search is in the 3-dot menu
                 getActivity().onSearchRequested();
                 return true;

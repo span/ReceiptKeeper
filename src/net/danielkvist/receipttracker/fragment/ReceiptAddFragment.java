@@ -141,7 +141,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
         
-        // XXX Add account selector and get accounts
+        // FIXME Add account selector and get accounts
+        // FIXME Add possibility to add new account (launch dialog with id and name)
         
         commentView = (EditText) rootView.findViewById(R.id.add_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
