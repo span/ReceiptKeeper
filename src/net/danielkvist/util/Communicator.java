@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.receipttracker.content.ReceiptAccount;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -13,7 +14,6 @@ import android.widget.Toast;
 
 public class Communicator
 {
-    // FIXME Add CRUD handling for accounts
     private static final String MESSAGE_DATA_WAS_SAVED = "Data was saved to database!";
     private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
     private static final String MESSAGE_COULD_NOT_OPEN = "Could not open database... try again and please report it to the developer!";
@@ -53,6 +53,38 @@ public class Communicator
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receiptList;
+    }
+    
+    public ArrayList<ReceiptAccount> getReceiptAccounts()
+    {
+        ArrayList<ReceiptAccount> receiptAccountList = null;
+        DbAdapter dbAdapter = new DbAdapter(context);
+
+        try
+        {
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.fetchReceiptAccounts();
+
+            if (cursor != null)
+            {
+                ReceiptAccount receiptAccount;
+                receiptAccountList = new ArrayList<ReceiptAccount>();
+                while (!cursor.isAfterLast())
+                {
+                    receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)));
+                    receiptAccountList.add(receiptAccount);
+                    cursor.moveToNext();
+                }
+            }
+
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return receiptAccountList;
     }
 
     public HashMap<String, Integer> getAllSettings()
@@ -147,6 +179,19 @@ public class Communicator
         }
 
     }
+    
+    public boolean saveReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        if (receiptAccount.getCode() > 0)
+        {
+            return updateReceiptAccount(receiptAccount);
+        }
+        else
+        {
+            return insertReceiptAccount(receiptAccount);
+        }
+
+    }
 
     public void saveSetting(Setting setting)
     {
@@ -178,6 +223,45 @@ public class Communicator
 
         return receiptList;
     }
+    
+    private boolean insertReceipt(Receipt receipt)
+    {
+        boolean result = false;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
+                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return result;
+    }
+    
+    private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        boolean result = false;
+        DbAdapter dbAdapter = new DbAdapter(context);
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return result;
+    }
 
     public boolean updateReceipt(Receipt receipt)
     {
@@ -198,16 +282,34 @@ public class Communicator
         }
         return result;
     }
-
-    private boolean insertReceipt(Receipt receipt)
+    
+    public boolean updateReceiptAccount(ReceiptAccount receiptAccount)
     {
-        boolean result = false;
         DbAdapter dbAdapter = new DbAdapter(context);
+        boolean result = false;
         try
         {
             dbAdapter.open();
-            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
-                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
+            result = dbAdapter.updateReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        return result;
+    }
+    
+    public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        DbAdapter dbAdapter = new DbAdapter(context);
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.deleteReceiptAccount(receiptAccount.getCode());
             showResult(result);
             dbAdapter.close();
         }
