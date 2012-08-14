@@ -81,10 +81,13 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             ScaleBitmapFileTask worker = new ScaleBitmapFileTask(receiptImage, receipt.getPhoto());
             worker.execute(150, 150);
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
+            TextView receiptTax = (TextView) findViewById(R.id.receipt_tax);
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
             receiptName.setText(receipt.getName());
             receiptSum.setText(receipt.getSum());
+            receiptTax.setText(receipt.getTax());
+            
             receiptDateAndTime.setText(receipt.getDateAndTime(this));
         }
     }

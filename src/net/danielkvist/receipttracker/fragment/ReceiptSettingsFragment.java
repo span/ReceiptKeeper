@@ -30,6 +30,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         /*if (getArguments().containsKey(ARG_ITEM_ID))
         {
             mItem = MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
