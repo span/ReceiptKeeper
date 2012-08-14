@@ -1,5 +1,9 @@
 package net.danielkvist.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,6 +23,7 @@ public class DbAdapter
     public static String SELECTED_TABLE;
     public static final String DATABASE_TABLE_RECEIPTS = "receipts";
     public static final String DATABASE_TABLE_SETTINGS = "settings";
+    public static final String DATABASE_TABLE_ACCOUNTS = "accounts";
     public static final String KEY_ROWID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_PHOTO = "photo";
@@ -53,8 +58,7 @@ public class DbAdapter
     private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_LOCATION + "',0" + ");";
 
-    // XXX Add accounts table with CRUD and read file with accounts for initial
-    // values (uk, se)
+    // FIXME Add accounts CRUD
 
     /**
      * 
@@ -104,6 +108,20 @@ public class DbAdapter
         ContentValues values = putReceiptValues(name, photo, timestamp, locLat, locLong, sum, tax, comment);
         return db.insert(DATABASE_TABLE_RECEIPTS, null, values) > 0;
     }
+    
+    /**
+     * 
+     * @param code
+     * @param name
+     * @return
+     */
+    public boolean createAccount(long code, String name)
+    {
+        ContentValues values = new ContentValues();
+        values.put(KEY_ROWID, code);
+        values.put(KEY_NAME, name);
+        return db.insert(DATABASE_TABLE_ACCOUNTS, null, values) > 0;
+    }
 
     /**
      * @param rowId
@@ -126,6 +144,28 @@ public class DbAdapter
     {
         SELECTED_TABLE = DATABASE_TABLE_RECEIPTS;
         return deleteItem(rowId);
+    }
+    
+    /**
+     * 
+     * @param rowId
+     * @return
+     */
+    public boolean deleteAccount(long rowId)
+    {
+        SELECTED_TABLE = DATABASE_TABLE_ACCOUNTS;
+        return deleteItem(rowId);
+    }
+    
+    public Cursor fetchAccounts()
+    {
+        Cursor cursor;
+        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, KEY_NAME + " ASC");
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
     }
 
     /**
@@ -250,6 +290,20 @@ public class DbAdapter
         }
         return cursor;
     }
+    
+    /**
+     * 
+     * @param name
+     * @param code
+     * @return
+     */
+    public boolean updateAccount(long code, String name)
+    {
+        ContentValues values = new ContentValues();
+        values.put(KEY_ROWID, code);
+        values.put(KEY_NAME, name);
+        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_ROWID + "=" + code, null) > 0;
+    }
 
     /**
      * 
@@ -313,9 +367,12 @@ public class DbAdapter
     private static class DatabaseHelper extends SQLiteOpenHelper
     {
 
+        private Context context;
+
         DatabaseHelper(Context context)
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            this.context = context;
         }
 
         @Override
@@ -327,6 +384,32 @@ public class DbAdapter
             db.execSQL(DATABASE_INIT_SETTING_TAX);
             db.execSQL(DATABASE_INIT_SETTING_COMMENT);
             db.execSQL(DATABASE_INIT_SETTING_LOCATION);
+            initDatabaseData(db);
+        }
+        
+        private void initDatabaseData(SQLiteDatabase db) {
+            BufferedReader br = null;
+            try {
+                
+                br = new BufferedReader(new InputStreamReader(context.getAssets().open("accounts.sql")), 1024 * 4);
+                String line = null;
+                db.beginTransaction();
+                while ((line = br.readLine()) != null) {
+                    db.execSQL(line);
+                }
+                db.setTransactionSuccessful();
+            } catch (IOException e) {
+                Log.e("test", "read database init file error");
+            } finally {
+                db.endTransaction();
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        Log.e("test", "buffer reader close error");
+                    }
+                }
+            }
         }
 
         @Override
