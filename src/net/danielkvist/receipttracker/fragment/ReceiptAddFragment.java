@@ -151,20 +151,26 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         // FIXME Add visibility setting to accounts
         // FIXME Save the selected account code with the receipt (get from position in list?)
         // FIXME Add possibility to add new account (launch dialog with id and name)
-        receiptAccounts = communicator.getReceiptAccounts();
-        List<String> list = new ArrayList<String>();
-        for(ReceiptAccount r : receiptAccounts)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.append(r.getCode());
-            sb.append(" - ");
-            sb.append(getResources().getString(getResources().getIdentifier(r.getName(), "string", "net.danielkvist.receipttracker")));
-            list.add(sb.toString());
-        }
         accountSpinner = (Spinner) rootView.findViewById(R.id.add_receipt_account);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        accountSpinner.setAdapter(dataAdapter);
+        accountSpinner.setVisibility(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT));
+        rootView.findViewById(R.id.add_receipt_account_label).setVisibility(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT));
+        if(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT) == View.VISIBLE)
+        {
+            receiptAccounts = communicator.getReceiptAccounts();
+            List<String> list = new ArrayList<String>();
+            for(ReceiptAccount r : receiptAccounts)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append(r.getCode());
+                sb.append(" - ");
+                sb.append(getResources().getString(getResources().getIdentifier(r.getName(), "string", "net.danielkvist.receipttracker")));
+                list.add(sb.toString());
+            }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            accountSpinner.setAdapter(dataAdapter);
+        }
+        
        
         
 
@@ -190,16 +196,23 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             public void onClick(View v) { showDateDialog(); }
         });
         
-        Bundle arguments = new Bundle();
-        arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
-        
-        Fragment fr = new MyMapFragmentActivity();
-        fr.setArguments(arguments);
-        
         FrameLayout f = (FrameLayout) rootView.findViewById(R.id.map_container);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.map_container, fr);
-        ft.commit();
+        f.setVisibility(settingsMap.get(Setting.SETTING_FIELD_LOCATION));
+        rootView.findViewById(R.id.map_container_label).setVisibility(settingsMap.get(Setting.SETTING_FIELD_LOCATION));
+        
+        if(settingsMap.get(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
+            
+            Fragment fr = new MyMapFragmentActivity();
+            fr.setArguments(arguments);
+            
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(R.id.map_container, fr);
+            ft.commit();
+        }
+        
         
         return rootView;
     }

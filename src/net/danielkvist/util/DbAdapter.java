@@ -39,6 +39,7 @@ public class DbAdapter
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
 
+    // FIXME Move initial SQL all into their own asset files
     private static final String DATABASE_CREATE_TABLE_RECEIPTS = "CREATE TABLE " + DATABASE_TABLE_RECEIPTS + " (" + KEY_ROWID
             + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_PHOTO + " text not null," + KEY_TIMESTAMP
             + " numeric not null," + KEY_LOCATION_LAT + " text not null," + KEY_LOCATION_LONG + " text not null," + KEY_SUM
@@ -58,6 +59,9 @@ public class DbAdapter
 
     private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_LOCATION + "',0" + ");";
+    
+    private static final String DATABASE_INIT_SETTING_ACCOUNT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
+            + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_ACCOUNT + "',0" + ");";
 
     /**
      * 
@@ -383,6 +387,7 @@ public class DbAdapter
             db.execSQL(DATABASE_INIT_SETTING_TAX);
             db.execSQL(DATABASE_INIT_SETTING_COMMENT);
             db.execSQL(DATABASE_INIT_SETTING_LOCATION);
+            db.execSQL(DATABASE_INIT_SETTING_ACCOUNT);
             initDatabaseData(db);
         }
 

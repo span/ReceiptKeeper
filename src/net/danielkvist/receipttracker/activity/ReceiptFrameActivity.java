@@ -19,7 +19,7 @@ import android.view.MenuItem;
 
 public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
 {
-    // FIXME Change title to approprieate title
+    // FIXME Change title to appropriate title
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
     private static final int SEARCH_FRAGMENT_ID = 2;

@@ -12,7 +12,7 @@ public class Setting
     public static final String SETTING_FIELD_SUM = "sum";
     public static final String SETTING_FIELD_TAX = "tax";
     public static final String SETTING_FIELD_COMMENT = "comment";
-    
+    public static final String SETTING_FIELD_ACCOUNT = "account";
     
     private int value;
     private String name;
