@@ -232,7 +232,7 @@ public class Communicator
         {
             dbAdapter.open();
             result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
-                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
+                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
             showResult(result);
             dbAdapter.close();
         }
@@ -271,7 +271,7 @@ public class Communicator
         {
             dbAdapter.open();
             result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
-                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment());
+                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
             showResult(result);
             dbAdapter.close();
         }
@@ -360,7 +360,7 @@ public class Communicator
                 .getColumnIndex(DbAdapter.KEY_TIMESTAMP)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
                 cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
                         .getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
-                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)));
+                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)), cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ACCOUNT_ID)));
     }
 
     private void showResult(boolean result)
