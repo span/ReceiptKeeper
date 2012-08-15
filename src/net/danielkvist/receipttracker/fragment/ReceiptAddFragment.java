@@ -148,8 +148,6 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
         
-        // FIXME Add visibility setting to accounts
-        // FIXME Save the selected account code with the receipt (get from position in list?)
         // FIXME Add possibility to add new account (launch dialog with id and name)
         accountSpinner = (Spinner) rootView.findViewById(R.id.add_receipt_account);
         accountSpinner.setVisibility(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT));
@@ -169,17 +167,16 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             accountSpinner.setAdapter(dataAdapter);
+            if(receipt.getReceiptAccountId() > -1)
+            {
+                int position = findReceiptPosition(receipt.getReceiptAccountId());
+                accountSpinner.setSelection(position);
+            }
         }
-        
-       
-        
 
-        
         commentView = (EditText) rootView.findViewById(R.id.add_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));
         commentView.setText(receipt.getComment());
-        
-        
         
         timeView = (TextView) rootView.findViewById(R.id.add_receipt_timestamp);
         timeView.setText(receipt.getDateAndTime(applicationContext));
@@ -217,6 +214,18 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         return rootView;
     }
     
+    private int findReceiptPosition(long receiptAccountId)
+    {
+        int i = 0;
+        while(i < receiptAccounts.size())
+        {
+            if(receiptAccountId == receiptAccounts.get(i).getCode())
+                break;
+            i++;
+        }
+        return i;
+    }
+
     private void showDateDialog()
     {
         datePickerFragment = DatePickerFragment.newInstance();
@@ -274,6 +283,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     
     private boolean setViewValues()
     {
+        // FIXME FC when map has no location! Get last known location not working?
         int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
         int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
         
@@ -294,6 +304,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         receipt.setSum(sumView.getText().toString());
         receipt.setTax(taxView.getText().toString());
         receipt.setComment(commentView.getText().toString());
+        receipt.setReceiptAccountId(receiptAccounts.get(accountSpinner.getSelectedItemPosition()).getCode());
         
         return true;
     }

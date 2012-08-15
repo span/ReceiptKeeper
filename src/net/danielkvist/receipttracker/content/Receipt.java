@@ -258,6 +258,12 @@ public class Receipt implements Parcelable
         return account_id;
     }
     
+
+    public void setReceiptAccountId(long accountId)
+    {
+        this.account_id = accountId;
+    }
+    
     private String getDateAndTime()
     {
         return String.valueOf(timestamp);
@@ -303,6 +309,5 @@ public class Receipt implements Parcelable
             return new Receipt[size];
         }
     };
-
 
 }
