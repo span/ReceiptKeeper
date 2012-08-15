@@ -60,8 +60,8 @@
     <string name="machines_and_inventory">Maskiner och inventarier</string>
     <string name="other_property_assets">Övriga anläggningstillgångar</string>
     <string name="merchandise_store">Varulager</string>
-    <string name="customer_billlings">Kundfordringar</string>
-    <string name="other_billlings">Övriga fordringar</string>
+    <string name="customer_billings">Kundfordringar</string>
+    <string name="other_billings">Övriga fordringar</string>
     <string name="cash_and_bank">Kassa och bank</string>
     <string name="own_capital">Eget kapital</string>
     <string name="expansion_fund">Expansionsfond</string>

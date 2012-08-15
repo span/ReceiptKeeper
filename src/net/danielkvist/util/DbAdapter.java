@@ -158,7 +158,7 @@ public class DbAdapter
     public Cursor fetchReceiptAccounts()
     {
         Cursor cursor;
-        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, KEY_NAME + " ASC");
+        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, KEY_ROWID);
         if (cursor != null)
         {
             cursor.moveToFirst();
