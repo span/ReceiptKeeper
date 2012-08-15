@@ -21,6 +21,8 @@ public class Receipt implements Parcelable
     private String sum;
     private String tax;
     private String comment;
+
+    private long account_id;
     
     public Receipt() 
     { 
@@ -33,12 +35,14 @@ public class Receipt implements Parcelable
         sum = "";
         tax = "";
         comment = "";
+        account_id = -1;
     }
 
     public Receipt(Parcel in)
     {
         this.id = in.readInt();
         this.timestamp = in.readLong();
+        this.account_id = in.readLong();
         
         String[] stringData = new String[7];
         in.readStringArray(stringData);
@@ -53,7 +57,7 @@ public class Receipt implements Parcelable
     }
 
     public Receipt(int id, String name, String photo, long timestamp, String locationLat,
-            String locationLong, String sum, String tax, String comment)
+            String locationLong, String sum, String tax, String comment, long account_id)
     {
         this.id = id;
         this.name = name;
@@ -64,6 +68,7 @@ public class Receipt implements Parcelable
         this.sum = sum;
         this.tax = tax;
         this.comment = comment;
+        this.account_id = account_id;
     }
 
     
@@ -248,6 +253,11 @@ public class Receipt implements Parcelable
         this.comment = comment;
     }
     
+    public long getReceiptAccountId()
+    {
+        return account_id;
+    }
+    
     private String getDateAndTime()
     {
         return String.valueOf(timestamp);
@@ -277,6 +287,7 @@ public class Receipt implements Parcelable
     {
         dest.writeInt(id);
         dest.writeLong(timestamp);
+        dest.writeLong(account_id);
         dest.writeStringArray(new String[] { name, photo, locationLat, locationLong, sum, tax, comment });
     }
 
@@ -292,5 +303,6 @@ public class Receipt implements Parcelable
             return new Receipt[size];
         }
     };
+
 
 }
