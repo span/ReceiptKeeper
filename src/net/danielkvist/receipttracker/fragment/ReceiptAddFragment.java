@@ -2,15 +2,18 @@ package net.danielkvist.receipttracker.fragment;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
@@ -32,11 +35,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +61,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private Communicator communicator;
     private Context applicationContext;
     private DatePickerFragment datePickerFragment;
+    private Spinner accountSpinner;
+    private ArrayList<ReceiptAccount> receiptAccounts;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -141,8 +148,26 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
         
-        // FIXME Add account selector and get accounts
+        // FIXME Add visibility setting to accounts
+        // FIXME Save the selected account code with the receipt (get from position in list?)
         // FIXME Add possibility to add new account (launch dialog with id and name)
+        receiptAccounts = communicator.getReceiptAccounts();
+        List<String> list = new ArrayList<String>();
+        for(ReceiptAccount r : receiptAccounts)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append(r.getCode());
+            sb.append(" - ");
+            sb.append(getResources().getString(getResources().getIdentifier(r.getName(), "string", "net.danielkvist.receipttracker")));
+            list.add(sb.toString());
+        }
+        accountSpinner = (Spinner) rootView.findViewById(R.id.add_receipt_account);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accountSpinner.setAdapter(dataAdapter);
+       
+        
+
         
         commentView = (EditText) rootView.findViewById(R.id.add_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));

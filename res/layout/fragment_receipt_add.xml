@@ -7,10 +7,10 @@
     android:fillViewport="true" >
 
     <LinearLayout
+        style="@style/mainContainerPadding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        style="@style/mainContainerPadding"
         tools:context=".AddReceiptFragment" >
 
         <LinearLayout
@@ -71,6 +71,13 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="@string/receipt" />
+
         <EditText
             android:id="@+id/add_receipt_name"
             android:layout_width="match_parent"
@@ -102,14 +109,35 @@
             android:hint="@string/receipt_comment_"
             android:inputType="textMultiLine"
             android:lines="3" />
-        
-        <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/map_container"></FrameLayout>
 
-<!--         <fragment -->
-<!--             android:name="net.danielkvist.receipttracker.activity.MyMapFragmentActivity" -->
-<!--             android:layout_width="match_parent" -->
-<!--             android:layout_height="wrap_content" > -->
-<!--         </fragment> -->
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="@string/account" />
+
+        <Spinner
+            android:id="@+id/add_receipt_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text="@string/location" />
+        
+        <!-- The margins on the TextView's cannot be extracted to styles since the listSepartorStyle is not extendable,
+             a workaround could be to create the listSeparatorStyle as my own style but I like to keep it at system setting.
+             See this bug report for more information: http://code.google.com/p/android/issues/detail?id=18659 -->
+
+        <FrameLayout
+            android:id="@+id/map_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>
