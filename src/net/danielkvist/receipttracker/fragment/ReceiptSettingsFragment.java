@@ -82,19 +82,23 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         ((RadioGroup) rootView.findViewById(R.id.radio_group_storage)).setOnCheckedChangeListener(this);
         
         Switch sumSwitch = (Switch) rootView.findViewById(R.id.switch_sum);
-        sumSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_SUM) == 0);
+        sumSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_SUM) == View.VISIBLE);
         sumSwitch.setOnCheckedChangeListener(this);
         
         Switch taxSwitch = (Switch) rootView.findViewById(R.id.switch_tax);
-        taxSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_TAX) == 0);
+        taxSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_TAX) == View.VISIBLE);
         taxSwitch.setOnCheckedChangeListener(this);
         
         Switch commentSwitch = (Switch) rootView.findViewById(R.id.switch_comment);
-        commentSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_COMMENT) == 0);
+        commentSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_COMMENT) == View.VISIBLE);
         commentSwitch.setOnCheckedChangeListener(this);
         
+        Switch accountSwitch = (Switch) rootView.findViewById(R.id.switch_account);
+        accountSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT) == View.VISIBLE);
+        accountSwitch.setOnCheckedChangeListener(this);
+        
         Switch locationSwitch = (Switch) rootView.findViewById(R.id.switch_location);
-        locationSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_LOCATION) == 0);
+        locationSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE);
         locationSwitch.setOnCheckedChangeListener(this);
     }
 
@@ -135,6 +139,9 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                 break;
             case R.id.switch_comment:
                 setting.setName(Setting.SETTING_FIELD_COMMENT);
+                break;
+            case R.id.switch_account:
+                setting.setName(Setting.SETTING_FIELD_ACCOUNT);
                 break;
         }
         setting.setValue(isChecked ? View.VISIBLE : View.GONE);

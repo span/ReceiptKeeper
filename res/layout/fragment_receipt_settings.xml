@@ -90,6 +90,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/comment" />
+                    
+                    <Switch
+                        android:id="@+id/switch_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account" />
 
                     <Switch
                         android:id="@+id/switch_location"
