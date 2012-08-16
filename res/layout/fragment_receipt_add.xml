@@ -118,10 +118,25 @@
             android:layout_marginBottom="6dp"
             android:text="@string/account" />
 
-        <Spinner
-            android:id="@+id/add_receipt_account"
+        <LinearLayout
+            android:id="@+id/add_receipt_account_spinner_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/add_receipt_account_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_input_add"
+                android:contentDescription="@string/click_to_add_a_receipt_account" />
+
+            <Spinner
+                android:id="@+id/add_receipt_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/map_container_label"
@@ -130,10 +145,12 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:text="@string/location" />
-        
-        <!-- The margins on the TextView's cannot be extracted to styles since the listSepartorStyle is not extendable,
+
+        <!--
+             The margins on the TextView's cannot be extracted to styles since the listSepartorStyle is not extendable,
              a workaround could be to create the listSeparatorStyle as my own style but I like to keep it at system setting.
-             See this bug report for more information: http://code.google.com/p/android/issues/detail?id=18659 -->
+             See this bug report for more information: http://code.google.com/p/android/issues/detail?id=18659
+        -->
 
         <FrameLayout
             android:id="@+id/map_container"

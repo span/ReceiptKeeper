@@ -34,7 +34,10 @@ public class DbAdapter
     public static final String KEY_TAX = "tax";
     public static final String KEY_COMMENT = "comment";
     public static final String KEY_ACCOUNT_ID = "account_id";
+    public static final String KEY_CODE = "code";
+    public static final String KEY_ROW = "row";
     public static final String KEY_SETTING_VALUE = "setting_value";
+    
 
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
@@ -62,6 +65,7 @@ public class DbAdapter
     
     private static final String DATABASE_INIT_SETTING_ACCOUNT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_ACCOUNT + "',0" + ");";
+    
 
     /**
      * 
@@ -120,7 +124,8 @@ public class DbAdapter
     public boolean createReceiptAccount(long code, String name)
     {
         ContentValues values = new ContentValues();
-        values.put(KEY_ROWID, code);
+        values.put(KEY_CODE, code);
+        values.put(KEY_ROW, "user");
         values.put(KEY_NAME, name);
         return db.insert(DATABASE_TABLE_ACCOUNTS, null, values) > 0;
     }
@@ -162,7 +167,7 @@ public class DbAdapter
     public Cursor fetchReceiptAccounts()
     {
         Cursor cursor;
-        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME }, null, null, null, null, KEY_ROWID);
+        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME, KEY_CODE }, null, null, null, null, KEY_CODE);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -299,12 +304,12 @@ public class DbAdapter
      * @param code
      * @return
      */
-    public boolean updateReceiptAccount(long code, String name)
+    public boolean updateReceiptAccount(long rowId, long code, String name)
     {
         ContentValues values = new ContentValues();
-        values.put(KEY_ROWID, code);
+        values.put(KEY_CODE, code);
         values.put(KEY_NAME, name);
-        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_ROWID + "=" + code, null) > 0;
+        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
     /**

@@ -82,5 +82,10 @@
     <string name="depreciation_and_impairments_of_inventory_and_immaterial_assets">Avskrivningar och nedskrivningar av maskiner och inventarier och immateriella tillgångar</string>
     <string name="interest_income">Ränteintäkter</string>
     <string name="interest_cost">Räntekostnader m.m.</string>
+    <string name="account_name">Account name:</string>
+    <string name="account_code">Account code:</string>
+    <string name="add_account">Add account</string>
+    <string name="click_to_add_a_receipt_account">Click to add a receipt account</string>
+    <string name="add">Add</string>
 
 </resources>

@@ -54,7 +54,7 @@ public class Communicator
         }
         return receiptList;
     }
-    
+
     public ArrayList<ReceiptAccount> getReceiptAccounts()
     {
         ArrayList<ReceiptAccount> receiptAccountList = null;
@@ -71,7 +71,9 @@ public class Communicator
                 receiptAccountList = new ArrayList<ReceiptAccount>();
                 while (!cursor.isAfterLast())
                 {
-                    receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)));
+                    receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
+                                                        cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_CODE)),
+                                                        cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)));
                     receiptAccountList.add(receiptAccount);
                     cursor.moveToNext();
                 }
@@ -151,7 +153,7 @@ public class Communicator
         {
             dbAdapter.open();
             cursor = dbAdapter.fetchLastReceipt();
-            
+
             if (cursor.getCount() > 0)
             {
                 receipt = buildReceipt(cursor);
@@ -179,10 +181,10 @@ public class Communicator
         }
 
     }
-    
+
     public boolean saveReceiptAccount(ReceiptAccount receiptAccount)
     {
-        if (receiptAccount.getCode() > 0)
+        if (receiptAccount.getRowId() > 0)
         {
             return updateReceiptAccount(receiptAccount);
         }
@@ -223,7 +225,7 @@ public class Communicator
 
         return receiptList;
     }
-    
+
     private boolean insertReceipt(Receipt receipt)
     {
         boolean result = false;
@@ -243,7 +245,7 @@ public class Communicator
         }
         return result;
     }
-    
+
     private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
@@ -271,7 +273,8 @@ public class Communicator
         {
             dbAdapter.open();
             result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
-                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
+                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(),
+                    receipt.getReceiptAccountId());
             showResult(result);
             dbAdapter.close();
         }
@@ -282,7 +285,7 @@ public class Communicator
         }
         return result;
     }
-    
+
     public boolean updateReceiptAccount(ReceiptAccount receiptAccount)
     {
         DbAdapter dbAdapter = new DbAdapter(context);
@@ -290,7 +293,7 @@ public class Communicator
         try
         {
             dbAdapter.open();
-            result = dbAdapter.updateReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
+            result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(), receiptAccount.getName());
             showResult(result);
             dbAdapter.close();
         }
@@ -301,7 +304,7 @@ public class Communicator
         }
         return result;
     }
-    
+
     public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
     {
         DbAdapter dbAdapter = new DbAdapter(context);
@@ -360,7 +363,8 @@ public class Communicator
                 .getColumnIndex(DbAdapter.KEY_TIMESTAMP)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
                 cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
                         .getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
-                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)), cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ACCOUNT_ID)));
+                cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)), cursor.getInt(cursor
+                        .getColumnIndex(DbAdapter.KEY_ACCOUNT_ID)));
     }
 
     private void showResult(boolean result)
