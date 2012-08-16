@@ -90,5 +90,7 @@
     <string name="click_to_add_a_receipt_account">Click to add a receipt account</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
+    <string name="enable_gps_message">Your GPS is disabled, do you want to enable it?</string>
+    <string name="enable_gps_title">Enable GPS?</string>
 
 </resources>
