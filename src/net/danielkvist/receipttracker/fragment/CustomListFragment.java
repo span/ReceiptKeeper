@@ -2,8 +2,8 @@ package net.danielkvist.receipttracker.fragment;
 
 import net.danielkvist.receipttracker.content.Receipt;
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.widget.ListView;
 
 public class CustomListFragment extends ListFragment

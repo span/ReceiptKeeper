@@ -7,17 +7,17 @@ import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
+public class ReceiptFrameActivity extends Activity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
 {
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
@@ -94,7 +94,7 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         Bundle arguments = new Bundle();
         arguments.putParcelable(Receipt.EXTRA_RECEIPT, newReceipt);
         
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         //ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         currentReceipt = newReceipt;

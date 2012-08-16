@@ -10,16 +10,16 @@ import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.task.ScaleBitmapFileTask;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MainActivity extends FragmentActivity implements CustomListFragment.Callbacks
+public class MainActivity extends Activity implements CustomListFragment.Callbacks
 {
     private boolean mTwoPane;
 
@@ -32,7 +32,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
         if (findViewById(R.id.receipt_frame_container) != null)
         {
             mTwoPane = true;
-            ((ReceiptListFragment) getSupportFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true);
+            ((ReceiptListFragment) getFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true);
             // XXX Take this out if possible, it's just setting a default value which probably is set anyway
         }
     }
@@ -101,7 +101,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
             Fragment fragment = new ReceiptDetailFragment();
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
         }
         else
         {
@@ -146,7 +146,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
             // ReceiptDetailFragment fragment = new ReceiptDetailFragment(null);
             // // XXX Launch the correct fragment, remove this?
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.receipt_frame_container, fragment).commit();
 
         }
         else
