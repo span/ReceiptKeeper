@@ -6,6 +6,8 @@ import net.danielkvist.util.Communicator;
 import net.danielkvist.util.MyOverlays;
 import net.danielkvist.util.Setting;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -23,9 +25,6 @@ public class MyMapActivity extends MapActivity
     private MapView mapView;
     private MyLocationOverlay mlo;
     private Receipt receipt;
-    private GeoPoint gp;
-    private LocationManager locationManager;
-    private String provider;
     private MapController mapController;
 
     @Override
@@ -42,6 +41,7 @@ public class MyMapActivity extends MapActivity
 
         mapController = mapView.getController();
         mapController.setZoom(16);
+        
 
         if (receipt != null)
         {
@@ -51,7 +51,7 @@ public class MyMapActivity extends MapActivity
             MyOverlays mo = new MyOverlays(marker);
             mo.addOverlay(item);
             mapView.getOverlays().add(mo);
-        }
+        }       
         else
         {
             mlo = new MyLocationOverlay(this, mapView);
@@ -78,6 +78,21 @@ public class MyMapActivity extends MapActivity
                     mapView.getController().animateTo(currentGeoPoint);
                 }
             });
+            if(currentGeoPoint == null)
+            {
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+                String bestProvider = locationManager.getBestProvider(criteria, false);
+                Location location = locationManager.getLastKnownLocation(bestProvider);
+                if(location != null)
+                {
+                    currentGeoPoint = new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6));
+                }
+                else
+                {
+                    currentGeoPoint = new GeoPoint((int) (0 * 1E6), (int) (0 * 1E6));
+                }
+            }
         }
     }
 
