@@ -318,7 +318,6 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
     private boolean setViewValues()
     {
-        // FIXME FC when map has no location! Get last known location not working?
         int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
         int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
 

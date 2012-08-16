@@ -5,11 +5,15 @@ import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.MyOverlays;
 import net.danielkvist.util.Setting;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -41,7 +45,6 @@ public class MyMapActivity extends MapActivity
 
         mapController = mapView.getController();
         mapController.setZoom(16);
-        
 
         if (receipt != null)
         {
@@ -51,7 +54,7 @@ public class MyMapActivity extends MapActivity
             MyOverlays mo = new MyOverlays(marker);
             mo.addOverlay(item);
             mapView.getOverlays().add(mo);
-        }       
+        }
         else
         {
             mlo = new MyLocationOverlay(this, mapView);
@@ -67,8 +70,13 @@ public class MyMapActivity extends MapActivity
     protected void onResume()
     {
         super.onResume();
-        if(mlo != null)
+        if (mlo != null)
         {
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            {
+                showAlertMessageGps();
+            }
             mlo.enableMyLocation();
             mlo.runOnFirstFix(new Runnable()
             {
@@ -78,13 +86,12 @@ public class MyMapActivity extends MapActivity
                     mapView.getController().animateTo(currentGeoPoint);
                 }
             });
-            if(currentGeoPoint == null)
+            if (currentGeoPoint == null)
             {
-                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
                 String bestProvider = locationManager.getBestProvider(criteria, false);
                 Location location = locationManager.getLastKnownLocation(bestProvider);
-                if(location != null)
+                if (location != null)
                 {
                     currentGeoPoint = new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6));
                 }
@@ -100,7 +107,7 @@ public class MyMapActivity extends MapActivity
     protected void onPause()
     {
         super.onPause();
-        if(mlo != null)
+        if (mlo != null)
         {
             mlo.disableMyLocation();
         }
@@ -112,5 +119,25 @@ public class MyMapActivity extends MapActivity
         return false;
     }
 
-    
+    private void showAlertMessageGps()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.enable_gps_message).setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(final DialogInterface dialog, final int id)
+                    {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+                {
+                    public void onClick(final DialogInterface dialog,final int id)
+                    {
+                        dialog.cancel();
+                    }
+                }).setTitle(R.string.enable_gps_title);
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 }
