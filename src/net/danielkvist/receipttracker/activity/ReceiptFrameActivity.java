@@ -19,7 +19,6 @@ import android.view.MenuItem;
 
 public class ReceiptFrameActivity extends FragmentActivity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
 {
-    // FIXME Change title to appropriate title
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
     private static final int SEARCH_FRAGMENT_ID = 2;
@@ -104,15 +103,26 @@ public class ReceiptFrameActivity extends FragmentActivity implements CustomList
         {
             case ADD_FRAGMENT_ID:
                 fragment = new ReceiptAddFragment();
+                if(currentReceipt == null)
+                {
+                    setTitle(getString(R.string.add));
+                }
+                else
+                {
+                    setTitle(getString(R.string.edit));
+                }
                 break;
             case SEARCH_FRAGMENT_ID:
                 fragment = new ReceiptSearchFragment();
+                setTitle(getString(R.string.search));
                 break;
             case SETTINGS_FRAGMENT_ID:
                 fragment = new ReceiptSettingsFragment();
+                setTitle(getString(R.string.settings));
                 break;
             case DETAIL_FRAGMENT_ID:
                 fragment = new ReceiptDetailFragment();
+                setTitle(getString(R.string.details));
                 break;
         }
         

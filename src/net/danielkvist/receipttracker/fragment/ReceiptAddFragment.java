@@ -154,11 +154,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         accountAddButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
-                showEditDialog();
-
-            }
+            public void onClick(View v) { showEditDialog(); }
         });
         accountSpinner = (Spinner) rootView.findViewById(R.id.add_receipt_account);
         accountSpinner.setVisibility(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT));

@@ -28,7 +28,7 @@ public class MainActivity extends FragmentActivity implements CustomListFragment
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setTitle(getString(R.string.app_name));
         if (findViewById(R.id.receipt_frame_container) != null)
         {
             mTwoPane = true;
