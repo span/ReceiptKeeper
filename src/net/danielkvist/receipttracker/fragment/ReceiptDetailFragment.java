@@ -3,11 +3,12 @@ package net.danielkvist.receipttracker.fragment;
 import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
-import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -96,14 +97,14 @@ public class ReceiptDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        // TODO Add option to share image/receipt
         this.receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
         Communicator communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);
         ImageView imageView = (ImageView) rootView.findViewById(R.id.receipt_image);
-        ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, receipt.getPhoto());
-        worker.execute(150, 150);
+        BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
+        bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
+        
         imageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
