@@ -60,11 +60,14 @@ public class BitmapLoader
     
     public void loadBitmap(ImageView imageView, String path)
     {
-        // FIXME Try to delete image and see what happends when trying to load when file not found or empty string is passed as path (choose default)
         final Bitmap bitmap = getBitmapFromMemCache(path);
         if (bitmap != null)
         {
             imageView.setImageBitmap(bitmap);
+        }
+        else if(path.equals(""))
+        {
+            imageView.setImageBitmap(defaultBitmap);
         }
         else
         {
@@ -226,7 +229,10 @@ public class BitmapLoader
             int newHeight = (Integer) params[0];
             int newWidth = (Integer) params[1];
             Bitmap bitmap = BitmapLoader.decodeSampledBitmap(pathToBitmap, newHeight, newWidth);
-            addBitmapToMemoryCache(pathToBitmap, bitmap); 
+            if(bitmap != null)
+            {
+                addBitmapToMemoryCache(pathToBitmap, bitmap);
+            }
             return bitmap;
         }
 
