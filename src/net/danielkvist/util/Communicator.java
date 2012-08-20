@@ -1,5 +1,6 @@
 package net.danielkvist.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,9 +15,11 @@ import android.widget.Toast;
 
 public class Communicator
 {
+    private static final String MESSAGE_RECEIPT_WAS_DELETED = "Receipt was successfully deleted from the database.";
     private static final String MESSAGE_DATA_WAS_SAVED = "Data was saved to database!";
     private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
     private static final String MESSAGE_COULD_NOT_OPEN = "Could not open database... try again and please report it to the developer!";
+    private static final String MESSAGE_COULD_NOT_DELETE_FILE = "Could not delete the file associated with the receipt. ";
 
     private Context context;
 
@@ -407,6 +410,33 @@ public class Communicator
             showToast(MESSAGE_COULD_NOT_OPEN);
         }
         return receiptList;
+    }
+
+    public boolean deleteReceipt(Receipt receipt)
+    {
+        String pathToFile = receipt.getPhoto();
+        File file = new File(pathToFile);
+        boolean deleted = file.delete();
+        DbAdapter dbAdapter = new DbAdapter(context);
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.deleteReceipt(receipt.getId());
+            showToast(MESSAGE_RECEIPT_WAS_DELETED);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+            showToast(MESSAGE_COULD_NOT_OPEN);
+        }
+        if(!deleted)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), "Failed to delete file: " + pathToFile);
+            showToast(MESSAGE_COULD_NOT_DELETE_FILE);
+        }
+        return result && deleted;
     }
 
 }
