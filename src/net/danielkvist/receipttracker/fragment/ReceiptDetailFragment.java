@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
+import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.BitmapLoader;
@@ -45,6 +46,7 @@ public class ReceiptDetailFragment extends Fragment
         @Override
         public void editSelected(Receipt receipt) { }
     };
+    private Communicator communicator;
     
     @Override
     public void onAttach(Activity activity)
@@ -75,8 +77,10 @@ public class ReceiptDetailFragment extends Fragment
     
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.item_edit);
-        item.setVisible(true);
+        MenuItem deleteItem = menu.findItem(R.id.item_delete);
+        deleteItem.setVisible(true);
+        MenuItem editItem = menu.findItem(R.id.item_edit);
+        editItem.setVisible(true);
         
         super.onPrepareOptionsMenu(menu);
     }
@@ -86,6 +90,11 @@ public class ReceiptDetailFragment extends Fragment
     {
         switch(item.getItemId()) 
         {
+            case R.id.item_delete:
+                communicator.deleteReceipt(receipt);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                getActivity().startActivity(intent);
+                return true;
             case R.id.item_edit:
                 mCallbacks.editSelected(receipt);
                 return true;
@@ -98,7 +107,7 @@ public class ReceiptDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         this.receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
-        Communicator communicator = new Communicator(getActivity());
+        communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);
         ImageView imageView = (ImageView) rootView.findViewById(R.id.receipt_image);

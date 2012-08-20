@@ -42,7 +42,6 @@ public class DbAdapter
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
 
-    // FIXME Move initial SQL all into their own asset files
     private static final String DATABASE_CREATE_TABLE_RECEIPTS = "CREATE TABLE " + DATABASE_TABLE_RECEIPTS + " (" + KEY_ROWID
             + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_PHOTO + " text not null," + KEY_TIMESTAMP
             + " numeric not null," + KEY_LOCATION_LAT + " text not null," + KEY_LOCATION_LONG + " text not null," + KEY_SUM
