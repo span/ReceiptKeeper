@@ -37,11 +37,6 @@ import android.widget.TextView;
 
 public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener, View.OnClickListener
 {
-    // FIXME Image loading loads all images into same view before distibuting them on the list, copy ImageLoader
-    // from
-    // "http://code.google.com/p/android-imagedownloader/source/browse/trunk/src/com/example/android/imagedownloader/ImageDownloader.java"
-    // and make it a BitmapLoader.
-    // FIXME Coming back from detail back into the search list makes images reload, takes a looong time
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
     private static final int TIME_TO = 1;
