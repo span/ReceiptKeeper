@@ -139,11 +139,10 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             }
         });
         
-        if(!receipt.getPhoto().equals(""))
-        {
-            bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
-            bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
-        }
+        
+        bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
+        bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
+        
         
         nameView = (EditText) rootView.findViewById(R.id.add_receipt_name);
         nameView.setText(receipt.getName());
