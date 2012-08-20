@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.activity;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
@@ -8,8 +9,8 @@ import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
+import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
-import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -77,9 +78,9 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
                 }
             });
 
-            ImageView receiptImage = (ImageView) findViewById(R.id.receipt_image);
-            ScaleBitmapFileTask worker = new ScaleBitmapFileTask(receiptImage, receipt.getPhoto());
-            worker.execute(150, 150);
+            ImageView imageView = (ImageView) findViewById(R.id.receipt_image);
+            BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getApplication()).bitmapLoader;
+            bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
             TextView receiptTax = (TextView) findViewById(R.id.receipt_tax);
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);

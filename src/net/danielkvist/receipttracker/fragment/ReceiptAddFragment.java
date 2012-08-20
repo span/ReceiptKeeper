@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.fragment.AddReceiptAccountDialog.AddReceiptAccountDialogListener;
+import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
-import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -67,6 +68,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private Spinner accountSpinner;
     private ArrayList<ReceiptAccount> receiptAccounts;
     private ImageView accountAddButton;
+    private BitmapLoader bitmapLoader;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -136,9 +138,13 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
             }
         });
-
-        showBitmap();
-
+        
+        if(!receipt.getPhoto().equals(""))
+        {
+            bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
+            bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
+        }
+        
         nameView = (EditText) rootView.findViewById(R.id.add_receipt_name);
         nameView.setText(receipt.getName());
 
@@ -373,16 +379,12 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    Toast.makeText(getActivity(), "The image was saved to: " + receipt.getPhoto(), Toast.LENGTH_LONG).show();
-                    showBitmap();
+                    String path = receipt.getPhoto();
+                    Toast.makeText(getActivity(), "The image was saved to: " + path, Toast.LENGTH_LONG).show();
+                    bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
+                    bitmapLoader.loadBitmap(imageView, path);
                 }
         }
-    }
-
-    private void showBitmap()
-    {
-        ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, receipt.getPhoto());
-        worker.execute(150, 150);
     }
 
     @Override

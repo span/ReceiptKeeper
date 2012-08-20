@@ -7,9 +7,10 @@ import java.util.Date;
 import java.util.Iterator;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.Receipt;
+import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
-import net.danielkvist.util.task.ScaleBitmapFileTask;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -36,6 +37,11 @@ import android.widget.TextView;
 
 public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener, View.OnClickListener
 {
+    // FIXME Image loading loads all images into same view before distibuting them on the list, copy ImageLoader
+    // from
+    // "http://code.google.com/p/android-imagedownloader/source/browse/trunk/src/com/example/android/imagedownloader/ImageDownloader.java"
+    // and make it a BitmapLoader.
+    // FIXME Coming back from detail back into the search list makes images reload, takes a looong time
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
     private static final int TIME_TO = 1;
@@ -78,12 +84,14 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             return true;
         }
     };
-    
+    private BitmapLoader bitmapLoader;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         communicator = new Communicator(getActivity());
+        bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
         populateList();
         setHasOptionsMenu(true);
     }
@@ -98,7 +106,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             @Override
             public void onGlobalLayout()
             {
-
+                // Need to measure the height of the filter container to be able to animate it
                 containerHeight = filterContainer.getHeight();
                 filterContainer.setVisibility(View.GONE);
                 filterContainer.getLayoutParams().height = 0;
@@ -276,7 +284,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
                 dateToView.setText(getString(R.string.select_to_date));
                 timeFrom = 0;
                 timeTo = System.currentTimeMillis();
-                if(timeToSet != TIME_NOT_SET)
+                if (timeToSet != TIME_NOT_SET)
                 {
                     timeToSet = TIME_NOT_SET;
                     populateList();
@@ -314,8 +322,12 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         else
         {
             va.reverse();
-            va.addListener(new AnimatorListenerAdapter() {
-                public void onAnimationEnd(Animator animation) { v.setVisibility(View.GONE); }
+            va.addListener(new AnimatorListenerAdapter()
+            {
+                public void onAnimationEnd(Animator animation)
+                {
+                    v.setVisibility(View.GONE);
+                }
             });
         }
     }
@@ -350,8 +362,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
                 ImageView image = (ImageView) view.findViewById(R.id.row_image);
                 name.setText(r.getName());
                 timestamp.setText(r.getDate(context));
-                new ScaleBitmapFileTask(image, r.getPhoto()).execute(75, 75);
-
+                bitmapLoader.loadBitmap(image, r.getPhoto());
             }
             return view;
         }
