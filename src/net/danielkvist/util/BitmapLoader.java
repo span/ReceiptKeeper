@@ -2,6 +2,7 @@ package net.danielkvist.util;
 
 import java.lang.ref.WeakReference;
 
+import net.danielkvist.receipttracker.R;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -17,14 +18,22 @@ import android.widget.ImageView;
 public class BitmapLoader
 {
 
+    private static final int THUMBNAIL_SIZE_DP = 75;
     private static LruCache<String, Bitmap> memoryCache;
     private static BitmapLoader instance;
-
+    private int thumbnailSize;
+    private Context context;
+    private Bitmap defaultBitmap;
+    
     private BitmapLoader(Context context)
     {
+        this.context = context;
+        
         final int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         final int cacheSize = 1024 * 1024 * memClass / 8;
-
+        final float scale = context.getResources().getDisplayMetrics().density; 
+        
+        thumbnailSize = (int) (THUMBNAIL_SIZE_DP * scale + 0.5f);
         memoryCache = new LruCache<String, Bitmap>(cacheSize)
         {
             @Override
@@ -33,6 +42,8 @@ public class BitmapLoader
                 return bitmap.getByteCount();
             }
         };
+        
+        defaultBitmap = decodeSampledBitmapFromResource(context.getResources(), R.drawable.ic_launcher, thumbnailSize, thumbnailSize);
     }
     
     public static BitmapLoader getInstance(Context context)
@@ -50,8 +61,6 @@ public class BitmapLoader
     public void loadBitmap(ImageView imageView, String path)
     {
         // FIXME Try to delete image and see what happends when trying to load when file not found or empty string is passed as path (choose default)
-        // FIXME Streamline image sizes so all bitmaps can use same cache copy
-        // FIXME Use standard icon in list (pass into the asyncdrawable)
         final Bitmap bitmap = getBitmapFromMemCache(path);
         if (bitmap != null)
         {
@@ -62,9 +71,9 @@ public class BitmapLoader
             if (cancelPotentialWork(imageView, path))
             {
                 ScaleBitmapFileTask worker = new ScaleBitmapFileTask(imageView, path);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(null, null, worker);
+                final AsyncDrawable asyncDrawable = new AsyncDrawable(context.getResources(), defaultBitmap, worker);
                 imageView.setImageDrawable(asyncDrawable);
-                worker.execute(75, 75);
+                worker.execute(thumbnailSize, thumbnailSize);
             }
         }
     }
