@@ -9,11 +9,11 @@
     android:showDividers="middle"
     tools:context=".ReceiptFrameActivity">
 
-    <fragment android:name="net.danielkvist.receipttracker.fragment.ReceiptListFragment"
-        android:id="@+id/receipt_list"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+<!--     <fragment android:name="net.danielkvist.receipttracker.fragment.ReceiptListFragment" -->
+<!--         android:id="@+id/receipt_list" -->
+<!--         android:layout_width="0dp" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_weight="1" /> -->
 
     <FrameLayout android:id="@+id/receipt_frame_container"
         android:layout_width="0dp"

@@ -92,5 +92,10 @@
     <string name="edit">Edit</string>
     <string name="enable_gps_message">Your GPS is disabled, do you want to enable it?</string>
     <string name="enable_gps_title">Enable GPS?</string>
+    <string name="click_to_add_receipt">Click to add receipt</string>
+    <string name="click_to_search_receipts">Click to search receipts</string>
+    <string name="click_to_view_settings">Click to view settings</string>
+    <string name="last_receipt">Last receipt</string>
+    <string name="menu">Menu</string>
 
 </resources>

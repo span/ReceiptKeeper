@@ -6,12 +6,32 @@
     android:layout_marginRight="16dp"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/receipt_list"
-        android:name="net.danielkvist.receipttracker.fragment.ReceiptListFragment"
+    <ImageView
+        android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".ReceiptListActivity" />
+        android:contentDescription="@string/click_to_add_receipt"
+        android:src="@drawable/add" />
+
+    <ImageView
+        android:id="@+id/search_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/click_to_search_receipts"
+        android:src="@drawable/search" />
+
+    <ImageView
+        android:id="@+id/settings_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/click_to_view_settings"
+        android:src="@drawable/settings" />
+
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/last_receipt" />
 
     <include layout="@layout/receipt_info" />
 

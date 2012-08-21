@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
-import net.danielkvist.receipttracker.content.MainMenuContent;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 public class ReceiptDetailFragment extends Fragment
 {
     public static final String ARG_ITEM_ID = "item_id";
-    MainMenuContent.DummyItem mItem;
     private Receipt receipt;
     private TextView nameView;
     private TextView sumView;

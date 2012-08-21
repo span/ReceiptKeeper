@@ -50,7 +50,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
         if (savedInstanceState == null)
         {
             Receipt r = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-            int fid = Integer.parseInt(getIntent().getStringExtra(ReceiptDetailFragment.ARG_ITEM_ID));
+            int fid = getIntent().getIntExtra(ReceiptDetailFragment.ARG_ITEM_ID, 1);
             replaceFragment(fid, r, false);
         }
     }
