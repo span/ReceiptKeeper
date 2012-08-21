@@ -228,7 +228,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         }
         else if (searchQuery.equals(""))
         {
-            receiptList = communicator.fetchReceipts(timeFrom, timeTo);
+            receiptList = communicator.getReceipts(timeFrom, timeTo);
         }
         else if (timeToSet == TIME_NOT_SET)
         {

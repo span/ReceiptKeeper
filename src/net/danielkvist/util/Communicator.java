@@ -22,46 +22,176 @@ public class Communicator
     private static final String MESSAGE_COULD_NOT_DELETE_FILE = "Could not delete the file associated with the receipt. ";
 
     private Context context;
+    private DbAdapter dbAdapter;
 
     public Communicator(Context context)
     {
         this.context = context;
+        dbAdapter = new DbAdapter(context);
     }
-
-    public ArrayList<Receipt> getAllReceipts()
+    
+    public boolean deleteReceipt(Receipt receipt)
     {
-        return getReceipts(0);
+        String pathToFile = receipt.getPhoto();
+        File file = new File(pathToFile);
+        boolean deleted = file.delete();
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            dbAdapter.deleteReceipt(receipt.getId());
+            showToast(MESSAGE_RECEIPT_WAS_DELETED);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        if(!deleted)
+        {
+            Log.d(context.getString(R.string.tag_receipttracker), "Failed to delete file: " + pathToFile);
+            showToast(MESSAGE_COULD_NOT_DELETE_FILE);
+        }
+        return result && deleted;
+    }
+    
+    public Receipt getLatestReceipt()
+    {
+        Receipt receipt = null;
+        try
+        {
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.fetchLastReceipt();
+            receipt = buildReceipt(cursor);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return receipt;
     }
 
     public ArrayList<Receipt> getReceipts(int limit)
     {
         ArrayList<Receipt> receiptList = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
-
         try
         {
             dbAdapter.open();
             Cursor cursor = dbAdapter.fetchReceipts(limit);
-
-            if (cursor != null)
-            {
-                receiptList = buildReceiptList(cursor);
-            }
-
+            receiptList = buildReceiptList(cursor);
             dbAdapter.close();
         }
         catch (SQLException e)
         {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
+            catchSQLException(e);
         }
         return receiptList;
+    }
+    
+    public ArrayList<Receipt> getReceipts(long timeFrom, long timeTo)
+    {
+        ArrayList<Receipt> receiptList = null;
+        try
+        {
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
+            receiptList = buildReceiptList(cursor);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return receiptList;
+    }
+    
+    public ArrayList<Receipt> searchReceipts(String query)
+    {
+        ArrayList<Receipt> receiptList = null;
+        try
+        {
+            dbAdapter.open();
+            Cursor cursor = dbAdapter.searchReceiptName(query);
+            receiptList = buildReceiptList(cursor);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return receiptList;
+    }
+    
+    public boolean saveReceipt(Receipt receipt)
+    {
+        if (receipt.getId() > 0)
+        {
+            return updateReceipt(receipt);
+        }
+        else
+        {
+            return insertReceipt(receipt);
+        }
+    }
+
+    private boolean insertReceipt(Receipt receipt)
+    {
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
+                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return result;
+    }
+    
+    public boolean updateReceipt(Receipt receipt)
+    {
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
+                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(),
+                    receipt.getReceiptAccountId());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return result;
+    }
+    
+    public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.deleteReceiptAccount(receiptAccount.getCode());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return result;
     }
 
     public ArrayList<ReceiptAccount> getReceiptAccounts()
     {
         ArrayList<ReceiptAccount> receiptAccountList = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
 
         try
         {
@@ -86,16 +216,60 @@ public class Communicator
         }
         catch (SQLException e)
         {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
+            catchSQLException(e);
         }
         return receiptAccountList;
+    }
+    
+    public boolean saveReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        if (receiptAccount.getRowId() > 0)
+        {
+            return updateReceiptAccount(receiptAccount);
+        }
+        else
+        {
+            return insertReceiptAccount(receiptAccount);
+        }
+    }
+    
+    private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return result;
+    }
+
+    private boolean updateReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        boolean result = false;
+        try
+        {
+            dbAdapter.open();
+            result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(), receiptAccount.getName());
+            showResult(result);
+            dbAdapter.close();
+        }
+        catch (SQLException e)
+        {
+            catchSQLException(e);
+        }
+        return result;
     }
 
     public HashMap<String, Integer> getAllSettings()
     {
         HashMap<String, Integer> settingsMap = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
         try
         {
             dbAdapter.open();
@@ -115,8 +289,7 @@ public class Communicator
         }
         catch (SQLException e)
         {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
+            catchSQLException(e);
         }
         return settingsMap;
     }
@@ -124,13 +297,10 @@ public class Communicator
     public int getSettingValue(String name)
     {
         int value = -1;
-        Cursor cursor = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
-
         try
         {
             dbAdapter.open();
-            cursor = dbAdapter.fetchSetting(name);
+            Cursor cursor = dbAdapter.fetchSetting(name);
             if (cursor != null)
             {
                 value = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
@@ -140,62 +310,9 @@ public class Communicator
         }
         catch (SQLException e)
         {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
+            catchSQLException(e);
         }
         return value;
-    }
-
-    public Receipt getLatestReceipt()
-    {
-        Receipt receipt = null;
-        Cursor cursor = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
-
-        try
-        {
-            dbAdapter.open();
-            cursor = dbAdapter.fetchLastReceipt();
-
-            if (cursor.getCount() > 0)
-            {
-                receipt = buildReceipt(cursor);
-            }
-
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return receipt;
-    }
-
-    public boolean saveReceipt(Receipt receipt)
-    {
-        if (receipt.getId() > 0)
-        {
-            return updateReceipt(receipt);
-        }
-        else
-        {
-            return insertReceipt(receipt);
-        }
-
-    }
-
-    public boolean saveReceiptAccount(ReceiptAccount receiptAccount)
-    {
-        if (receiptAccount.getRowId() > 0)
-        {
-            return updateReceiptAccount(receiptAccount);
-        }
-        else
-        {
-            return insertReceiptAccount(receiptAccount);
-        }
-
     }
 
     public void saveSetting(Setting setting)
@@ -203,134 +320,9 @@ public class Communicator
         updateSetting(setting);
     }
 
-    public ArrayList<Receipt> searchReceipts(String query)
-    {
-        ArrayList<Receipt> receiptList = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
-
-        try
-        {
-            dbAdapter.open();
-            Cursor cursor = dbAdapter.searchReceiptName(query);
-
-            if (cursor != null)
-            {
-                receiptList = buildReceiptList(cursor);
-            }
-
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-
-        return receiptList;
-    }
-
-    private boolean insertReceipt(Receipt receipt)
-    {
-        boolean result = false;
-        DbAdapter dbAdapter = new DbAdapter(context);
-        try
-        {
-            dbAdapter.open();
-            result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
-                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
-            showResult(result);
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return result;
-    }
-
-    private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
-    {
-        boolean result = false;
-        DbAdapter dbAdapter = new DbAdapter(context);
-        try
-        {
-            dbAdapter.open();
-            result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
-            showResult(result);
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return result;
-    }
-
-    public boolean updateReceipt(Receipt receipt)
-    {
-        DbAdapter dbAdapter = new DbAdapter(context);
-        boolean result = false;
-        try
-        {
-            dbAdapter.open();
-            result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
-                    receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(),
-                    receipt.getReceiptAccountId());
-            showResult(result);
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return result;
-    }
-
-    public boolean updateReceiptAccount(ReceiptAccount receiptAccount)
-    {
-        DbAdapter dbAdapter = new DbAdapter(context);
-        boolean result = false;
-        try
-        {
-            dbAdapter.open();
-            result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(), receiptAccount.getName());
-            showResult(result);
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return result;
-    }
-
-    public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
-    {
-        DbAdapter dbAdapter = new DbAdapter(context);
-        boolean result = false;
-        try
-        {
-            dbAdapter.open();
-            result = dbAdapter.deleteReceiptAccount(receiptAccount.getCode());
-            showResult(result);
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return result;
-    }
-
     private boolean updateSetting(Setting setting)
     {
         boolean result = false;
-        DbAdapter dbAdapter = new DbAdapter(context);
         try
         {
             dbAdapter.open();
@@ -340,34 +332,48 @@ public class Communicator
         }
         catch (SQLException e)
         {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
+            catchSQLException(e);
         }
         return result;
     }
 
     private ArrayList<Receipt> buildReceiptList(Cursor cursor)
     {
-        Receipt receipt;
-        ArrayList<Receipt> receiptList = new ArrayList<Receipt>();
-        while (!cursor.isAfterLast())
+        ArrayList<Receipt> receiptList = null;
+        if(cursor != null)
         {
-            receipt = buildReceipt(cursor);
-            receiptList.add(receipt);
-            cursor.moveToNext();
+            Receipt receipt;
+            receiptList = new ArrayList<Receipt>();
+            while (!cursor.isAfterLast())
+            {
+                receipt = buildReceipt(cursor);
+                receiptList.add(receipt);
+                cursor.moveToNext();
+            } 
         }
         return receiptList;
     }
 
     private Receipt buildReceipt(Cursor cursor)
     {
-        return new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor
+        Receipt receipt = null;
+        if (cursor.getCount() > 0)
+        {
+            receipt = new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor
                 .getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)), cursor.getLong(cursor
                 .getColumnIndex(DbAdapter.KEY_TIMESTAMP)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
                 cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
                         .getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
                 cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_COMMENT)), cursor.getInt(cursor
                         .getColumnIndex(DbAdapter.KEY_ACCOUNT_ID)));
+        }
+        return receipt;
+    }
+    
+    private void catchSQLException(SQLException e)
+    {
+        Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
+        showToast(MESSAGE_COULD_NOT_OPEN);
     }
 
     private void showResult(boolean result)
@@ -385,58 +391,6 @@ public class Communicator
     public void showToast(String message)
     {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-    }
-
-    public ArrayList<Receipt> fetchReceipts(long timeFrom, long timeTo)
-    {
-        ArrayList<Receipt> receiptList = null;
-        DbAdapter dbAdapter = new DbAdapter(context);
-
-        try
-        {
-            dbAdapter.open();
-            Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
-
-            if (cursor != null)
-            {
-                receiptList = buildReceiptList(cursor);
-            }
-
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        return receiptList;
-    }
-
-    public boolean deleteReceipt(Receipt receipt)
-    {
-        String pathToFile = receipt.getPhoto();
-        File file = new File(pathToFile);
-        boolean deleted = file.delete();
-        DbAdapter dbAdapter = new DbAdapter(context);
-        boolean result = false;
-        try
-        {
-            dbAdapter.open();
-            result = dbAdapter.deleteReceipt(receipt.getId());
-            showToast(MESSAGE_RECEIPT_WAS_DELETED);
-            dbAdapter.close();
-        }
-        catch (SQLException e)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
-            showToast(MESSAGE_COULD_NOT_OPEN);
-        }
-        if(!deleted)
-        {
-            Log.d(context.getString(R.string.tag_receipttracker), "Failed to delete file: " + pathToFile);
-            showToast(MESSAGE_COULD_NOT_DELETE_FILE);
-        }
-        return result && deleted;
     }
 
 }
