@@ -5,7 +5,9 @@ import android.app.LocalActivityManager;
 import android.os.Bundle;
 
 /**
- * This is a fragment that will be used during transition from activities to fragments.
+ * This is a fragment that will be used during transition from activities to fragments. Although
+ * LocalActivityManager is deprecated this is being recommended at the bug tracker for AOSP. See
+ * this URL for more information: http://code.google.com/p/android/issues/detail?id=15347
  */
 @SuppressWarnings("deprecation")
 public class LocalActivityManagerFragment extends Fragment {
