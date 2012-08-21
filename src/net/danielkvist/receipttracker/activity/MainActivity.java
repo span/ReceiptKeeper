@@ -3,10 +3,8 @@ package net.danielkvist.receipttracker.activity;
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.Receipt;
-import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
-import net.danielkvist.receipttracker.fragment.ReceiptListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.util.BitmapLoader;
@@ -27,9 +25,12 @@ import android.widget.TextView;
  * @author Daniel Kvist
  *
  */
-public class MainActivity extends Activity implements CustomListFragment.Callbacks
+public class MainActivity extends Activity implements View.OnClickListener
 {
     private boolean mTwoPane;
+    private ImageView addButton;
+    private ImageView searchButton;
+    private ImageView settingsButton;
 
     /**
      * Sets the content view and title of the Application.
@@ -40,12 +41,21 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getString(R.string.app_name));
+        setupView();
         if (findViewById(R.id.receipt_frame_container) != null)
         {
             mTwoPane = true;
-            ((ReceiptListFragment) getFragmentManager().findFragmentById(R.id.receipt_list)).setActivateOnItemClick(true);
-            // XXX Take this out if possible, it's just setting a default value which probably is set anyway
         }
+    }
+
+    private void setupView()
+    {
+        addButton = (ImageView) findViewById(R.id.add_button);
+        addButton.setOnClickListener(this);
+        searchButton = (ImageView) findViewById(R.id.search_button);
+        searchButton.setOnClickListener(this);
+        settingsButton = (ImageView) findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(this);
     }
 
     /*
@@ -142,16 +152,19 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
      * decide which action to take.
      */
     @Override
-    public void onItemSelected(String id)
+    public void onClick(View v)
     {
+        int id = 1;
         // XXX Handle two pane layouts and test the switch statement result
         if (mTwoPane)
         {
             Fragment fragment = null;
             Bundle arguments = new Bundle();
-            switch (Integer.parseInt(id))
+            int vid = v.getId();
+            switch (vid)
             // XXX This switch is the same as in receiptFrameActivity, refactor if tablet version
             {
+                // XXX change 1,2,3,4 to id of view
                 case 1:
                     fragment = new ReceiptAddFragment();
                     break;
@@ -170,7 +183,7 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
             }
 
 
-            arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id);
+            //arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id); this id to string?
             // ReceiptDetailFragment fragment = new ReceiptDetailFragment(null);
             // // XXX Launch the correct fragment, remove this?
             fragment.setArguments(arguments);
@@ -179,16 +192,23 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
         }
         else
         {
+            switch(v.getId())
+            {
+                case R.id.add_button:
+                    id = 1;
+                    break;
+                case R.id.search_button:
+                    id = 2;
+                    break;
+                case R.id.settings_button:
+                    id = 3;
+                    break;
+            }
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
             detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
-    }
-
-    @Override
-    public void onItemSelected(Receipt receipt)
-    {
-        /* Nothing to do here at the moment, needed to implement the CustomListFragment.Callbacks interface */
+        
     }
 
 }
