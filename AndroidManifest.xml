@@ -15,6 +15,13 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
     <application
         android:name=".ReceiptTrackerApp"
         android:hardwareAccelerated="true"

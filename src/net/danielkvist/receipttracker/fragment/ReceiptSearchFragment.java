@@ -194,7 +194,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     public void onListItemClick(ListView listView, View view, int position, long id)
     {
         super.onListItemClick(listView, view, position, id);
-        mCallbacks.onItemSelected(receiptList.get(position));
+        callbacks.onItemSelected(receiptList.get(position));
     }
 
     @Override

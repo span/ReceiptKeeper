@@ -8,6 +8,11 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * This is a parcelable class that holds data related to a Receipt.
+ * @author Daniel Kvist
+ *
+ */
 public class Receipt implements Parcelable
 {
     public static final String EXTRA_RECEIPT = "extra_receipt";
@@ -24,6 +29,10 @@ public class Receipt implements Parcelable
 
     private long account_id;
     
+    /**
+     * Constructor for the class that initiates all strings to empty strings, sets
+     * the timestamp to the current time in ms and any integer values gets set to -1.
+     */
     public Receipt() 
     { 
         id = -1;
@@ -38,6 +47,10 @@ public class Receipt implements Parcelable
         account_id = -1;
     }
 
+    /**
+     * Constructor for the parcelable interface that re-initiates the values
+     * @param in, the Parcel that contains the data
+     */
     public Receipt(Parcel in)
     {
         this.id = in.readInt();
@@ -56,6 +69,19 @@ public class Receipt implements Parcelable
         this.comment = stringData[6];
     }
 
+    /**
+     * Full constructor for the class that initiates all values
+     * @param id the id for the receipt
+     * @param name the name for the receipt
+     * @param photo the path in /mnt/media/... format
+     * @param timestamp the timestamp to use for the receipt
+     * @param locationLat a string representation of the latitude
+     * @param locationLong a string representation of the longitude
+     * @param sum the total sum on the receipt
+     * @param tax the tax on the receipt
+     * @param comment any comment on the receipt
+     * @param account_id the account id that should be associated with the receipt
+     */
     public Receipt(int id, String name, String photo, long timestamp, String locationLat,
             String locationLong, String sum, String tax, String comment, long account_id)
     {
@@ -82,8 +108,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(int id)
     {
@@ -99,8 +124,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name)
     {
@@ -116,8 +140,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param photo
-     *            the photo to set
+     * @param photo the photo to set
      */
     public void setPhoto(String photo)
     {
@@ -132,6 +155,12 @@ public class Receipt implements Parcelable
         return timestamp;
     }
     
+    /**
+     * This method returns the receipts date as a String that is formatted according
+     * to the users preferences.
+     * @param context
+     * @return the string representation of the date
+     */
     public String getDate(Context context)
     {
         Calendar calendar = Calendar.getInstance();
@@ -142,6 +171,12 @@ public class Receipt implements Parcelable
         return dateFormat.format(date);
     }
     
+    /**
+     * This method returns the receipts time as a String that is formatted according
+     * to the users preferences.
+     * @param context
+     * @return the string representation of the time
+     */
     public String getTime(Context context)
     {
         Calendar calendar = Calendar.getInstance();
@@ -152,6 +187,11 @@ public class Receipt implements Parcelable
         return timeFormat.format(date);
     }
     
+    /**
+     * This method takes the date and time and returns them as one string.
+     * @param context
+     * @return the date and time as a string
+     */
     public String getDateAndTime(Context context)
     {
         StringBuilder sb = new StringBuilder();
@@ -160,8 +200,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param timestamp
-     *            the timestamp to set
+     * @param timestamp the timestamp to set
      */
     public void setTimestamp(long timestamp)
     {
@@ -177,8 +216,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param locationLat
-     *            the locationLat to set
+     * @param locationLat the locationLat to set
      */
     public void setLocationLat(String locationLat)
     {
@@ -194,8 +232,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param locationLong
-     *            the locationLong to set
+     * @param locationLong the locationLong to set
      */
     public void setLocationLong(String locationLong)
     {
@@ -211,8 +248,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param sum
-     *            the sum to set
+     * @param sum the sum to set
      */
     public void setSum(String sum)
     {
@@ -228,8 +264,7 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param tax
-     *            the tax to set
+     * @param tax the tax to set
      */
     public void setTax(String tax)
     {
@@ -245,32 +280,41 @@ public class Receipt implements Parcelable
     }
 
     /**
-     * @param comment
-     *            the comment to set
+     * @param comment the comment to set
      */
     public void setComment(String comment)
     {
         this.comment = comment;
     }
     
+    /**
+     * 
+     * @return account_id
+     */
     public long getReceiptAccountId()
     {
         return account_id;
     }
     
-
+    /**
+     * @param accountId the accountId to set
+     */
     public void setReceiptAccountId(long accountId)
     {
         this.account_id = accountId;
     }
     
+    /**
+     * Private helper method to the toString() method
+     * @return
+     */
     private String getDateAndTime()
     {
         return String.valueOf(timestamp);
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * Returns a string based on the receipt name and date and time
      */
     @Override
     public String toString()
@@ -288,6 +332,9 @@ public class Receipt implements Parcelable
         return 0;
     }
 
+    /**
+     * Writes the data to the parcel
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -297,6 +344,9 @@ public class Receipt implements Parcelable
         dest.writeStringArray(new String[] { name, photo, locationLat, locationLong, sum, tax, comment });
     }
 
+    /**
+     * Parcelable construction
+     */
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
         public Receipt createFromParcel(Parcel in)
