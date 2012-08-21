@@ -1,38 +1,44 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/mainContainerPadding"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/add_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/click_to_add_receipt"
-        android:src="@drawable/add" />
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/search_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/click_to_search_receipts"
-        android:src="@drawable/search" />
+        <ImageView
+            android:id="@+id/add_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/click_to_add_receipt"
+            android:src="@drawable/add" />
 
-    <ImageView
-        android:id="@+id/settings_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/click_to_view_settings"
-        android:src="@drawable/settings" />
+        <ImageView
+            android:id="@+id/search_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/click_to_search_receipts"
+            android:src="@drawable/search" />
 
-    <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/last_receipt" />
+        <ImageView
+            android:id="@+id/settings_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/click_to_view_settings"
+            android:src="@drawable/settings" />
 
-    <include layout="@layout/receipt_info" />
 
-</LinearLayout>
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/last_receipt" />
+
+        <include layout="@layout/receipt_info" />
+    </LinearLayout>
+
+</RelativeLayout>
