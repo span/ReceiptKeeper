@@ -20,10 +20,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * This is the activity that is launched first for the application. It is responsible for
+ * showing the first Fragment which contains a list of selections on where to navigate
+ * in the application.
+ * @author Daniel Kvist
+ *
+ */
 public class MainActivity extends Activity implements CustomListFragment.Callbacks
 {
     private boolean mTwoPane;
 
+    /**
+     * Sets the content view and title of the Application.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -39,9 +49,10 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
     }
 
     /*
-     * (non-Javadoc)
+     * Loads any parameters that are passed in via the Intent and checks
+     * if a Receipt was among the Extra's. If there is no receipt we get the last
+     * added receipt from the database and show it.
      * 
-     * @see android.support.v4.app.FragmentActivity#onResume()
      */
     @Override
     protected void onResume()
@@ -57,6 +68,11 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
         showLastReceipt(receipt);
     }
 
+    /**
+     * Finds the view's related to the receipt that is passed in and sets their
+     * content accordingly.
+     * @param receipt
+     */
     private void showLastReceipt(final Receipt receipt)
     {
         if (receipt == null)
@@ -93,6 +109,13 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
         }
     }
 
+    /**
+     * When a receipt has been clicked this method is called to show it's details in a detail
+     * view. On a phone this means to launch the next activity which handles the details and
+     * on a tablet another fragment is loaded. The method passes on the receipt it takes as
+     * a parameter to the corresponding activity/fragment.
+     * @param receipt
+     */
     private void showDetail(Receipt receipt)
     {
         if (mTwoPane)
@@ -114,6 +137,10 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
         }
     }
 
+    /**
+     * When a item in the navigation list have been selected this method is called to 
+     * decide which action to take.
+     */
     @Override
     public void onItemSelected(String id)
     {
@@ -161,7 +188,7 @@ public class MainActivity extends Activity implements CustomListFragment.Callbac
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        /* Nothing to do here yet */
+        /* Nothing to do here at the moment, needed to implement the CustomListFragment.Callbacks interface */
     }
 
 }

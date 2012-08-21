@@ -23,6 +23,12 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 
 // WORKAROUND http://code.google.com/p/android/issues/detail?id=15347 MapFragment don't exist
+/**
+ * This activity handles the MapView that is shown in a Fragment and sets the location of 
+ * the current Receipt that is being added or of the already added receipt's location.
+ * @author Daniel Kvist
+ *
+ */
 public class MyMapActivity extends MapActivity
 {
     public static GeoPoint currentGeoPoint;
@@ -31,6 +37,10 @@ public class MyMapActivity extends MapActivity
     private Receipt receipt;
     private MapController mapController;
 
+    /**
+     * Sets up the views in the activity and adds location overlays depending on if
+     * a receipt location is available or if we're showing the current location.
+     */
     @Override
     protected void onCreate(Bundle icicle)
     {
@@ -66,6 +76,10 @@ public class MyMapActivity extends MapActivity
         mapView.setVisibility(communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION));
     }
 
+    /**
+     * Sets the actual GeoPoint data to the map. Shows an alert to the user if GPS is disabled and
+     * allows the user to enable it.
+     */
     @Override
     protected void onResume()
     {
@@ -119,6 +133,10 @@ public class MyMapActivity extends MapActivity
         return false;
     }
 
+    /**
+     * Shows the actual alert message to the user about enabling GPS. This method also
+     * lanches an Intent to get into the settings to enable it.
+     */
     private void showAlertMessageGps()
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
