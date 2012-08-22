@@ -422,7 +422,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         {
             if (!mediaStorageDir.mkdirs())
             {
-                Log.d(getActivity().getString(R.string.tag_receipttracker), "failed to create directory");
+                Log.d(getActivity().getString(R.string.tag_receipttracker), "Failed to create directory");
             }
         }
 
