@@ -1,5 +1,7 @@
 package net.danielkvist.receipttracker.activity;
 
+import java.util.HashMap;
+
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.Receipt;
@@ -9,6 +11,7 @@ import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.Setting;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -95,6 +98,8 @@ public class MainActivity extends Activity implements View.OnClickListener
         else
         {
             LinearLayout container = ((LinearLayout) findViewById(R.id.receipt_added_container));
+            Communicator communicator = new Communicator(this);
+            HashMap<String, Integer> settings = communicator.getAllSettings();
             container.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -108,14 +113,21 @@ public class MainActivity extends Activity implements View.OnClickListener
             BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getApplication()).bitmapLoader;
             bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
+            TextView receiptSumLabel = (TextView) findViewById(R.id.receipt_sum_label);
             TextView receiptTax = (TextView) findViewById(R.id.receipt_tax);
+            TextView receiptTaxLabel = (TextView) findViewById(R.id.receipt_tax_label);
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
             receiptName.setText(receipt.getName());
             receiptSum.setText(receipt.getSum());
             receiptTax.setText(receipt.getTax());
-            
             receiptDateAndTime.setText(receipt.getDateAndTime(this));
+            
+            receiptSum.setVisibility(settings.get(Setting.SETTING_FIELD_SUM));
+            receiptSumLabel.setVisibility(settings.get(Setting.SETTING_FIELD_SUM));
+            receiptTax.setVisibility(settings.get(Setting.SETTING_FIELD_TAX));
+            receiptTaxLabel.setVisibility(settings.get(Setting.SETTING_FIELD_TAX));
+            
         }
     }
 
