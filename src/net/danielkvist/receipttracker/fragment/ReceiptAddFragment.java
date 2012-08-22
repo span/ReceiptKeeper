@@ -176,6 +176,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         taxView.setText(receipt.getTax());
 
         accountAddButton = (ImageView) rootView.findViewById(R.id.add_receipt_account_button);
+        accountAddButton.setVisibility(settingsMap.get(Setting.SETTING_FIELD_ACCOUNT));
         accountAddButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -372,10 +373,16 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
      */
     private boolean setViewValues()
     {
-        int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
-        int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
-
+        int selectedPosition = accountSpinner.getSelectedItemPosition();
         String name = nameView.getText().toString();
+        
+        if(MyMapActivity.currentGeoPoint != null)
+        {
+            int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
+            int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
+            receipt.setLocationLat(String.valueOf(latitude));
+            receipt.setLocationLong(String.valueOf(longitude));
+        }
         if (name.equals(""))
         {
             communicator.showToast("You need to fill in a name of your receipt.");
@@ -387,12 +394,15 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             return false;
         }
         receipt.setName(name);
-        receipt.setLocationLat(String.valueOf(latitude));
-        receipt.setLocationLong(String.valueOf(longitude));
         receipt.setSum(sumView.getText().toString());
         receipt.setTax(taxView.getText().toString());
         receipt.setComment(commentView.getText().toString());
-        receipt.setReceiptAccountId(receiptAccounts.get(accountSpinner.getSelectedItemPosition()).getCode());
+        
+        if(selectedPosition >= 0)
+        {
+            receipt.setReceiptAccountId(receiptAccounts.get(selectedPosition).getCode());
+        }
+        
 
         return true;
     }

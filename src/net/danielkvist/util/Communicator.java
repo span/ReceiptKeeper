@@ -356,7 +356,6 @@ public class Communicator
             result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
             closeDatabase();
         }
-        showResult(result);
         return result;
     }
 
