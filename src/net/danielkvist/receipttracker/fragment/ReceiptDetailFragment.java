@@ -39,6 +39,8 @@ public class ReceiptDetailFragment extends Fragment
     private TextView dateAndTimeView;
     private Callbacks callbacks;
     private Communicator communicator;
+    private TextView sumViewLabel;
+    private TextView taxViewLabel;
     
     /**
      * Custom interface to handle communication with the parent Activity.
@@ -157,10 +159,16 @@ public class ReceiptDetailFragment extends Fragment
         sumView = (TextView) rootView.findViewById(R.id.receipt_sum);
         sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
         sumView.setText(receipt.getSum());
+        
+        sumViewLabel = (TextView) rootView.findViewById(R.id.receipt_sum_label);
+        sumViewLabel.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
 
         taxView = (TextView) rootView.findViewById(R.id.receipt_tax);
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
+        
+        taxViewLabel = (TextView) rootView.findViewById(R.id.receipt_tax_label);
+        taxViewLabel.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
 
         commentView = (TextView) rootView.findViewById(R.id.detail_receipt_comment);
         commentView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_COMMENT));

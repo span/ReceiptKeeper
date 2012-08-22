@@ -110,24 +110,29 @@ public class MainActivity extends Activity implements View.OnClickListener
             });
 
             ImageView imageView = (ImageView) findViewById(R.id.receipt_image);
+            
             BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getApplication()).bitmapLoader;
             bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
-            TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
-            TextView receiptSumLabel = (TextView) findViewById(R.id.receipt_sum_label);
-            TextView receiptTax = (TextView) findViewById(R.id.receipt_tax);
-            TextView receiptTaxLabel = (TextView) findViewById(R.id.receipt_tax_label);
-            TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
-            TextView receiptName = (TextView) findViewById(R.id.receipt_name);
-            receiptName.setText(receipt.getName());
-            receiptSum.setText(receipt.getSum());
-            receiptTax.setText(receipt.getTax());
-            receiptDateAndTime.setText(receipt.getDateAndTime(this));
             
+            TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
+            receiptSum.setText(receipt.getSum());
             receiptSum.setVisibility(settings.get(Setting.SETTING_FIELD_SUM));
+            
+            TextView receiptSumLabel = (TextView) findViewById(R.id.receipt_sum_label);
             receiptSumLabel.setVisibility(settings.get(Setting.SETTING_FIELD_SUM));
+            
+            TextView receiptTax = (TextView) findViewById(R.id.receipt_tax);
+            receiptTax.setText(receipt.getTax());
             receiptTax.setVisibility(settings.get(Setting.SETTING_FIELD_TAX));
+            
+            TextView receiptTaxLabel = (TextView) findViewById(R.id.receipt_tax_label);
             receiptTaxLabel.setVisibility(settings.get(Setting.SETTING_FIELD_TAX));
             
+            TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
+            receiptDateAndTime.setText(receipt.getDateAndTime(this));
+            
+            TextView receiptName = (TextView) findViewById(R.id.receipt_name);
+            receiptName.setText(receipt.getName());
         }
     }
 
