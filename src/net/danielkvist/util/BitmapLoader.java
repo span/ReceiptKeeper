@@ -15,6 +15,13 @@ import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * This Singleton utility class uses an AsyncTask to load bitmaps in the background. It also provides a 
+ * default Bitmap that is being displayed in the ImageView that is to be populated while the real
+ * Bitmap is loading. The class also keeps its own memory cache with the help of LruCache.
+ * @author Daniel Kvist
+ *
+ */
 public class BitmapLoader
 {
 
@@ -25,6 +32,11 @@ public class BitmapLoader
     private Context context;
     private Bitmap defaultBitmap;
     
+    /**
+     * Construcor that takes a context as a parameter to be able to calculate how big
+     * the memory cache should be. It also decodes the default bitmap.
+     * @param context
+     */
     private BitmapLoader(Context context)
     {
         this.context = context;
@@ -46,6 +58,11 @@ public class BitmapLoader
         defaultBitmap = decodeSampledBitmapFromResource(context.getResources(), R.drawable.ic_launcher, thumbnailSize, thumbnailSize);
     }
     
+    /**
+     * This returns the current instance of the class if there is one, if not it creates a new instance.
+     * @param context the application context
+     * @return an instance of the class
+     */
     public static BitmapLoader getInstance(Context context)
     {
         if(instance == null)
@@ -58,6 +75,11 @@ public class BitmapLoader
         }
     }
     
+    /**
+     * Called to load Bitmap into an ImageView.
+     * @param imageView the ImageView to populate
+     * @param path the path to the Bitmap
+     */
     public void loadBitmap(ImageView imageView, String path)
     {
         final Bitmap bitmap = getBitmapFromMemCache(path);
@@ -81,6 +103,14 @@ public class BitmapLoader
         }
     }
 
+    /**
+     * Calculates the scaling factors so that the scaling of the Bitmap is done properly without
+     * distoring the image.
+     * @param options the options
+     * @param reqWidth the new width
+     * @param reqHeight the new height
+     * @return
+     */
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
     {
         final int height = options.outHeight;
@@ -102,6 +132,13 @@ public class BitmapLoader
         return inSampleSize;
     }
 
+    /**
+     * Decodes the Bitmap which the path is pointing with the dimensions provided.
+     * @param pathToBitmap the path to the Bitmap
+     * @param newHeight the requested new height
+     * @param newWidth the request new width
+     * @return the decoded Bitmap
+     */
     private static Bitmap decodeSampledBitmap(String pathToBitmap, int newHeight, int newWidth)
     {
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -115,6 +152,14 @@ public class BitmapLoader
         return BitmapFactory.decodeFile(pathToBitmap, options);
     }
 
+    /**
+     * Decodes the resrouce which the resource id is pointing with the dimensions provided.
+     * @param res the application resources
+     * @param resId the resource id
+     * @param newHeight the requested new height
+     * @param newWidth the request new width
+     * @return the decoded Bitmap
+     */
     private static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int newWidth, int newHeight)
     {
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -128,6 +173,11 @@ public class BitmapLoader
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
+    /**
+     * Adds the current Bitmap to memory cache
+     * @param key the key to store the Bitmap with
+     * @param bitmap the actual Bitmap
+     */
     private static void addBitmapToMemoryCache(String key, Bitmap bitmap)
     {
         if (getBitmapFromMemCache(key) == null)
@@ -136,11 +186,22 @@ public class BitmapLoader
         }
     }
 
+    /**
+     * Returns the Bitmap located by the key.
+     * @param key the key of the Bitmap
+     * @return the Bitmap or null
+     */
     private static Bitmap getBitmapFromMemCache(String key)
     {
         return memoryCache.get(key);
     }
 
+    /**
+     * Helper method to make sure we are not processing double work when loading a Bitmap.
+     * @param imageView the ImageView which we are loading into
+     * @param path the path to the image we're decoding
+     * @return true if we are already processing the data, false if not
+     */
     private static boolean cancelPotentialWork(ImageView imageView, String path)
     {
         final ScaleBitmapFileTask bitmapWorkerTask = getWorkerTask(imageView);
@@ -159,6 +220,12 @@ public class BitmapLoader
         return true;
     }
 
+    /**
+     * Each ImageView is associated with an instance of the AsyncTask that is loading its Bitmap. This
+     * method returns a reference to the AsyncTask that's being used.
+     * @param imageView the ImageView who is related to the task we want
+     * @return the AsyncTask if it exists or null
+     */
     private static ScaleBitmapFileTask getWorkerTask(ImageView imageView)
     {
         if (imageView != null)
@@ -173,6 +240,12 @@ public class BitmapLoader
         return null;
     }
 
+    /**
+     * An inner helper class that is needed to add a relation between the AsyncTask processing the Bitmap
+     * and ImageView and the ImageView itself. This is accomplished by making each Bitmap into a AsyncDrawable
+     * which keeps a WeakReference to the task. It has to be weak to avoid memory leaks.
+     *
+     */
     private static class AsyncDrawable extends BitmapDrawable
     {
         private final WeakReference workerReference;
@@ -189,18 +262,33 @@ public class BitmapLoader
         }
     }
 
+    /**
+     * This is the AsyncTask that does the heavy lifting when it comes to loading and decoding the Bitmap into
+     * the ImageView. It takes a reference to the ImageView it will populate together with a path to the Bitmap resource.
+     */
     private static class ScaleBitmapFileTask extends AsyncTask
     {
 
         private final WeakReference imageViewReference;
         public String pathToBitmap;
 
+        /**
+         * Constructor which takes a reference to the ImageView it will populate together with a path to the Bitmap resource.
+         * It creates a WeakReference to the ImageView. The WeakReference makes sure that the ImageView can be garbage collected
+         * since there is a possibility that the ImageView will be gone when the task finishes.
+         * @param imageView the ImageView to populate
+         * @param pathToBitmap the path to the bitmap resource
+         */
         public ScaleBitmapFileTask(ImageView imageView, String pathToBitmap)
         {
             imageViewReference = new WeakReference(imageView);
             this.pathToBitmap = pathToBitmap;
         }
 
+        /**
+         * When the task is done we do some checking to make sure we have a proper Bitmap, ImageView and
+         * that the task that is related to the ImageView is this current task.
+         */
         @Override
         public void onPostExecute(Object obj)
         {
@@ -223,6 +311,10 @@ public class BitmapLoader
             }
         }
 
+        /**
+         * This is the background work we want to do where we set the new height and width
+         * as params[0] and params[1] and then decode the bitmap and add it to the cache.
+         */
         @Override
         protected Object doInBackground(Object... params)
         {

@@ -20,6 +20,7 @@ import android.os.Bundle;
  * 
  * Bug 2 report:
  * http://code.google.com/p/android/issues/detail?id=34833
+ * http://stackoverflow.com/questions/11444238/jelly-bean-datepickerdialog-is-there-a-way-to-cancel
  * 
  * @author Daniel Kvist
  *
@@ -69,9 +70,9 @@ public class DatePickerFragment extends DialogFragment
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        // WORKAROUND Bug in JB prevents this standard way of working, using workaround
-        // with custom buttons and handlers for accepting date. For more information
-        // see Bug 2.
+        // WORKAROUND Bug in JB prevents this standard way of working since the cancel/dismiss behaviour
+        // is broken, using workaround  with custom buttons and handlers for accepting date. For more information
+        // see Bug 2 in header.
         // return new DatePickerDialog(getActivity(), callBack, year, month, day);
         
         DatePickerDialog picker = new DatePickerDialog(

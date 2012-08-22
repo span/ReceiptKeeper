@@ -13,6 +13,13 @@ import android.database.SQLException;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * This class handles communication with the user and the database. It provides a layer between the
+ * database handling and the converting of data from the database provided Cursor to the more specific
+ * data types that are used in the Activities and Fragments.
+ * @author Daniel Kvist
+ *
+ */
 public class Communicator
 {
     private static final String MESSAGE_RECEIPT_WAS_DELETED = "Receipt was successfully deleted from the database.";
@@ -24,12 +31,22 @@ public class Communicator
     private Context context;
     private DbAdapter dbAdapter;
 
+    /**
+     * Constructor that takes a context as parameter and instantiates a new database adapter
+     * @param context
+     */
     public Communicator(Context context)
     {
         this.context = context;
         this.dbAdapter = new DbAdapter(context);
     }
 
+    /**
+     * Deletes the receipt that is being passed in both from disk and
+     * from the database. Shows messages to the user on results.
+     * @param receipt the receipt to delete
+     * @return true if file deletion and db-deletion are true
+     */
     public boolean deleteReceipt(Receipt receipt)
     {
         String pathToFile = receipt.getPhoto();
@@ -51,6 +68,10 @@ public class Communicator
         return result && deleted;
     }
 
+    /**
+     * Gets the last added receipt from the database
+     * @return the receipt
+     */
     public Receipt getLatestReceipt()
     {
         Receipt receipt = null;
@@ -63,6 +84,11 @@ public class Communicator
         return receipt;
     }
 
+    /**
+     * Gets a list of receipts with the limit of the parameter.
+     * @param limit the number of receipts
+     * @return an ArrayList with receipts
+     */
     public ArrayList<Receipt> getReceipts(int limit)
     {
         ArrayList<Receipt> receiptList = null;
@@ -75,6 +101,12 @@ public class Communicator
         return receiptList;
     }
 
+    /**
+     * Gets a list of receipts with dates between the from and to date.
+     * @param timeFrom lower date restriction
+     * @param timeTo upper date restriction
+     * @return an ArrayList with receipts
+     */
     public ArrayList<Receipt> getReceipts(long timeFrom, long timeTo)
     {
         ArrayList<Receipt> receiptList = null;
@@ -87,6 +119,12 @@ public class Communicator
         return receiptList;
     }
 
+    /**
+     * Searches for receipts that contains the provided query and
+     * returns a list of them
+     * @param query the query to search for
+     * @return an ArrayList with receipts
+     */
     public ArrayList<Receipt> searchReceipts(String query)
     {
         ArrayList<Receipt> receiptList = null;
@@ -99,6 +137,12 @@ public class Communicator
         return receiptList;
     }
 
+    /**
+     * Saves the receipt to the databse. If the receipt has an id > 0 it updates the database
+     * row, if the id < 0 it creates a new row.
+     * @param receipt
+     * @return true if successful
+     */
     public boolean saveReceipt(Receipt receipt)
     {
         if (receipt.getId() > 0)
@@ -111,6 +155,11 @@ public class Communicator
         }
     }
 
+    /**
+     * Creates a new row out of the supplied Receipt
+     * @param receipt
+     * @return true if successful
+     */
     private boolean insertReceipt(Receipt receipt)
     {
         boolean result = false;
@@ -124,6 +173,11 @@ public class Communicator
         return result;
     }
 
+    /**
+     * Updates a row out with the supplied Receipt
+     * @param receipt
+     * @return true if successful
+     */
     public boolean updateReceipt(Receipt receipt)
     {
         boolean result = false;
@@ -138,6 +192,11 @@ public class Communicator
         return result;
     }
 
+    /**
+     * Deletes the provided receipt account
+     * @param receiptAccount the account to delete
+     * @return true if successful
+     */
     public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
@@ -150,6 +209,10 @@ public class Communicator
         return result;
     }
 
+    /**
+     * Gets a list of all receipt accounts
+     * @return an ArrayList of accounts
+     */
     public ArrayList<ReceiptAccount> getReceiptAccounts()
     {
         ArrayList<ReceiptAccount> receiptAccountList = null;
@@ -173,6 +236,12 @@ public class Communicator
         return receiptAccountList;
     }
 
+    /**
+     * Saves the receipt account. If the account has an id > 0 it updates the database
+     * row, if the id < 0 it creates a new row.
+     * @param receiptAccount
+     * @return true if successful
+     */
     public boolean saveReceiptAccount(ReceiptAccount receiptAccount)
     {
         if (receiptAccount.getRowId() > 0)
@@ -185,6 +254,11 @@ public class Communicator
         }
     }
 
+    /**
+     * Creates a new row in the database for the account
+     * @param receiptAccount
+     * @return true if successful
+     */
     private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
@@ -197,6 +271,11 @@ public class Communicator
         return result;
     }
 
+    /**
+     * Updates a row in the database with the provided account
+     * @param receiptAccount
+     * @return true if successful
+     */
     private boolean updateReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
@@ -209,6 +288,10 @@ public class Communicator
         return result;
     }
 
+    /**
+     * Gets a list of all the Settings that are stored in the database.
+     * @return a HashMap with the setting name and setting value
+     */
     public HashMap<String, Integer> getAllSettings()
     {
         HashMap<String, Integer> settingsMap = null;
@@ -231,6 +314,11 @@ public class Communicator
         return settingsMap;
     }
 
+    /**
+     * Gets the value for a specific Setting
+     * @param name the setting name
+     * @return the setting value
+     */
     public int getSettingValue(String name)
     {
         int value = -1;
@@ -246,11 +334,20 @@ public class Communicator
         return value;
     }
 
-    public void saveSetting(Setting setting)
+    /**
+     * Saves the Setting that is passed in
+     * @param setting the setting to save
+     */
+    public boolean saveSetting(Setting setting)
     {
-        updateSetting(setting);
+        return updateSetting(setting);
     }
 
+    /**
+     * Updates the database row for the specific Setting
+     * @param setting
+     * @return true if successfull
+     */
     private boolean updateSetting(Setting setting)
     {
         boolean result = false;
@@ -263,6 +360,11 @@ public class Communicator
         return result;
     }
 
+    /**
+     * Builds an ArrayList out of the provided Cursor
+     * @param cursor the cursor from the query
+     * @return an ArrayList with the receipts
+     */
     private ArrayList<Receipt> buildReceiptList(Cursor cursor)
     {
         ArrayList<Receipt> receiptList = null;
@@ -280,6 +382,11 @@ public class Communicator
         return receiptList;
     }
 
+    /**
+     * Builds a Receipt from the passed in Cursor
+     * @param cursor
+     * @return a new Receipt
+     */
     private Receipt buildReceipt(Cursor cursor)
     {
         Receipt receipt = null;
@@ -296,12 +403,20 @@ public class Communicator
         return receipt;
     }
 
+    /**
+     * Handles logging and messaging to the user if there was a problem with the database
+     * @param e
+     */
     private void catchSQLException(SQLException e)
     {
         Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
         showToast(MESSAGE_COULD_NOT_OPEN);
     }
     
+    /**
+     * Tries to open the database and shows an error if it fails
+     * @return true if successful
+     */
     private boolean openDatabase()
     {
         try
@@ -316,11 +431,18 @@ public class Communicator
         }
     }
 
+    /**
+     * Closes the database
+     */
     private void closeDatabase()
     {
         dbAdapter.close();
     }
 
+    /**
+     * Shows successful result if result is true and negative result if result is false
+     * @param result the result
+     */
     private void showResult(boolean result)
     {
         if (result)
@@ -333,6 +455,9 @@ public class Communicator
         }
     }
 
+    /**
+     * Shows the passed in message to the user as a Toast. 
+     */
     public void showToast(String message)
     {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
