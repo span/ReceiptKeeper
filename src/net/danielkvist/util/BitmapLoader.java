@@ -25,7 +25,7 @@ import android.widget.ImageView;
 public class BitmapLoader
 {
 
-    private static final int THUMBNAIL_SIZE_DP = 75;
+    private static final int THUMBNAIL_SIZE_DP = 50;
     private static LruCache<String, Bitmap> memoryCache;
     private static BitmapLoader instance;
     private int thumbnailSize;
