@@ -22,6 +22,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * This Fragment shows any details related to the selected Receipt. It also hooks into the options menu to add an Edit icon
+ * and a Delete icon. It also uses some custom Callbacks to talk with it's parent Activity.
+ * @author Daniel Kvist
+ *
+ */
 public class ReceiptDetailFragment extends Fragment
 {
     public static final String ARG_ITEM_ID = "item_id";
@@ -31,21 +37,27 @@ public class ReceiptDetailFragment extends Fragment
     private TextView taxView;
     private TextView commentView;
     private TextView dateAndTimeView;
-    private Callbacks mCallbacks;
+    private Callbacks callbacks;
+    private Communicator communicator;
     
-
+    /**
+     * Custom interface to handle communication with the parent Activity.
+     *
+     */
     public interface Callbacks
     {
         public void editSelected(Receipt receipt);
     }
     
-    private static Callbacks sDummyCallbacks = new Callbacks() 
+    private static Callbacks dummyCallbacks = new Callbacks() 
     {
         @Override
         public void editSelected(Receipt receipt) { }
     };
-    private Communicator communicator;
     
+    /**
+     * Get a reference to the Activity when we're being attached.
+     */
     @Override
     public void onAttach(Activity activity)
     {
@@ -55,16 +67,22 @@ public class ReceiptDetailFragment extends Fragment
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
 
-        mCallbacks = (Callbacks) activity;
+        callbacks = (Callbacks) activity;
     }
 
+    /**
+     * Gets rid of the reference to the Activity when we're being detached.
+     */
     @Override
     public void onDetach()
     {
         super.onDetach();
-        mCallbacks = sDummyCallbacks;
+        callbacks = dummyCallbacks;
     }
 
+    /**
+     * Makes sure we retain the Fragment instance when needed and set flag to add options on the OptionsMenu.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -73,6 +91,9 @@ public class ReceiptDetailFragment extends Fragment
         setRetainInstance(true);
     }
     
+    /**
+     * Hook into the OptionsMenu and add an Edit and Delete option.
+     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem deleteItem = menu.findItem(R.id.item_delete);
@@ -83,6 +104,9 @@ public class ReceiptDetailFragment extends Fragment
         super.onPrepareOptionsMenu(menu);
     }
     
+    /**
+     * Handle the selection of any visible item in the OptionsMenu.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -94,13 +118,16 @@ public class ReceiptDetailFragment extends Fragment
                 getActivity().startActivity(intent);
                 return true;
             case R.id.item_edit:
-                mCallbacks.editSelected(receipt);
+                callbacks.editSelected(receipt);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Set up the View contents that is needed to display the information about the Receipt.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

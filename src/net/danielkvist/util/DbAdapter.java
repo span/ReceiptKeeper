@@ -12,6 +12,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * This class handles all the database IO together with creating and updating tables and the
+ * database when necessary. It also is responsibile for adding the default data in the settings
+ * and accounts tables.
+ * @author daniel
+ *
+ */
 public class DbAdapter
 {
 
@@ -67,9 +74,8 @@ public class DbAdapter
     
 
     /**
-     * 
+     * Constructor that saves the context that is passed in
      * @param context
-     *            the Context within which to work
      */
     public DbAdapter(Context context)
     {
@@ -77,10 +83,9 @@ public class DbAdapter
     }
 
     /**
-     * 
-     * @return this (self reference, allowing this to be chained in an initialization call)
-     * @throws SQLException
-     *             if the database could be neither opened or created
+     * Tries to open the database and throws an exception if it fails.
+     * @return the instance of itself
+     * @throws SQLException if the database couldn't be opened or created
      */
     public DbAdapter open() throws SQLException
     {
@@ -89,23 +94,26 @@ public class DbAdapter
         return this;
     }
 
+    /**
+     * Closes the database
+     */
     public void close()
     {
         dbHelper.close();
     }
 
     /**
-     * 
-     * @param tax
-     * @param sum
-     * @param date
-     * @param time
-     * @param location
-     * @param title
-     *            the title
-     * @param body
-     *            the body
-     * @return rowId or -1 if failed
+     * Creates a new row in the database with the information passed in.
+     * @param name name of the receipt
+     * @param photo path to the photo of the receipt
+     * @param timestamp timestamp of the receipt
+     * @param locLat string representation of the latitude
+     * @param locLong string representation of the longitude
+     * @param sum the total sum
+     * @param tax the tax
+     * @param comment any comment on the receipt
+     * @param account_id which receipt accound id to associate with the receipt
+     * @return the new rowId or -1
      */
     public boolean createReceipt(String name, String photo, long timestamp, String locLat, String locLong, String sum, String tax,
             String comment, long account_id)
@@ -115,10 +123,10 @@ public class DbAdapter
     }
 
     /**
-     * 
-     * @param code
-     * @param name
-     * @return
+     * Creates a new row in the accounts table with the receipt account information passed in.
+     * @param code the account code
+     * @param name the account name
+     * @return the new rowId or -1
      */
     public boolean createReceiptAccount(long code, String name)
     {
@@ -130,9 +138,11 @@ public class DbAdapter
     }
 
     /**
-     * @param rowId
-     *            id to delete
+     * Deletes the item whose rowId corresponds with the parameter. Make sure to set which 
+     * table to delete from before calling this.
+     * @param rowId id to delete
      * @return true if deleted, false otherwise
+     * @throws IllegalAccessErrror if the selected table is not set
      */
     public boolean deleteItem(long rowId)
     {
@@ -142,8 +152,8 @@ public class DbAdapter
     }
 
     /**
-     * @param rowId
-     *            id to delete
+     * Deletes a receipt.
+     * @param rowId the rowId to delete
      * @return true if deleted, false otherwise
      */
     public boolean deleteReceipt(long rowId)
@@ -153,9 +163,9 @@ public class DbAdapter
     }
 
     /**
-     * 
+     * Deletes a receipt account
      * @param rowId
-     * @return
+     * @return true if deleted, false otherwise
      */
     public boolean deleteReceiptAccount(long rowId)
     {
@@ -163,6 +173,11 @@ public class DbAdapter
         return deleteItem(rowId);
     }
 
+    /**
+     * Fetches all receipt accounts from the database and returns a Cursor pointing to 
+     * the first row.
+     * @return Cursor pointing to the first row or null
+     */
     public Cursor fetchReceiptAccounts()
     {
         Cursor cursor;
@@ -177,7 +192,7 @@ public class DbAdapter
     /**
      * Return a Cursor over the list entries in the receipt table
      * 
-     * @return Cursor over all notes
+     * @return Cursor pointing to the first row or null
      */
     public Cursor fetchReceipts(int limit)
     {
@@ -204,7 +219,7 @@ public class DbAdapter
     /**
      * Return a Cursor over the list of all entries in the settings table
      * 
-     * @return Cursor over all notes
+     * @return Cursor pointing to the first row or null
      */
     public Cursor fetchAllSettings()
     {
@@ -220,13 +235,10 @@ public class DbAdapter
     /**
      * Return a Cursor positioned at the receipt that matches the given rowId
      * 
-     * @param rowId
-     *            id of receipt to retrieve
-     * @return Cursor positioned to matching receipt, if found
-     * @throws SQLException
-     *             if receipt could not be found/retrieved
+     * @param rowId the id of receipt to retrieve
+     * @return Cursor pointing to the first row or null
      */
-    public Cursor fetchReceipt(long rowId) throws SQLException
+    public Cursor fetchReceipt(long rowId)
     {
 
         Cursor cursor = db
@@ -240,6 +252,12 @@ public class DbAdapter
 
     }
 
+    /**
+     * Return a Cursor pointing to the receipts that matches the time span passed in.
+     * @param timeFrom lower time restriction
+     * @param timeTo upper time restriction
+     * @return Cursor pointing to the first row or null
+     */
     public Cursor fetchReceipts(long timeFrom, long timeTo)
     {
         Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
@@ -252,6 +270,10 @@ public class DbAdapter
         return cursor;
     }
 
+    /**
+     * Return a Cursor pointing to the last receipt
+     * @return Cursor pointing to the first row or null
+     */
     public Cursor fetchLastReceipt()
     {
         Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
@@ -266,13 +288,10 @@ public class DbAdapter
     /**
      * Return a Cursor positioned at the setting that matches the given rowId
      * 
-     * @param rowId
-     *            id of setting to retrieve
-     * @return Cursor positioned to matching setting, if found
-     * @throws SQLException
-     *             if setting could not be found/retrieved
+     * @param rowId the id of setting to retrieve
+     * @return Cursor pointing to first row or null
      */
-    public Cursor fetchSetting(String name) throws SQLException
+    public Cursor fetchSetting(String name)
     {
 
         Cursor cursor = db.query(true, DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, KEY_NAME + "='"
@@ -285,6 +304,11 @@ public class DbAdapter
 
     }
 
+    /**
+     * Searches for a receipt with a name matching the query.
+     * @param query the string to search for
+     * @return Cursor pointing to first row or null
+     */
     public Cursor searchReceiptName(String query)
     {
         Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
@@ -298,10 +322,11 @@ public class DbAdapter
     }
 
     /**
-     * 
-     * @param name
-     * @param code
-     * @return
+     * Updates the receipt account row with the provided information
+     * @param rowId the row to update
+     * @param name the name to update
+     * @param code the code to update
+     * @return true if successful
      */
     public boolean updateReceiptAccount(long rowId, long code, String name)
     {
@@ -312,14 +337,18 @@ public class DbAdapter
     }
 
     /**
-     * 
-     * @param rowId
-     *            id of note to update
-     * @param title
-     *            value to set note title to
-     * @param body
-     *            value to set note body to
-     * @return true if the note was successfully updated, false otherwise
+     * Updates the corresponding row in the database with the information passed in.
+     * @paran rowId the row id to update
+     * @param name name of the receipt
+     * @param photo path to the photo of the receipt
+     * @param timestamp timestamp of the receipt
+     * @param locLat string representation of the latitude
+     * @param locLong string representation of the longitude
+     * @param sum the total sum
+     * @param tax the tax
+     * @param comment any comment on the receipt
+     * @param account_id which receipt accound id to associate with the receipt
+     * @return true if successful
      */
     public boolean updateReceipt(long rowId, String name, String photo, long timestamp, String locLat, String locLong, String sum,
             String tax, String comment, long account_id)
@@ -329,11 +358,10 @@ public class DbAdapter
     }
 
     /**
-     * 
-     * @param rowId
-     * @param name
-     * @param value
-     * @return
+     * Updates the setting value corresponding to the name passed in
+     * @param name name of setting
+     * @param value value of setting
+     * @return true if successful
      */
     public boolean updateSetting(String name, int value)
     {
@@ -343,17 +371,17 @@ public class DbAdapter
     }
 
     /**
-     * 
+     * Saves the values in a ContentValues object that is then return to the caller
      * @param name
      * @param photo
-     * @param date
-     * @param time
+     * @param timestamp
      * @param locLat
      * @param locLong
      * @param sum
      * @param tax
      * @param comment
-     * @return
+     * @param account_id
+     * @return the ContentValues object containing the data
      */
     private ContentValues putReceiptValues(String name, String photo, long timestamp, String locLat, String locLong, String sum,
             String tax, String comment, long account_id)
@@ -371,17 +399,27 @@ public class DbAdapter
         return values;
     }
 
+    /**
+     * Inner class that handles first initialization of data in the database and creates its tables.
+     */
     private static class DatabaseHelper extends SQLiteOpenHelper
     {
 
         private Context context;
 
+        /**
+         * Constructor that takes a context as a parameter
+         * @param context
+         */
         DatabaseHelper(Context context)
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             this.context = context;
         }
 
+        /**
+         * Creates tables, initiates setting values and imports the accounts.sql file
+         */
         @Override
         public void onCreate(SQLiteDatabase db)
         {
@@ -395,6 +433,10 @@ public class DbAdapter
             initDatabaseData(db);
         }
 
+        /**
+         * This method does the import of the accounts.sql data
+         * @param db
+         */
         private void initDatabaseData(SQLiteDatabase db)
         {
             BufferedReader br = null;
@@ -431,6 +473,9 @@ public class DbAdapter
             }
         }
 
+        /**
+         * Runs on upgrade and destroys all tables and data
+         */
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
         {
@@ -438,6 +483,7 @@ public class DbAdapter
                     + oldVersion + " to " + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_RECEIPTS);
             db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_SETTINGS);
+            db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_ACCOUNTS);
             onCreate(db);
         }
     }

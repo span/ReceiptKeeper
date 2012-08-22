@@ -48,6 +48,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * This fragment contains the UI that is used to add a new Receipt. It contains all the form fields necessary and 
+ * hooks into the options menu to add a save icon in the ActionBar. The Fragment also contains other fragments to
+ * handle date selection and a custom Dialog that allow the user to add a new ReceiptAccount.
+ * @author Daniel Kvist
+ *
+ */
 public class ReceiptAddFragment extends Fragment implements OnDateSetListener, DialogInterface.OnClickListener,
         AddReceiptAccountDialogListener
 {
@@ -70,6 +77,10 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private ImageView accountAddButton;
     private BitmapLoader bitmapLoader;
 
+    /**
+     * Instantiates a Communicator, sets the Fragment to retain it's instance and
+     * fetches any Receipt that was passed in.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -84,6 +95,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
     }
 
+    /**
+     * Adds the save icon to the options menu.
+     */
     @Override
     public void onPrepareOptionsMenu(Menu menu)
     {
@@ -93,6 +107,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         super.onPrepareOptionsMenu(menu);
     }
 
+    /**
+     * Handles a selection of the options menu.
+     */
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -105,6 +122,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Sets up the basic View UI, adds click listeners and loads the map.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -217,6 +237,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         return rootView;
     }
 
+    /**
+     * A helper method to show the Dialog that can add a new ReceiptAccount.
+     */
     private void showEditDialog()
     {
         FragmentManager fm = getFragmentManager();
@@ -225,6 +248,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         dialog.show(fm, "fragment_add_receipt_account");
     }
 
+    /**
+     * Creates a List and an Adapter to drive the ReceiptAccount spinner.
+     */
     private void setReceiptAccountAdapter()
     {
         List<String> list = new ArrayList<String>();
@@ -254,6 +280,11 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         }
     }
 
+    /**
+     * Find out which receipt in the original unfiltered list that was selected.
+     * @param receiptAccountId the id of the selected ReceiptAccount
+     * @return the position in the original List
+     */
     private int findReceiptPosition(long receiptAccountId)
     {
         int i = 0;
@@ -266,18 +297,27 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         return i;
     }
 
+    /**
+     * A helper method to instantiate the DatePickerFragment and add listeners to it. This
+     * method is currently using a workaround because the onDateSet listener is broken in JellyBean
+     * as detailed in the DatePickerFragment class. Instead we use a onClickListener.
+     */
     private void showDateDialog()
     {
         datePickerFragment = DatePickerFragment.newInstance();
 
         // WORKAROUND Due to bug detailed in DatePickerFragment we do not use the onDateSet listener
-        // keeping the code around for the future though as it is the preferred way to handle selections
+        // keeping the code around for the future though as it is the preferred way to handle selections.
         // datePickerFragment.setCallback(this);
         datePickerFragment.setAcceptDateListener(this);
         datePickerFragment.show(getFragmentManager(), null);
     }
 
     // WORKAROUND this listener is not currently being used because of system bug detailed in DatePickerFragment
+    /**
+     * Implements the onDateSet listener that is currently not being used due to system bug. Instead we are now
+     * using onClick to handle the date selection. This is currently being called from DialogInterface.onClick.
+     */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day)
     {
@@ -288,18 +328,23 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         timeView.setText(receipt.getDateAndTime(applicationContext));
     }
 
+    /**
+     * Implements the temporary onClick listener to handle the clicks from the accept button
+     * in the DatePickerFragment. Sets the date on the Receipt and in the corresponding TextView.
+     */
     @Override
     public void onClick(DialogInterface dialog, int which)
     {
         DatePicker picker = ((DatePickerDialog) dialog).getDatePicker();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth(), 0, 0, 0);
-        Date date = calendar.getTime();
-        receipt.setTimestamp(date.getTime());
-        timeView.setText(receipt.getDateAndTime(applicationContext));
-
+        onDateSet(picker, picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
     }
 
+    /**
+     * Saves the current receipt by first setting all the values that are currently set in the View's. It
+     * then uses the Communicator to save the receipt. Then it launches an Intent which takes the user back
+     * to the MainActivity.
+     * @return
+     */
     public Receipt saveReceipt()
     {
 
@@ -321,6 +366,10 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
     }
 
+    /**
+     * A helper method to get the values from each View and set them on the Receipt.
+     * @return
+     */
     private boolean setViewValues()
     {
         int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
@@ -348,6 +397,10 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         return true;
     }
 
+    /**
+     * Helper method that launcher a new Intent to launch an IMAGE_CAPTURE. It passes the current
+     * date and time for the filename and starts the activity for a result.
+     */
     private void takePhoto()
     {
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -369,6 +422,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
+    /**
+     * Handles the result from the IMAGE_CAPTURE Intent and shows the image as a Bitmap.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -386,6 +442,10 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         }
     }
 
+    /**
+     * Saves the information that was added in the ReceiptAccount dialog and updates the
+     * Spinner and it's adapter.
+     */
     @Override
     public void onFinishEditDialog(int receiptAccountCode, String receiptAccountName)
     {

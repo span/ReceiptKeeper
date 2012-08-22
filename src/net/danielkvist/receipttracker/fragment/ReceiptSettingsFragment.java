@@ -16,27 +16,37 @@ import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
+/**
+ * This Fragment controls the visibility of settings through 3 tabs. The each setting is set to auto save
+ * when it is selected. The settings consist of storage, fields and accounts.
+ * @author Daniel Kvist
+ *
+ */
 public class ReceiptSettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener
 {
-    
-    
 
+    /**
+     * Just an empty constructor
+     */
     public ReceiptSettingsFragment()
     {
         
     }
     
+    
+    /**
+     * Sets retain instance to true
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        /*if (getArguments().containsKey(ARG_ITEM_ID))
-        {
-            mItem = MainMenuContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-        }*/
     }
 
+    /**
+     * Calls two helper methods that setup the tabs and the setting controls
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -48,8 +58,10 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         return rootView;
     }
 
-    
-    
+    /**
+     * Sets up the tab host and its indicators
+     * @param rootView the container View
+     */
     private void setupTabs(View rootView)
     {
         TabHost tabHost = (TabHost) rootView.findViewById(android.R.id.tabhost);
@@ -62,18 +74,23 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         spec.setIndicator(getString(R.string.storage));
         tabHost.addTab(spec);
     
-        spec=tabHost.newTabSpec("tag2");
+        spec = tabHost.newTabSpec("tag2");
         spec.setContent(R.id.receipt);
         spec.setIndicator(getString(R.string.receipt));
         tabHost.addTab(spec);  
         
-        spec=tabHost.newTabSpec("tag3");
+        spec = tabHost.newTabSpec("tag3");
         spec.setContent(R.id.account);
         spec.setIndicator(getString(R.string.account));
         tabHost.addTab(spec);
         
     }
 
+    /**
+     * Sets up the switches and radio buttons and adds listeners to them so that
+     * we can handle changes in the settings immediately
+     * @param rootView the container View
+     */
     private void setupSettingControls(View rootView)
     {
         Communicator communicator = new Communicator(getActivity());
@@ -102,10 +119,14 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         locationSwitch.setOnCheckedChangeListener(this);
     }
 
+    /**
+     * Listener for the RadioGroup which contains the radio buttons that saves the
+     * current setting to the database.
+     */
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        // XXX Add cloud storage setting and make it do something :P
+        // XXX Add cloud storage Setting and make it do something :P
         Setting setting = new Setting();
         setting.setName("storage");
         switch(checkedId)
@@ -122,6 +143,9 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         communicator.saveSetting(setting);
     }
 
+    /**
+     * Listener for the switches that saves each Setting as needed when they change.
+     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
