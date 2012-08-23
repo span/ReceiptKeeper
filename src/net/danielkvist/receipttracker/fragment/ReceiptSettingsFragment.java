@@ -1,20 +1,33 @@
 package net.danielkvist.receipttracker.fragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
+import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This Fragment controls the visibility of settings through 3 tabs. The each setting is set to auto save when it is
@@ -23,8 +36,18 @@ import android.widget.TabHost.TabSpec;
  * @author Daniel Kvist
  * 
  */
-public class ReceiptSettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener
+public class ReceiptSettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener,
+        RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
 {
+
+    private ArrayList<ReceiptAccount> receiptAccounts;
+    private TextView accountName;
+    private TextView accountCode;
+    private Spinner accountSpinner;
+    private Communicator communicator;
+    private MenuItem deleteItem;
+    private MenuItem saveItem;
+    private ReceiptAccountAdapter adapter;
 
     /**
      * Just an empty constructor
@@ -42,6 +65,51 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
+        communicator = new Communicator(getActivity());
+    }
+
+    /**
+     * Adds the save icon to the options menu.
+     */
+    @Override
+    public void onPrepareOptionsMenu(Menu menu)
+    {
+        deleteItem = menu.findItem(R.id.item_delete);
+        saveItem = menu.findItem(R.id.item_save);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * Handles a selection of the options menu.
+     */
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        ReceiptAccount receiptAccount = receiptAccounts.get(accountSpinner.getSelectedItemPosition());
+        switch (item.getItemId())
+        {
+            case R.id.item_delete:
+                deleteReceiptAccount(receiptAccount);
+                adapter.notifyDataSetChanged();
+                return true;
+            case R.id.item_save:
+                saveReceiptAccount(receiptAccount);
+                adapter.notifyDataSetChanged();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        communicator.deleteReceiptAccount(receiptAccount);
+    }
+
+    private void saveReceiptAccount(ReceiptAccount receiptAccount)
+    {
+        receiptAccount.setName(accountName.getText().toString());
+        receiptAccount.setCode(Long.parseLong(accountCode.getText().toString()));
+        communicator.saveReceiptAccount(receiptAccount);
     }
 
     /**
@@ -86,6 +154,24 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         spec.setIndicator(getString(R.string.account));
         tabHost.addTab(spec);
 
+        tabHost.setOnTabChangedListener(new OnTabChangeListener()
+        {
+            @Override
+            public void onTabChanged(String tabId)
+            {
+                if(tabId.equals("tag3"))
+                {
+                    deleteItem.setVisible(true);
+                    saveItem.setVisible(true);
+                }
+                else
+                {
+                    deleteItem.setVisible(false);
+                    saveItem.setVisible(false);
+                }
+            }
+        });
+
     }
 
     /**
@@ -121,6 +207,35 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         Switch locationSwitch = (Switch) rootView.findViewById(R.id.switch_location);
         locationSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE);
         locationSwitch.setOnCheckedChangeListener(this);
+
+        accountSpinner = (Spinner) rootView.findViewById(R.id.account_spinner);
+        accountSpinner.setOnItemSelectedListener(this);
+        receiptAccounts = communicator.getReceiptAccounts();
+
+        adapter = new ReceiptAccountAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
+        accountSpinner.setAdapter(adapter);
+
+        accountName = (TextView) rootView.findViewById(R.id.account_name);
+        accountCode = (TextView) rootView.findViewById(R.id.account_code);
+        accountCode.setOnKeyListener(new View.OnKeyListener()
+        {
+            /**
+             * An onKeyListener that keeps track of the number of chars we have in the field. It allows for erasing with
+             * keycode 67.
+             */
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                EditText e = (EditText) v;
+
+                if (e.getText().length() == 3 && keyCode != 67) // FIXME Check for back key as well
+                {
+                    Toast.makeText(getActivity(), "You can only use 3 numbers for the receipt account code.", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -175,5 +290,33 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
 
         Communicator communicator = new Communicator(getActivity());
         communicator.saveSetting(setting);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+    {
+        String displayName;
+        String name = receiptAccounts.get(accountSpinner.getSelectedItemPosition()).getName();
+        long code = receiptAccounts.get(accountSpinner.getSelectedItemPosition()).getCode();
+        if (code >= 1000)
+        {
+            accountName.setEnabled(false);
+            accountCode.setEnabled(false);
+            displayName = getResources().getString(getResources().getIdentifier(name, "string", "net.danielkvist.receipttracker"));
+        }
+        else
+        {
+            accountName.setEnabled(true);
+            accountCode.setEnabled(true);
+            displayName = name;
+        }
+        accountName.setText(displayName);
+        accountCode.setText(String.valueOf(code));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0)
+    {
+        /* Nothing selected in spinner so we don't have to do anything, yawn */
     }
 }

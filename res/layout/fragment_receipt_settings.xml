@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/comment" />
-                    
+
                     <Switch
                         android:id="@+id/switch_account"
                         android:layout_width="match_parent"
@@ -111,10 +111,33 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        style="?android:attr/textAppearanceLarge"
+                        style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/account_settings" />
+                        android:text="@string/select_receipt_account" />
+
+                    <Spinner
+                        android:id="@+id/account_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/receipt_account" />
+
+                    <EditText
+                        android:id="@+id/account_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/account_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
