@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
@@ -127,25 +126,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
                 obs.removeGlobalOnLayoutListener(this);
             }
         });
-    }
-
-    // FIXME Check if ListView has own filtering?
-    /**
-     * Private helper method that filters the list
-     *
-     */
-    private void filterList()
-    {
-        Iterator<Receipt> iterator = receiptList.iterator();
-        while (iterator.hasNext())
-        {
-            Receipt r = iterator.next();
-            long timestamp = r.getTimestamp();
-            if (timestamp < timeFrom || timestamp > timeTo)
-            {
-                iterator.remove();
-            }
-        }
     }
 
     /**
