@@ -1,24 +1,24 @@
 package net.danielkvist.util;
 
 /**
- * This is a simple data holder class that is used to store setting names and values. It also 
- * keeps static references to the name of the setting fields.
+ * This is a simple data holder class that is used to store setting names and values. It also keeps static references to
+ * the name of the setting fields.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class Setting
 {
 
     public static final int SETTING_STORAGE_LOCAL = 0;
     public static final int SETTING_STORAGE_CLOUD = 1;
-    
 
     public static final String SETTING_FIELD_LOCATION = "location";
     public static final String SETTING_FIELD_SUM = "sum";
     public static final String SETTING_FIELD_TAX = "tax";
     public static final String SETTING_FIELD_COMMENT = "comment";
     public static final String SETTING_FIELD_ACCOUNT = "account";
-    
+
     private int value;
     private String name;
 
@@ -30,11 +30,14 @@ public class Setting
         this.value = 0;
         this.name = "";
     }
-    
+
     /**
      * Constructore which instantiates the class with the given values
-     * @param name name of Setting
-     * @param value value of Setting
+     * 
+     * @param name
+     *            name of Setting
+     * @param value
+     *            value of Setting
      */
     public Setting(String name, int value)
     {
@@ -51,7 +54,8 @@ public class Setting
     }
 
     /**
-     * @param value the value to set
+     * @param value
+     *            the value to set
      */
     public void setValue(int value)
     {
@@ -67,12 +71,12 @@ public class Setting
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name)
     {
         this.name = name;
     }
-
 
 }

@@ -36,13 +36,15 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 /**
- * This Fragment handles the search mechanism in the application. It is also responsible to adding date filters
- * to allow a search to be limited to specific dates and/or select all receipts within a specific date interval. It
- * extends the CustomListFragment so that it has Callbacks interfaces for communicating with the parent activity. 
+ * This Fragment handles the search mechanism in the application. It is also responsible to adding date filters to allow
+ * a search to be limited to specific dates and/or select all receipts within a specific date interval. It extends the
+ * CustomListFragment so that it has Callbacks interfaces for communicating with the parent activity.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
-public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener, View.OnClickListener, DialogInterface.OnClickListener
+public class ReceiptSearchFragment extends CustomListFragment implements OnDateSetListener, View.OnClickListener,
+        DialogInterface.OnClickListener
 {
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
@@ -64,10 +66,9 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     private TextView filterHeader;
     private BitmapLoader bitmapLoader;
     private ReceiptSearchAdapter adapter;
-    
+
     /**
-     * This listener listens for changes in the text in the search box and also for the submission
-     * of a query.
+     * This listener listens for changes in the text in the search box and also for the submission of a query.
      */
     private final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener()
     {
@@ -87,10 +88,9 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             return true;
         }
     };
-    
+
     /**
-     * Populates the search list with a default selection and adds the possibility on hooking into
-     * the options menu.
+     * Populates the search list with a default selection and adds the possibility on hooking into the options menu.
      */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -103,9 +103,9 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     }
 
     /**
-     * Adds a globalLayoutListener so that we can measure the height of the hidden
-     * filter container. This uses a deprecated method removeGlobalOnLayoutListener because
-     * the new version removeOnGlobalLayoutListener is only available from API 15.
+     * Adds a globalLayoutListener so that we can measure the height of the hidden filter container. This uses a
+     * deprecated method removeGlobalOnLayoutListener because the new version removeOnGlobalLayoutListener is only
+     * available from API 15.
      */
     @Override
     public void onResume()
@@ -159,20 +159,18 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     }
 
     /**
-     * Helper method to show the DatePickerFragment. Using a temporary listener until
-     * bug has been fixed.
+     * Helper method to show the DatePickerFragment. Using a temporary listener until bug has been fixed.
      */
     private void showDateDialog()
     {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
-        //datePickerFragment.setCallback(this);
+        // datePickerFragment.setCallback(this);
         datePickerFragment.setAcceptDateListener(this);
         datePickerFragment.show(getFragmentManager(), null);
     }
 
     /**
-     * Hooks into the options menu and sets the search item to visible and adds some listeners
-     * to it.
+     * Hooks into the options menu and sets the search item to visible and adds some listeners to it.
      */
     @Override
     public void onPrepareOptionsMenu(Menu menu)
@@ -206,8 +204,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     }
 
     /**
-     * Click listener for the list that calls back to the parent Activity
-     * to show a detail view of the selected Receipt.
+     * Click listener for the list that calls back to the parent Activity to show a detail view of the selected Receipt.
      */
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id)
@@ -218,8 +215,8 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
 
     // WORKAROUND this listener is not currently being used because of system bug detailed in DatePickerFragment
     /**
-     * Implements the onDateSet listener that is currently not being used due to system bug. Instead we are now
-     * using onClick to handle the date selection. This is currently being called from DialogInterface.onClick.
+     * Implements the onDateSet listener that is currently not being used due to system bug. Instead we are now using
+     * onClick to handle the date selection. This is currently being called from DialogInterface.onClick.
      */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day)
@@ -243,10 +240,10 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             dateToView.setText(dateFormat.format(date));
         }
     }
-    
+
     /**
-     * Implements the temporary onClick listener to handle the clicks from the accept button
-     * in the DatePickerFragment. Sets the date on the Receipt and in the corresponding TextView.
+     * Implements the temporary onClick listener to handle the clicks from the accept button in the DatePickerFragment.
+     * Sets the date on the Receipt and in the corresponding TextView.
      */
     @Override
     public void onClick(DialogInterface dialog, int which)
@@ -260,7 +257,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
      */
     private void populateList()
     {
-        if(searchQuery.equals("") && timeToSet == TIME_NOT_SET)
+        if (searchQuery.equals("") && timeToSet == TIME_NOT_SET)
         {
             receiptList = communicator.getReceipts(20);
         }
@@ -269,7 +266,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             receiptList = communicator.getReceipts(timeFrom, timeTo);
         }
         adapter = new ReceiptSearchAdapter(getActivity(), R.layout.row, receiptList, bitmapLoader);
-        if(!searchQuery.equals(""))
+        if (!searchQuery.equals(""))
         {
             adapter.getFilter().filter(searchQuery);
         }
@@ -322,9 +319,10 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     }
 
     /**
-     * Helper method to toggle the visibility of the filter container, uses a ValueAnimator to
-     * animate the height.
-     * @param v the view (LinearLayout) to animate
+     * Helper method to toggle the visibility of the filter container, uses a ValueAnimator to animate the height.
+     * 
+     * @param v
+     *            the view (LinearLayout) to animate
      */
     private void toggleFilters(final LinearLayout v)
     {
@@ -357,6 +355,5 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
             });
         }
     }
-
 
 }

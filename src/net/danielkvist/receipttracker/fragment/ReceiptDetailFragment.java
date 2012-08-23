@@ -24,10 +24,11 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 /**
- * This Fragment shows any details related to the selected Receipt. It also hooks into the options menu to add an Edit icon
- * and a Delete icon. It also uses some custom Callbacks to talk with it's parent Activity.
+ * This Fragment shows any details related to the selected Receipt. It also hooks into the options menu to add an Edit
+ * icon and a Delete icon. It also uses some custom Callbacks to talk with it's parent Activity.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class ReceiptDetailFragment extends Fragment
 {
@@ -43,22 +44,24 @@ public class ReceiptDetailFragment extends Fragment
     private TextView sumViewLabel;
     private TextView taxViewLabel;
     private ShareActionProvider shareActionProvider;
-    
+
     /**
      * Custom interface to handle communication with the parent Activity.
-     *
+     * 
      */
     public interface Callbacks
     {
         public void editSelected(Receipt receipt);
     }
-    
-    private static Callbacks dummyCallbacks = new Callbacks() 
+
+    private static Callbacks dummyCallbacks = new Callbacks()
     {
         @Override
-        public void editSelected(Receipt receipt) { }
+        public void editSelected(Receipt receipt)
+        {
+        }
     };
-    
+
     /**
      * Get a reference to the Activity when we're being attached.
      */
@@ -95,29 +98,31 @@ public class ReceiptDetailFragment extends Fragment
         setHasOptionsMenu(true);
         setRetainInstance(true);
     }
-    
+
     /**
      * Hook into the OptionsMenu and add an Edit, Delete and Share option.
      */
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(Menu menu)
+    {
         MenuItem deleteItem = menu.findItem(R.id.item_delete);
         deleteItem.setVisible(true);
-        
+
         MenuItem editItem = menu.findItem(R.id.item_edit);
         editItem.setVisible(true);
-        
+
         MenuItem shareItem = menu.findItem(R.id.item_share);
         shareItem.setVisible(true);
         shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
         shareActionProvider.setShareIntent(getShareIntent());
-        
+
         super.onPrepareOptionsMenu(menu);
     }
-    
+
     /**
-     * Builds an intent that takes the path for the image and passes it to 
-     * the sharing mechanism as a stream built on the URI of the image path.
+     * Builds an intent that takes the path for the image and passes it to the sharing mechanism as a stream built on
+     * the URI of the image path.
+     * 
      * @return the intent to share the image as a stream
      */
     private Intent getShareIntent()
@@ -128,14 +133,14 @@ public class ReceiptDetailFragment extends Fragment
         shareIntent.setType("image/jpeg");
         return shareIntent;
     }
-    
+
     /**
      * Handle the selection of any visible item in the OptionsMenu.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId()) 
+        switch (item.getItemId())
         {
             case R.id.item_delete:
                 communicator.deleteReceipt(receipt);
@@ -156,14 +161,15 @@ public class ReceiptDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        getActivity().invalidateOptionsMenu(); // Need to call this since the options menu is not rendering properly on first run
+        getActivity().invalidateOptionsMenu(); // Need to call this since the options menu is not rendering properly on
+                                               // first run
         communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);
         ImageView imageView = (ImageView) rootView.findViewById(R.id.receipt_image);
         BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
         bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
-        
+
         imageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -182,14 +188,14 @@ public class ReceiptDetailFragment extends Fragment
         sumView = (TextView) rootView.findViewById(R.id.receipt_sum);
         sumView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
         sumView.setText(receipt.getSum());
-        
+
         sumViewLabel = (TextView) rootView.findViewById(R.id.receipt_sum_label);
         sumViewLabel.setVisibility(settingsMap.get(Setting.SETTING_FIELD_SUM));
 
         taxView = (TextView) rootView.findViewById(R.id.receipt_tax);
         taxView.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
         taxView.setText(receipt.getTax());
-        
+
         taxViewLabel = (TextView) rootView.findViewById(R.id.receipt_tax_label);
         taxViewLabel.setVisibility(settingsMap.get(Setting.SETTING_FIELD_TAX));
 
@@ -202,5 +208,5 @@ public class ReceiptDetailFragment extends Fragment
 
         return rootView;
     }
-    
+
 }

@@ -2,8 +2,9 @@ package net.danielkvist.receipttracker.content;
 
 /**
  * This is a simple data holder class for the Receipt Accounts.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class ReceiptAccount
 {
@@ -14,12 +15,15 @@ public class ReceiptAccount
     private long rowId;
 
     /**
-     * Constructor of the receipt account, initiates the parameters and sets
-     * a flag if it's a user added account or not depending on the code. Any code
-     * with less then 4 digits is considered user added.
-     * @param rowId the rowId in the database table 
-     * @param code the account code
-     * @param name the account name
+     * Constructor of the receipt account, initiates the parameters and sets a flag if it's a user added account or not
+     * depending on the code. Any code with less then 4 digits is considered user added.
+     * 
+     * @param rowId
+     *            the rowId in the database table
+     * @param code
+     *            the account code
+     * @param name
+     *            the account name
      */
     public ReceiptAccount(long rowId, long code, String name)
     {
@@ -46,7 +50,8 @@ public class ReceiptAccount
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name)
     {
@@ -62,7 +67,8 @@ public class ReceiptAccount
     }
 
     /**
-     * @param userAdded the userAdded to set
+     * @param userAdded
+     *            the userAdded to set
      */
     public void setUserAdded(boolean userAdded)
     {

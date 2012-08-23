@@ -13,11 +13,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * This class handles all the database IO together with creating and updating tables and the
- * database when necessary. It also is responsibile for adding the default data in the settings
- * and accounts tables.
+ * This class handles all the database IO together with creating and updating tables and the database when necessary. It
+ * also is responsibile for adding the default data in the settings and accounts tables.
+ * 
  * @author daniel
- *
+ * 
  */
 public class DbAdapter
 {
@@ -44,7 +44,6 @@ public class DbAdapter
     public static final String KEY_CODE = "code";
     public static final String KEY_ROW = "row";
     public static final String KEY_SETTING_VALUE = "setting_value";
-    
 
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
@@ -52,7 +51,8 @@ public class DbAdapter
     private static final String DATABASE_CREATE_TABLE_RECEIPTS = "CREATE TABLE " + DATABASE_TABLE_RECEIPTS + " (" + KEY_ROWID
             + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_PHOTO + " text not null," + KEY_TIMESTAMP
             + " numeric not null," + KEY_LOCATION_LAT + " text not null," + KEY_LOCATION_LONG + " text not null," + KEY_SUM
-            + " text not null," + KEY_TAX + " text not null," + KEY_COMMENT + " text not null," + KEY_ACCOUNT_ID + " integer not null" + ");";
+            + " text not null," + KEY_TAX + " text not null," + KEY_COMMENT + " text not null," + KEY_ACCOUNT_ID + " integer not null"
+            + ");";
 
     private static final String DATABASE_CREATE_TABLE_SETTINGS = "CREATE TABLE " + DATABASE_TABLE_SETTINGS + " (" + KEY_ROWID
             + " integer primary key autoincrement, " + KEY_NAME + " text not null, " + KEY_SETTING_VALUE + " integer not null" + ");";
@@ -68,13 +68,13 @@ public class DbAdapter
 
     private static final String DATABASE_INIT_SETTING_LOCATION = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_LOCATION + "',0" + ");";
-    
+
     private static final String DATABASE_INIT_SETTING_ACCOUNT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_ACCOUNT + "',0" + ");";
-    
 
     /**
      * Constructor that saves the context that is passed in
+     * 
      * @param context
      */
     public DbAdapter(Context context)
@@ -84,8 +84,10 @@ public class DbAdapter
 
     /**
      * Tries to open the database and throws an exception if it fails.
+     * 
      * @return the instance of itself
-     * @throws SQLException if the database couldn't be opened or created
+     * @throws SQLException
+     *             if the database couldn't be opened or created
      */
     public DbAdapter open() throws SQLException
     {
@@ -104,15 +106,25 @@ public class DbAdapter
 
     /**
      * Creates a new row in the database with the information passed in.
-     * @param name name of the receipt
-     * @param photo path to the photo of the receipt
-     * @param timestamp timestamp of the receipt
-     * @param locLat string representation of the latitude
-     * @param locLong string representation of the longitude
-     * @param sum the total sum
-     * @param tax the tax
-     * @param comment any comment on the receipt
-     * @param account_id which receipt accound id to associate with the receipt
+     * 
+     * @param name
+     *            name of the receipt
+     * @param photo
+     *            path to the photo of the receipt
+     * @param timestamp
+     *            timestamp of the receipt
+     * @param locLat
+     *            string representation of the latitude
+     * @param locLong
+     *            string representation of the longitude
+     * @param sum
+     *            the total sum
+     * @param tax
+     *            the tax
+     * @param comment
+     *            any comment on the receipt
+     * @param account_id
+     *            which receipt accound id to associate with the receipt
      * @return the new rowId or -1
      */
     public boolean createReceipt(String name, String photo, long timestamp, String locLat, String locLong, String sum, String tax,
@@ -124,8 +136,11 @@ public class DbAdapter
 
     /**
      * Creates a new row in the accounts table with the receipt account information passed in.
-     * @param code the account code
-     * @param name the account name
+     * 
+     * @param code
+     *            the account code
+     * @param name
+     *            the account name
      * @return the new rowId or -1
      */
     public boolean createReceiptAccount(long code, String name)
@@ -138,11 +153,14 @@ public class DbAdapter
     }
 
     /**
-     * Deletes the item whose rowId corresponds with the parameter. Make sure to set which 
-     * table to delete from before calling this.
-     * @param rowId id to delete
+     * Deletes the item whose rowId corresponds with the parameter. Make sure to set which table to delete from before
+     * calling this.
+     * 
+     * @param rowId
+     *            id to delete
      * @return true if deleted, false otherwise
-     * @throws IllegalAccessErrror if the selected table is not set
+     * @throws IllegalAccessErrror
+     *             if the selected table is not set
      */
     public boolean deleteItem(long rowId)
     {
@@ -153,7 +171,9 @@ public class DbAdapter
 
     /**
      * Deletes a receipt.
-     * @param rowId the rowId to delete
+     * 
+     * @param rowId
+     *            the rowId to delete
      * @return true if deleted, false otherwise
      */
     public boolean deleteReceipt(long rowId)
@@ -164,6 +184,7 @@ public class DbAdapter
 
     /**
      * Deletes a receipt account
+     * 
      * @param rowId
      * @return true if deleted, false otherwise
      */
@@ -174,8 +195,8 @@ public class DbAdapter
     }
 
     /**
-     * Fetches all receipt accounts from the database and returns a Cursor pointing to 
-     * the first row.
+     * Fetches all receipt accounts from the database and returns a Cursor pointing to the first row.
+     * 
      * @return Cursor pointing to the first row or null
      */
     public Cursor fetchReceiptAccounts()
@@ -200,8 +221,8 @@ public class DbAdapter
         if (limit > 0)
         {
             cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
-                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null, null, null, KEY_TIMESTAMP + " DESC," + KEY_TIMESTAMP
-                    + " DESC", String.valueOf(limit));
+                    KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null, null, null, KEY_TIMESTAMP + " DESC,"
+                    + KEY_TIMESTAMP + " DESC", String.valueOf(limit));
         }
         else
         {
@@ -235,15 +256,16 @@ public class DbAdapter
     /**
      * Return a Cursor positioned at the receipt that matches the given rowId
      * 
-     * @param rowId the id of receipt to retrieve
+     * @param rowId
+     *            the id of receipt to retrieve
      * @return Cursor pointing to the first row or null
      */
     public Cursor fetchReceipt(long rowId)
     {
 
-        Cursor cursor = db
-                .query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
-                        KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_ROWID + "=" + rowId, null, null, null, null, null);
+        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_ROWID + "=" + rowId, null, null,
+                null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -254,15 +276,18 @@ public class DbAdapter
 
     /**
      * Return a Cursor pointing to the receipts that matches the time span passed in.
-     * @param timeFrom lower time restriction
-     * @param timeTo upper time restriction
+     * 
+     * @param timeFrom
+     *            lower time restriction
+     * @param timeTo
+     *            upper time restriction
      * @return Cursor pointing to the first row or null
      */
     public Cursor fetchReceipts(long timeFrom, long timeTo)
     {
         Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
-                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_TIMESTAMP + ">" + timeFrom + " AND "
-                + KEY_TIMESTAMP + "<" + timeTo, null, null, null, KEY_TIMESTAMP + " DESC", null);
+                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_TIMESTAMP + ">" + timeFrom
+                + " AND " + KEY_TIMESTAMP + "<" + timeTo, null, null, null, KEY_TIMESTAMP + " DESC", null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -272,12 +297,14 @@ public class DbAdapter
 
     /**
      * Return a Cursor pointing to the last receipt
+     * 
      * @return Cursor pointing to the first row or null
      */
     public Cursor fetchLastReceipt()
     {
         Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
-                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null, null, null, KEY_ROWID + " DESC", "1");
+                KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null, null, null, KEY_ROWID
+                + " DESC", "1");
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -288,7 +315,8 @@ public class DbAdapter
     /**
      * Return a Cursor positioned at the setting that matches the given rowId
      * 
-     * @param rowId the id of setting to retrieve
+     * @param rowId
+     *            the id of setting to retrieve
      * @return Cursor pointing to first row or null
      */
     public Cursor fetchSetting(String name)
@@ -306,14 +334,16 @@ public class DbAdapter
 
     /**
      * Searches for a receipt with a name matching the query.
-     * @param query the string to search for
+     * 
+     * @param query
+     *            the string to search for
      * @return Cursor pointing to first row or null
      */
     public Cursor searchReceiptName(String query)
     {
         Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
-                KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_NAME + " LIKE ?", new String[] { "%" + query + "%" }, null, null,
-                null);
+                KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_NAME + " LIKE ?",
+                new String[] { "%" + query + "%" }, null, null, null);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -323,9 +353,13 @@ public class DbAdapter
 
     /**
      * Updates the receipt account row with the provided information
-     * @param rowId the row to update
-     * @param name the name to update
-     * @param code the code to update
+     * 
+     * @param rowId
+     *            the row to update
+     * @param name
+     *            the name to update
+     * @param code
+     *            the code to update
      * @return true if successful
      */
     public boolean updateReceiptAccount(long rowId, long code, String name)
@@ -338,16 +372,26 @@ public class DbAdapter
 
     /**
      * Updates the corresponding row in the database with the information passed in.
+     * 
      * @paran rowId the row id to update
-     * @param name name of the receipt
-     * @param photo path to the photo of the receipt
-     * @param timestamp timestamp of the receipt
-     * @param locLat string representation of the latitude
-     * @param locLong string representation of the longitude
-     * @param sum the total sum
-     * @param tax the tax
-     * @param comment any comment on the receipt
-     * @param account_id which receipt accound id to associate with the receipt
+     * @param name
+     *            name of the receipt
+     * @param photo
+     *            path to the photo of the receipt
+     * @param timestamp
+     *            timestamp of the receipt
+     * @param locLat
+     *            string representation of the latitude
+     * @param locLong
+     *            string representation of the longitude
+     * @param sum
+     *            the total sum
+     * @param tax
+     *            the tax
+     * @param comment
+     *            any comment on the receipt
+     * @param account_id
+     *            which receipt accound id to associate with the receipt
      * @return true if successful
      */
     public boolean updateReceipt(long rowId, String name, String photo, long timestamp, String locLat, String locLong, String sum,
@@ -359,8 +403,11 @@ public class DbAdapter
 
     /**
      * Updates the setting value corresponding to the name passed in
-     * @param name name of setting
-     * @param value value of setting
+     * 
+     * @param name
+     *            name of setting
+     * @param value
+     *            value of setting
      * @return true if successful
      */
     public boolean updateSetting(String name, int value)
@@ -372,6 +419,7 @@ public class DbAdapter
 
     /**
      * Saves the values in a ContentValues object that is then return to the caller
+     * 
      * @param name
      * @param photo
      * @param timestamp
@@ -409,6 +457,7 @@ public class DbAdapter
 
         /**
          * Constructor that takes a context as a parameter
+         * 
          * @param context
          */
         DatabaseHelper(Context context)
@@ -435,6 +484,7 @@ public class DbAdapter
 
         /**
          * This method does the import of the accounts.sql data
+         * 
          * @param db
          */
         private void initDatabaseData(SQLiteDatabase db)

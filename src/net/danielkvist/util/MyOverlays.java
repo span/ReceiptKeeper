@@ -9,8 +9,9 @@ import com.google.android.maps.OverlayItem;
 
 /**
  * This class adds a marker to an Overlay that can be used to mark positions on a MapView
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class MyOverlays extends ItemizedOverlay
 {
@@ -18,7 +19,9 @@ public class MyOverlays extends ItemizedOverlay
 
     /**
      * Constructor which uses a Drawable as a default marker
-     * @param defaultMarker the default marker
+     * 
+     * @param defaultMarker
+     *            the default marker
      */
     public MyOverlays(Drawable defaultMarker)
     {
@@ -27,7 +30,9 @@ public class MyOverlays extends ItemizedOverlay
 
     /**
      * Adds the item to the overlays list
-     * @param overlay the item to add
+     * 
+     * @param overlay
+     *            the item to add
      */
     public void addOverlay(OverlayItem overlay)
     {

@@ -14,11 +14,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
- * This class handles communication with the user and the database. It provides a layer between the
- * database handling and the converting of data from the database provided Cursor to the more specific
- * data types that are used in the Activities and Fragments.
+ * This class handles communication with the user and the database. It provides a layer between the database handling
+ * and the converting of data from the database provided Cursor to the more specific data types that are used in the
+ * Activities and Fragments.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class Communicator
 {
@@ -33,6 +34,7 @@ public class Communicator
 
     /**
      * Constructor that takes a context as parameter and instantiates a new database adapter
+     * 
      * @param context
      */
     public Communicator(Context context)
@@ -42,9 +44,11 @@ public class Communicator
     }
 
     /**
-     * Deletes the receipt that is being passed in both from disk and
-     * from the database. Shows messages to the user on results.
-     * @param receipt the receipt to delete
+     * Deletes the receipt that is being passed in both from disk and from the database. Shows messages to the user on
+     * results.
+     * 
+     * @param receipt
+     *            the receipt to delete
      * @return true if file deletion and db-deletion are true
      */
     public boolean deleteReceipt(Receipt receipt)
@@ -54,7 +58,7 @@ public class Communicator
         boolean deleted = file.delete();
         boolean result = false;
 
-        if(openDatabase())
+        if (openDatabase())
         {
             dbAdapter.deleteReceipt(receipt.getId());
             showToast(MESSAGE_RECEIPT_WAS_DELETED);
@@ -70,12 +74,13 @@ public class Communicator
 
     /**
      * Gets the last added receipt from the database
+     * 
      * @return the receipt
      */
     public Receipt getLatestReceipt()
     {
         Receipt receipt = null;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchLastReceipt();
             receipt = buildReceipt(cursor);
@@ -86,13 +91,15 @@ public class Communicator
 
     /**
      * Gets a list of receipts with the limit of the parameter.
-     * @param limit the number of receipts
+     * 
+     * @param limit
+     *            the number of receipts
      * @return an ArrayList with receipts
      */
     public ArrayList<Receipt> getReceipts(int limit)
     {
         ArrayList<Receipt> receiptList = null;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchReceipts(limit);
             receiptList = buildReceiptList(cursor);
@@ -103,14 +110,17 @@ public class Communicator
 
     /**
      * Gets a list of receipts with dates between the from and to date.
-     * @param timeFrom lower date restriction
-     * @param timeTo upper date restriction
+     * 
+     * @param timeFrom
+     *            lower date restriction
+     * @param timeTo
+     *            upper date restriction
      * @return an ArrayList with receipts
      */
     public ArrayList<Receipt> getReceipts(long timeFrom, long timeTo)
     {
         ArrayList<Receipt> receiptList = null;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
             receiptList = buildReceiptList(cursor);
@@ -120,15 +130,16 @@ public class Communicator
     }
 
     /**
-     * Searches for receipts that contains the provided query and
-     * returns a list of them
-     * @param query the query to search for
+     * Searches for receipts that contains the provided query and returns a list of them
+     * 
+     * @param query
+     *            the query to search for
      * @return an ArrayList with receipts
      */
     public ArrayList<Receipt> searchReceipts(String query)
     {
         ArrayList<Receipt> receiptList = null;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.searchReceiptName(query);
             receiptList = buildReceiptList(cursor);
@@ -138,8 +149,9 @@ public class Communicator
     }
 
     /**
-     * Saves the receipt to the databse. If the receipt has an id > 0 it updates the database
-     * row, if the id < 0 it creates a new row.
+     * Saves the receipt to the databse. If the receipt has an id > 0 it updates the database row, if the id < 0 it
+     * creates a new row.
+     * 
      * @param receipt
      * @return true if successful
      */
@@ -157,13 +169,14 @@ public class Communicator
 
     /**
      * Creates a new row out of the supplied Receipt
+     * 
      * @param receipt
      * @return true if successful
      */
     private boolean insertReceipt(Receipt receipt)
     {
         boolean result = false;
-        if(openDatabase())
+        if (openDatabase())
         {
             result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
                     receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
@@ -175,13 +188,14 @@ public class Communicator
 
     /**
      * Updates a row out with the supplied Receipt
+     * 
      * @param receipt
      * @return true if successful
      */
     public boolean updateReceipt(Receipt receipt)
     {
         boolean result = false;
-        if(openDatabase())
+        if (openDatabase())
         {
             result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
                     receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(),
@@ -194,13 +208,15 @@ public class Communicator
 
     /**
      * Deletes the provided receipt account
-     * @param receiptAccount the account to delete
+     * 
+     * @param receiptAccount
+     *            the account to delete
      * @return true if successful
      */
     public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
-        if(openDatabase())
+        if (openDatabase())
         {
             result = dbAdapter.deleteReceiptAccount(receiptAccount.getCode());
             closeDatabase();
@@ -211,12 +227,13 @@ public class Communicator
 
     /**
      * Gets a list of all receipt accounts
+     * 
      * @return an ArrayList of accounts
      */
     public ArrayList<ReceiptAccount> getReceiptAccounts()
     {
         ArrayList<ReceiptAccount> receiptAccountList = null;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchReceiptAccounts();
             if (cursor != null)
@@ -237,8 +254,9 @@ public class Communicator
     }
 
     /**
-     * Saves the receipt account. If the account has an id > 0 it updates the database
-     * row, if the id < 0 it creates a new row.
+     * Saves the receipt account. If the account has an id > 0 it updates the database row, if the id < 0 it creates a
+     * new row.
+     * 
      * @param receiptAccount
      * @return true if successful
      */
@@ -256,13 +274,14 @@ public class Communicator
 
     /**
      * Creates a new row in the database for the account
+     * 
      * @param receiptAccount
      * @return true if successful
      */
     private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
-        if(openDatabase())
+        if (openDatabase())
         {
             result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
             closeDatabase();
@@ -273,13 +292,14 @@ public class Communicator
 
     /**
      * Updates a row in the database with the provided account
+     * 
      * @param receiptAccount
      * @return true if successful
      */
     private boolean updateReceiptAccount(ReceiptAccount receiptAccount)
     {
         boolean result = false;
-        if(openDatabase())
+        if (openDatabase())
         {
             result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(), receiptAccount.getName());
             closeDatabase();
@@ -290,12 +310,13 @@ public class Communicator
 
     /**
      * Gets a list of all the Settings that are stored in the database.
+     * 
      * @return a HashMap with the setting name and setting value
      */
     public HashMap<String, Integer> getAllSettings()
     {
         HashMap<String, Integer> settingsMap = null;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchAllSettings();
             settingsMap = new HashMap<String, Integer>();
@@ -310,19 +331,21 @@ public class Communicator
             }
             closeDatabase();
         }
-        
+
         return settingsMap;
     }
 
     /**
      * Gets the value for a specific Setting
-     * @param name the setting name
+     * 
+     * @param name
+     *            the setting name
      * @return the setting value
      */
     public int getSettingValue(String name)
     {
         int value = -1;
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchSetting(name);
             if (cursor != null)
@@ -336,7 +359,9 @@ public class Communicator
 
     /**
      * Saves the Setting that is passed in
-     * @param setting the setting to save
+     * 
+     * @param setting
+     *            the setting to save
      */
     public boolean saveSetting(Setting setting)
     {
@@ -345,13 +370,14 @@ public class Communicator
 
     /**
      * Updates the database row for the specific Setting
+     * 
      * @param setting
      * @return true if successfull
      */
     private boolean updateSetting(Setting setting)
     {
         boolean result = false;
-        if(openDatabase())
+        if (openDatabase())
         {
             result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
             closeDatabase();
@@ -361,7 +387,9 @@ public class Communicator
 
     /**
      * Builds an ArrayList out of the provided Cursor
-     * @param cursor the cursor from the query
+     * 
+     * @param cursor
+     *            the cursor from the query
      * @return an ArrayList with the receipts
      */
     private ArrayList<Receipt> buildReceiptList(Cursor cursor)
@@ -383,6 +411,7 @@ public class Communicator
 
     /**
      * Builds a Receipt from the passed in Cursor
+     * 
      * @param cursor
      * @return a new Receipt
      */
@@ -404,6 +433,7 @@ public class Communicator
 
     /**
      * Handles logging and messaging to the user if there was a problem with the database
+     * 
      * @param e
      */
     private void catchSQLException(SQLException e)
@@ -411,9 +441,10 @@ public class Communicator
         Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
         showToast(MESSAGE_COULD_NOT_OPEN);
     }
-    
+
     /**
      * Tries to open the database and shows an error if it fails
+     * 
      * @return true if successful
      */
     private boolean openDatabase()
@@ -440,7 +471,9 @@ public class Communicator
 
     /**
      * Shows successful result if result is true and negative result if result is false
-     * @param result the result
+     * 
+     * @param result
+     *            the result
      */
     private void showResult(boolean result)
     {
@@ -455,7 +488,7 @@ public class Communicator
     }
 
     /**
-     * Shows the passed in message to the user as a Toast. 
+     * Shows the passed in message to the user as a Toast.
      */
     public void showToast(String message)
     {
