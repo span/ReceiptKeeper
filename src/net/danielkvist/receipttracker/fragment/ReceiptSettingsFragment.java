@@ -48,6 +48,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     private MenuItem deleteItem;
     private MenuItem saveItem;
     private ReceiptAccountAdapter adapter;
+    private MenuItem addItem;
 
     /**
      * Just an empty constructor
@@ -77,6 +78,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     {
         deleteItem = menu.findItem(R.id.item_delete);
         saveItem = menu.findItem(R.id.item_save);
+        addItem = menu.findItem(R.id.item_add);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -96,6 +98,10 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                 saveReceiptAccount(receiptAccount);
                 adapter.notifyDataSetChanged();
                 return true;
+            case R.id.item_add:
+                addReceiptAccount();
+                adapter.notifyDataSetChanged();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -107,9 +113,29 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
 
     private void saveReceiptAccount(ReceiptAccount receiptAccount)
     {
-        receiptAccount.setName(accountName.getText().toString());
-        receiptAccount.setCode(Long.parseLong(accountCode.getText().toString()));
+        String name = accountName.getText().toString();
+        long code = Long.parseLong(accountCode.getText().toString());
+        if(name.equals(""))
+        {
+            showToast("You need to enter a name for your account before saving");
+            return;
+        }
+        if(code < 0) // FIXME Add proper code checking, we do not want duplicate codes
+        {
+            showToast("You must enter a valid code before saving, duplicates are not allowed nor is an empty field.");
+            return;
+        }
+        receiptAccount.setName(name);
+        receiptAccount.setCode(code);
         communicator.saveReceiptAccount(receiptAccount);
+    }
+    
+    private void addReceiptAccount()
+    {
+        accountName.setText("");
+        accountName.setHint(R.string.account_name);
+        accountCode.setText("");
+        accountCode.setHint(R.string.account_code);
     }
 
     /**
@@ -163,11 +189,13 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                 {
                     deleteItem.setVisible(true);
                     saveItem.setVisible(true);
+                    addItem.setVisible(true);
                 }
                 else
                 {
                     deleteItem.setVisible(false);
                     saveItem.setVisible(false);
+                    addItem.setVisible(false);
                 }
             }
         });
@@ -230,7 +258,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
 
                 if (e.getText().length() == 3 && keyCode != 67) // FIXME Check for back key as well
                 {
-                    Toast.makeText(getActivity(), "You can only use 3 numbers for the receipt account code.", Toast.LENGTH_LONG).show();
+                    showToast("You can only use 3 numbers for the receipt account code.");
                     return true;
                 }
                 return false;
@@ -318,5 +346,10 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     public void onNothingSelected(AdapterView<?> arg0)
     {
         /* Nothing selected in spinner so we don't have to do anything, yawn */
+    }
+    
+    private void showToast(String message)
+    {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 }
