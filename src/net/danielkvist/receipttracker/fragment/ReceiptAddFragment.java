@@ -4,15 +4,16 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
+import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.fragment.AddReceiptAccountDialog.AddReceiptAccountDialogListener;
@@ -38,7 +39,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -77,6 +77,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private ArrayList<ReceiptAccount> receiptAccounts;
     private ImageView accountAddButton;
     private BitmapLoader bitmapLoader;
+    private ReceiptAccountAdapter adapter;
 
     /**
      * Instantiates a Communicator, sets the Fragment to retain it's instance and fetches any Receipt that was passed
@@ -256,26 +257,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
      */
     private void setReceiptAccountAdapter()
     {
-        List<String> list = new ArrayList<String>();
-        for (ReceiptAccount r : receiptAccounts)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.append(r.getCode());
-            sb.append(" - ");
-            if (r.isUserAdded())
-            {
-                sb.append(r.getName());
-            }
-            else
-            {
-                sb.append(getResources().getString(getResources().getIdentifier(r.getName(), "string", "net.danielkvist.receipttracker")));
-            }
-
-            list.add(sb.toString());
-        }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        accountSpinner.setAdapter(dataAdapter);
+        adapter = new ReceiptAccountAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
+        accountSpinner.setAdapter(adapter);
         if (receipt.getReceiptAccountId() > -1)
         {
             int position = findReceiptPosition(receipt.getReceiptAccountId());
@@ -352,7 +335,6 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
      */
     public Receipt saveReceipt()
     {
-
         if (setViewValues())
         {
             if (communicator.saveReceipt(receipt))
@@ -361,14 +343,12 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
                 intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
                 getActivity().startActivity(intent);
             }
-
             return receipt;
         }
         else
         {
             return null;
         }
-
     }
 
     /**
@@ -464,10 +444,12 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     public void onFinishEditDialog(int receiptAccountCode, String receiptAccountName)
     {
         ReceiptAccount receiptAccount = new ReceiptAccount(-1, receiptAccountCode, receiptAccountName);
-        receipt.setReceiptAccountId(receiptAccountCode);
-        communicator.saveReceiptAccount(receiptAccount);
         receiptAccounts.add(receiptAccount);
-        setReceiptAccountAdapter();
+        Collections.sort(receiptAccounts);
+        receipt.setReceiptAccountId(receiptAccountCode);
+        accountSpinner.setSelection(findReceiptPosition(receiptAccountCode));
+        communicator.saveReceiptAccount(receiptAccount);
+        adapter.notifyDataSetChanged();
     }
 
 }

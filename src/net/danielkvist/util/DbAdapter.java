@@ -367,7 +367,7 @@ public class DbAdapter
         ContentValues values = new ContentValues();
         values.put(KEY_CODE, code);
         values.put(KEY_NAME, name);
-        return db.update(DATABASE_TABLE_SETTINGS, values, KEY_ROWID + "=" + rowId, null) > 0;
+        return db.update(DATABASE_TABLE_ACCOUNTS, values, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
     /**

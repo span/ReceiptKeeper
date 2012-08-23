@@ -98,5 +98,7 @@
     <string name="last_receipt">Last receipt</string>
     <string name="menu">Menu</string>
     <string name="send_to">Send to</string>
+    <string name="receipt_account">Receipt account</string>
+    <string name="select_receipt_account">Select receipt account</string>
 
 </resources>
