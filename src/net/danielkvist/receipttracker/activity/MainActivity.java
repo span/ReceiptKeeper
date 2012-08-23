@@ -157,7 +157,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         else
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
-            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, "4");
+            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, 4);
             // XXX Refactor out these id's and replace with something more semantic?
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
