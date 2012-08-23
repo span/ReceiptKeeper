@@ -451,6 +451,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
                     String path = receipt.getPhoto();
                     Toast.makeText(getActivity(), "The image was saved to: " + path, Toast.LENGTH_LONG).show();
                     bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
+                    bitmapLoader.resizeBitmap(path, 1280, 800);
                     bitmapLoader.loadBitmap(imageView, path);
                 }
         }
