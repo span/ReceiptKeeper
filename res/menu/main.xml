@@ -24,6 +24,14 @@
         android:showAsAction="ifRoom|withText"
         android:title="Save"
         android:visible="false"/>
+    
+    <item
+        android:id="@+id/item_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom|withText"
+        android:title="Add"
+        android:visible="false"/>
+    
     <item
         android:id="@+id/menu_search"
         android:actionViewClass="android.widget.SearchView"
