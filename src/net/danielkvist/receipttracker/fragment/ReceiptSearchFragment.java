@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
+import net.danielkvist.receipttracker.adapter.ReceiptSearchAdapter;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
@@ -27,11 +28,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -65,6 +64,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     private LinearLayout filterContainer;
     private TextView filterHeader;
     private BitmapLoader bitmapLoader;
+    private ReceiptSearchAdapter adapter;
     
     /**
      * This listener listens for changes in the text in the search box and also for the submission
@@ -75,13 +75,8 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         @Override
         public boolean onQueryTextChange(String newText)
         {
-            // TODO Try to implement auto update of the list when typing
             searchQuery = newText;
-            if (!newText.equals(""))
-            {
-                populateList();
-            }
-
+            adapter.getFilter().filter(newText);
             return true;
         }
 
@@ -89,7 +84,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         public boolean onQueryTextSubmit(String query)
         {
             searchQuery = query;
-            populateList(); // FIXME List not resetting when wmpty string
+            adapter.getFilter().filter(query);
             return true;
         }
     };
@@ -184,7 +179,8 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     }
 
     /**
-     * Helper method to show the DatePickerFragment
+     * Helper method to show the DatePickerFragment. Using a temporary listener until
+     * bug has been fixed.
      */
     private void showDateDialog()
     {
@@ -221,8 +217,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         switch (item.getItemId())
         {
             case R.id.menu_search:
-                // TODO Make sure that search works on small screen where
-                // search is in the 3-dot menu
                 getActivity().onSearchRequested();
                 return true;
             default:
@@ -286,24 +280,20 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
      */
     private void populateList()
     {
-        if (searchQuery.equals("") && timeToSet == TIME_NOT_SET)
+        if(searchQuery.equals("") && timeToSet == TIME_NOT_SET)
         {
-            receiptList = communicator.getReceipts(10);
-        }
-        else if (searchQuery.equals(""))
-        {
-            receiptList = communicator.getReceipts(timeFrom, timeTo);
-        }
-        else if (timeToSet == TIME_NOT_SET)
-        {
-            receiptList = communicator.searchReceipts(searchQuery);
+            receiptList = communicator.getReceipts(20);
         }
         else
         {
-            receiptList = communicator.searchReceipts(searchQuery);
-            filterList();
+            receiptList = communicator.getReceipts(timeFrom, timeTo);
         }
-        setListAdapter(new ReceiptAdapter(getActivity(), R.layout.row, receiptList));
+        adapter = new ReceiptSearchAdapter(getActivity(), R.layout.row, receiptList, bitmapLoader);
+        if(!searchQuery.equals(""))
+        {
+            adapter.getFilter().filter(searchQuery);
+        }
+        setListAdapter(adapter);
     }
 
     /**
@@ -388,44 +378,5 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
         }
     }
 
-    /**
-     *  This is the custom adapter for the ListView that sets the name, timestamp and
-     *  uses the BitmapLoader to load images into the ImageViews.
-     */
-    private class ReceiptAdapter extends ArrayAdapter<Receipt>
-    {
-
-        private ArrayList<Receipt> items;
-        private Context context;
-
-        public ReceiptAdapter(Context context, int textViewResourceId, ArrayList<Receipt> items)
-        {
-            super(context, textViewResourceId, items);
-            this.items = items;
-            this.context = context;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            View view = convertView;
-            if (view == null)
-            {
-                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = vi.inflate(R.layout.row, null);
-            }
-            Receipt r = items.get(position);
-            if (r != null)
-            {
-                TextView name = (TextView) view.findViewById(R.id.row_name);
-                TextView timestamp = (TextView) view.findViewById(R.id.row_timestamp);
-                ImageView image = (ImageView) view.findViewById(R.id.row_image);
-                name.setText(r.getName());
-                timestamp.setText(r.getDate(context));
-                bitmapLoader.loadBitmap(image, r.getPhoto());
-            }
-            return view;
-        }
-    }
 
 }

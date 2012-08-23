@@ -321,8 +321,8 @@ public class Receipt implements Parcelable
     {
         StringBuilder sb = new StringBuilder();
         sb.append(getName());
-        sb.append(" ");
-        sb.append(getDateAndTime());
+//        sb.append(" ");
+//        sb.append(getDateAndTime());
         return sb.toString();
     }
 
