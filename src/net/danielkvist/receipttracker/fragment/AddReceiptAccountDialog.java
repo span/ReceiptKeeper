@@ -15,12 +15,12 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 /**
- * This class handles the dialog that pops up when the user has initiated an action
- * to add a new receipt account. It listens for the user to accept the changes and then
- * dispatches the information back to the parent class. It has a custom Interface that that
- * parent class must implement for the callback to work properly.
+ * This class handles the dialog that pops up when the user has initiated an action to add a new receipt account. It
+ * listens for the user to accept the changes and then dispatches the information back to the parent class. It has a
+ * custom Interface that that parent class must implement for the callback to work properly.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class AddReceiptAccountDialog extends DialogFragment implements OnEditorActionListener
 {
@@ -36,7 +36,6 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
     private EditText accountCodeView;
     private EditText accountNameView;
     private AddReceiptAccountDialogListener callback;
-    
 
     /**
      * Empty constructor required by DialogFragment.
@@ -72,7 +71,7 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
                 onEditorAction(null, EditorInfo.IME_ACTION_DONE, null);
             }
         });
-      
+
         getDialog().setTitle(getString(R.string.add_account));
         getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         accountNameView.setOnEditorActionListener(this);
@@ -80,10 +79,12 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
 
         return view;
     }
-    
+
     /**
      * This method MUST be called by the parent in order to set the callback mechanism.
-     * @param callback the AddReceiptAccountDialogListener which will handle the result
+     * 
+     * @param callback
+     *            the AddReceiptAccountDialogListener which will handle the result
      */
     public void setCallback(AddReceiptAccountDialogListener callback)
     {
@@ -102,7 +103,7 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
             this.dismiss();
             return true;
         }
-        else if(EditorInfo.IME_ACTION_NONE == actionId)
+        else if (EditorInfo.IME_ACTION_NONE == actionId)
         {
             this.dismiss();
         }

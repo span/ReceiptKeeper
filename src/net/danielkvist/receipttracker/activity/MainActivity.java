@@ -22,11 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * This is the activity that is launched first for the application. It is responsible for
- * showing the first Fragment which contains a list of selections on where to navigate
- * in the application.
+ * This is the activity that is launched first for the application. It is responsible for showing the first Fragment
+ * which contains a list of selections on where to navigate in the application.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class MainActivity extends Activity implements View.OnClickListener
 {
@@ -62,10 +62,8 @@ public class MainActivity extends Activity implements View.OnClickListener
     }
 
     /*
-     * Loads any parameters that are passed in via the Intent and checks
-     * if a Receipt was among the Extra's. If there is no receipt we get the last
-     * added receipt from the database and show it.
-     * 
+     * Loads any parameters that are passed in via the Intent and checks if a Receipt was among the Extra's. If there is
+     * no receipt we get the last added receipt from the database and show it.
      */
     @Override
     protected void onResume()
@@ -82,8 +80,8 @@ public class MainActivity extends Activity implements View.OnClickListener
     }
 
     /**
-     * Finds the view's related to the receipt that is passed in and sets their
-     * content accordingly.
+     * Finds the view's related to the receipt that is passed in and sets their content accordingly.
+     * 
      * @param receipt
      */
     private void showLastReceipt(final Receipt receipt)
@@ -110,37 +108,37 @@ public class MainActivity extends Activity implements View.OnClickListener
             });
 
             ImageView imageView = (ImageView) findViewById(R.id.receipt_image);
-            
+
             BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getApplication()).bitmapLoader;
             bitmapLoader.loadBitmap(imageView, receipt.getPhoto());
-            
+
             TextView receiptSum = (TextView) findViewById(R.id.receipt_sum);
             receiptSum.setText(receipt.getSum());
             receiptSum.setVisibility(settings.get(Setting.SETTING_FIELD_SUM));
-            
+
             TextView receiptSumLabel = (TextView) findViewById(R.id.receipt_sum_label);
             receiptSumLabel.setVisibility(settings.get(Setting.SETTING_FIELD_SUM));
-            
+
             TextView receiptTax = (TextView) findViewById(R.id.receipt_tax);
             receiptTax.setText(receipt.getTax());
             receiptTax.setVisibility(settings.get(Setting.SETTING_FIELD_TAX));
-            
+
             TextView receiptTaxLabel = (TextView) findViewById(R.id.receipt_tax_label);
             receiptTaxLabel.setVisibility(settings.get(Setting.SETTING_FIELD_TAX));
-            
+
             TextView receiptDateAndTime = (TextView) findViewById(R.id.receipt_date_and_time);
             receiptDateAndTime.setText(receipt.getDateAndTime(this));
-            
+
             TextView receiptName = (TextView) findViewById(R.id.receipt_name);
             receiptName.setText(receipt.getName());
         }
     }
 
     /**
-     * When a receipt has been clicked this method is called to show it's details in a detail
-     * view. On a phone this means to launch the next activity which handles the details and
-     * on a tablet another fragment is loaded. The method passes on the receipt it takes as
-     * a parameter to the corresponding activity/fragment.
+     * When a receipt has been clicked this method is called to show it's details in a detail view. On a phone this
+     * means to launch the next activity which handles the details and on a tablet another fragment is loaded. The
+     * method passes on the receipt it takes as a parameter to the corresponding activity/fragment.
+     * 
      * @param receipt
      */
     private void showDetail(Receipt receipt)
@@ -165,8 +163,7 @@ public class MainActivity extends Activity implements View.OnClickListener
     }
 
     /**
-     * When a item in the navigation list have been selected this method is called to 
-     * decide which action to take.
+     * When a item in the navigation list have been selected this method is called to decide which action to take.
      */
     @Override
     public void onClick(View v)
@@ -181,7 +178,7 @@ public class MainActivity extends Activity implements View.OnClickListener
             switch (vid)
             // XXX This switch is the same as in receiptFrameActivity, refactor if tablet version
             {
-                // XXX change 1,2,3,4 to id of view
+            // XXX change 1,2,3,4 to id of view
                 case 1:
                     fragment = new ReceiptAddFragment();
                     break;
@@ -199,8 +196,7 @@ public class MainActivity extends Activity implements View.OnClickListener
                     break;
             }
 
-
-            //arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id); this id to string?
+            // arguments.putString(ReceiptDetailFragment.ARG_ITEM_ID, id); this id to string?
             // ReceiptDetailFragment fragment = new ReceiptDetailFragment(null);
             // // XXX Launch the correct fragment, remove this?
             fragment.setArguments(arguments);
@@ -209,7 +205,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         }
         else
         {
-            switch(v.getId())
+            switch (v.getId())
             {
                 case R.id.add_button:
                     id = 1;
@@ -225,7 +221,7 @@ public class MainActivity extends Activity implements View.OnClickListener
             detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
-        
+
     }
 
 }

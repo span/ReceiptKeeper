@@ -24,10 +24,11 @@ import com.google.android.maps.OverlayItem;
 
 // WORKAROUND http://code.google.com/p/android/issues/detail?id=15347 MapFragment don't exist
 /**
- * This activity handles the MapView that is shown in a Fragment and sets the location of 
- * the current Receipt that is being added or of the already added receipt's location.
+ * This activity handles the MapView that is shown in a Fragment and sets the location of the current Receipt that is
+ * being added or of the already added receipt's location.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class MyMapActivity extends MapActivity
 {
@@ -38,8 +39,8 @@ public class MyMapActivity extends MapActivity
     private MapController mapController;
 
     /**
-     * Sets up the views in the activity and adds location overlays depending on if
-     * a receipt location is available or if we're showing the current location.
+     * Sets up the views in the activity and adds location overlays depending on if a receipt location is available or
+     * if we're showing the current location.
      */
     @Override
     protected void onCreate(Bundle icicle)
@@ -77,8 +78,8 @@ public class MyMapActivity extends MapActivity
     }
 
     /**
-     * Sets the actual GeoPoint data to the map. Shows an alert to the user if GPS is disabled and
-     * allows the user to enable it.
+     * Sets the actual GeoPoint data to the map. Shows an alert to the user if GPS is disabled and allows the user to
+     * enable it.
      */
     @Override
     protected void onResume()
@@ -134,8 +135,8 @@ public class MyMapActivity extends MapActivity
     }
 
     /**
-     * Shows the actual alert message to the user about enabling GPS. This method also
-     * lanches an Intent to get into the settings to enable it.
+     * Shows the actual alert message to the user about enabling GPS. This method also lanches an Intent to get into the
+     * settings to enable it.
      */
     private void showAlertMessageGps()
     {
@@ -149,7 +150,7 @@ public class MyMapActivity extends MapActivity
                     }
                 }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
                 {
-                    public void onClick(final DialogInterface dialog,final int id)
+                    public void onClick(final DialogInterface dialog, final int id)
                     {
                         dialog.cancel();
                     }

@@ -19,14 +19,14 @@ import android.view.MenuItem;
 import android.widget.ShareActionProvider;
 
 /**
- * The is a wrapper activity for the different Fragments that build up the application. This activity
- * is responsible for showing the right fragment according to what action was taken before the
- * activity was launched. The class also implements some custom callbacks to make it possible
- * for the fragments to communicate with the activity.
+ * The is a wrapper activity for the different Fragments that build up the application. This activity is responsible for
+ * showing the right fragment according to what action was taken before the activity was launched. The class also
+ * implements some custom callbacks to make it possible for the fragments to communicate with the activity.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
-public class ReceiptFrameActivity extends Activity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks     
+public class ReceiptFrameActivity extends Activity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks
 {
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
     private static final int ADD_FRAGMENT_ID = 1;
@@ -38,8 +38,8 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     public ShareActionProvider shareActionProvider;
 
     /**
-     * Receives information about which fragment to show and calls replaceFragment
-     * with the information that is passed in. Also enables UP navigation.
+     * Receives information about which fragment to show and calls replaceFragment with the information that is passed
+     * in. Also enables UP navigation.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,27 +56,27 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
             replaceFragment(fid, r, false);
         }
     }
-    
+
     /**
      * Creates the menu in the ActionBar
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
+    public boolean onCreateOptionsMenu(Menu menu)
     {
         // XXX Add this and opOptionsIte... for two pane in MainActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-        
+
         return true;
     }
-    
+
     /**
      * Handles the UP navigation when pressing the home button in the top left.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch(item.getItemId()) 
+        switch (item.getItemId())
         {
             case android.R.id.home:
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
@@ -93,49 +93,51 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     }
 
     /**
-     * Handles callback from the Fragment and replaces the fragment
-     * according to which Receipt is passed in to show the details of
-     * the receipt.
+     * Handles callback from the Fragment and replaces the fragment according to which Receipt is passed in to show the
+     * details of the receipt.
      */
     @Override
     public void onItemSelected(Receipt receipt)
     {
         replaceFragment(DETAIL_FRAGMENT_ID, receipt, true);
     }
-    
+
     /**
-     * Handles callback from the Fragment and replaces the fragment
-     * according to which Receipt is passed in and shows the Add/Edit
-     * form for editing the data in the Receipt.
+     * Handles callback from the Fragment and replaces the fragment according to which Receipt is passed in and shows
+     * the Add/Edit form for editing the data in the Receipt.
      */
     @Override
     public void editSelected(Receipt receipt)
     {
         replaceFragment(ADD_FRAGMENT_ID, receipt, true);
     }
-    
+
     /**
      * Replaces the current fragment with a new one.
-     * @param newFragmentId The ID of the fragment to show
-     * @param newReceipt The Receipt that is passed to the fragment
-     * @param addToBackStack If we want to add the fragment to the backStack or not
+     * 
+     * @param newFragmentId
+     *            The ID of the fragment to show
+     * @param newReceipt
+     *            The Receipt that is passed to the fragment
+     * @param addToBackStack
+     *            If we want to add the fragment to the backStack or not
      */
     private void replaceFragment(int newFragmentId, Receipt newReceipt, boolean addToBackStack)
     {
         // TODO Fix animations in the transactions
         Bundle arguments = new Bundle();
         arguments.putParcelable(Receipt.EXTRA_RECEIPT, newReceipt);
-        
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        //ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        //ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        // ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         currentReceipt = newReceipt;
-        
-        switch(newFragmentId)
+
+        switch (newFragmentId)
         {
             case ADD_FRAGMENT_ID:
                 fragment = new ReceiptAddFragment();
-                if(currentReceipt == null)
+                if (currentReceipt == null)
                 {
                     setTitle(getString(R.string.add));
                 }
@@ -157,20 +159,21 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
                 setTitle(getString(R.string.details));
                 break;
         }
-        
-        if(addToBackStack)
+
+        if (addToBackStack)
         {
             ft.addToBackStack(null);
         }
-        
+
         fragment.setArguments(arguments);
         ft.replace(RECEIPT_FRAME_CONTAINER, fragment);
         ft.commit();
         invalidateOptionsMenu();
     }
-    
+
     /**
      * Returns the current receipt that is being displayed
+     * 
      * @return
      */
     public Receipt getReceipt()

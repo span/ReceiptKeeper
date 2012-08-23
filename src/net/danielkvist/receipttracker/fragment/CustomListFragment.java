@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 /**
- * This is a base class for any ListFragments that are used in the application. It handles basic things
- * like repositioning the list, callbacks and sets the item checked or not. It has a custom Interface
- * that the Activities that holds the fragments can use to communicate with the fragment.
+ * This is a base class for any ListFragments that are used in the application. It handles basic things like
+ * repositioning the list, callbacks and sets the item checked or not. It has a custom Interface that the Activities
+ * that holds the fragments can use to communicate with the fragment.
+ * 
  * @author Daniel Kvist
- *
+ * 
  */
 public class CustomListFragment extends ListFragment
 {
@@ -25,30 +26,35 @@ public class CustomListFragment extends ListFragment
     public interface Callbacks
     {
         public void onItemSelected(String id);
+
         public void onItemSelected(Receipt receipt);
     }
 
     private static Callbacks dummyCallbacks = new Callbacks()
     {
         @Override
-        public void onItemSelected(String id) { }
+        public void onItemSelected(String id)
+        {
+        }
+
         @Override
-        public void onItemSelected(Receipt receipt) { }
+        public void onItemSelected(Receipt receipt)
+        {
+        }
     };
-    
+
     /**
      * We want to retain the instance of the fragment so we set the setRetainInstance to true
      */
     @Override
-    public void onCreate(Bundle savedInstanceState) 
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     };
 
     /**
-     * When the fragment is being attached we can save a reference to the activity
-     * that we use for the callback methods.
+     * When the fragment is being attached we can save a reference to the activity that we use for the callback methods.
      */
     @Override
     public void onAttach(Activity activity)
@@ -63,8 +69,8 @@ public class CustomListFragment extends ListFragment
     }
 
     /**
-     * Make sure to set the main activity back to some dummu callbacks since we don't need
-     * them any more when we're being detached.
+     * Make sure to set the main activity back to some dummu callbacks since we don't need them any more when we're
+     * being detached.
      */
     @Override
     public void onDetach()
@@ -88,6 +94,7 @@ public class CustomListFragment extends ListFragment
 
     /**
      * Set the type of ListView we want, ie if we want to be able to select multiple items or not
+     * 
      * @param activateOnItemClick
      */
     public void setActivateOnItemClick(boolean activateOnItemClick)
@@ -96,8 +103,8 @@ public class CustomListFragment extends ListFragment
     }
 
     /**
-     * Resets the actual position of the List when we're being resumed and reattached to the
-     * activity
+     * Resets the actual position of the List when we're being resumed and reattached to the activity
+     * 
      * @param position
      */
     public void setActivatedPosition(int position)
@@ -105,7 +112,7 @@ public class CustomListFragment extends ListFragment
         if (position == ListView.INVALID_POSITION)
         {
             getListView().setItemChecked(activatedPosition, false);
-        } 
+        }
         else
         {
             getListView().setItemChecked(position, true);
