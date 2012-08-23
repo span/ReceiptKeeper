@@ -16,6 +16,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ShareActionProvider;
 
 /**
  * The is a wrapper activity for the different Fragments that build up the application. This activity
@@ -34,6 +35,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     private static final int DETAIL_FRAGMENT_ID = 4;
     private Fragment fragment = null;
     private Receipt currentReceipt;
+    public ShareActionProvider shareActionProvider;
 
     /**
      * Receives information about which fragment to show and calls replaceFragment

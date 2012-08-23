@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 /**
@@ -41,6 +42,7 @@ public class ReceiptDetailFragment extends Fragment
     private Communicator communicator;
     private TextView sumViewLabel;
     private TextView taxViewLabel;
+    private ShareActionProvider shareActionProvider;
     
     /**
      * Custom interface to handle communication with the parent Activity.
@@ -70,6 +72,7 @@ public class ReceiptDetailFragment extends Fragment
         }
 
         callbacks = (Callbacks) activity;
+        this.receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
     }
 
     /**
@@ -94,16 +97,36 @@ public class ReceiptDetailFragment extends Fragment
     }
     
     /**
-     * Hook into the OptionsMenu and add an Edit and Delete option.
+     * Hook into the OptionsMenu and add an Edit, Delete and Share option.
      */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem deleteItem = menu.findItem(R.id.item_delete);
         deleteItem.setVisible(true);
+        
         MenuItem editItem = menu.findItem(R.id.item_edit);
         editItem.setVisible(true);
         
+        MenuItem shareItem = menu.findItem(R.id.item_share);
+        shareItem.setVisible(true);
+        shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+        shareActionProvider.setShareIntent(getShareIntent());
+        
         super.onPrepareOptionsMenu(menu);
+    }
+    
+    /**
+     * Builds an intent that takes the path for the image and passes it to 
+     * the sharing mechanism as a stream built on the URI of the image path.
+     * @return the intent to share the image as a stream
+     */
+    private Intent getShareIntent()
+    {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + receipt.getPhoto()));
+        shareIntent.setType("image/jpeg");
+        return shareIntent;
     }
     
     /**
@@ -133,7 +156,7 @@ public class ReceiptDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        this.receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
+        getActivity().invalidateOptionsMenu(); // Need to call this since the options menu is not rendering properly on first run
         communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
         View rootView = inflater.inflate(R.layout.fragment_receipt_detail, container, false);

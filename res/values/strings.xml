@@ -97,5 +97,6 @@
     <string name="click_to_view_settings">Click to view settings</string>
     <string name="last_receipt">Last receipt</string>
     <string name="menu">Menu</string>
+    <string name="send_to">Send to</string>
 
 </resources>
