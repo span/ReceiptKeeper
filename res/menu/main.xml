@@ -5,19 +5,19 @@
         android:icon="@android:drawable/ic_menu_delete"
         android:showAsAction="ifRoom|withText"
         android:title="Delete"
-        android:visible="true"/>
+        android:visible="false"/>
     <item
         android:id="@+id/item_edit"
         android:icon="@android:drawable/ic_menu_edit"
         android:showAsAction="ifRoom|withText"
         android:title="Edit"
-        android:visible="true"/>
+        android:visible="false"/>
     <item
         android:id="@+id/item_share"
         android:actionProviderClass="android.widget.ShareActionProvider"
         android:showAsAction="ifRoom|withText"
         android:title="Share"
-        android:visible="true"/>
+        android:visible="false"/>
     <item
         android:id="@+id/item_save"
         android:icon="@android:drawable/ic_menu_save"
