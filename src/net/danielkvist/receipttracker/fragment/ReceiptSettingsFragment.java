@@ -266,12 +266,19 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         communicator.saveSetting(setting);
     }
 
+    /**
+     * When an item in the Spinner has been selected we want to update the fields with the correct information.
+     */
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
     {
         updateFields();
     }
 
+    /**
+     * Helper method that gets the current selected position of the Spinner and sets the edit text views accordingly. If
+     * the code is not user provided we disable the fields for editing.
+     */
     private void updateFields()
     {
         String displayName;
@@ -282,9 +289,10 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
             // so we have to decrement with one to get the last item.
             position--;
         }
-        String name = receiptAccounts.get(position).getName();
-        long code = receiptAccounts.get(position).getCode();
-        if (code >= 1000)
+        ReceiptAccount receiptAccount = receiptAccounts.get(position);
+        String name = receiptAccount.getName();
+        long code = receiptAccount.getCode();
+        if (!receiptAccount.isUserAdded())
         {
             accountName.setEnabled(false);
             accountCode.setEnabled(false);
@@ -300,6 +308,9 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         accountCode.setText(String.valueOf(code));
     }
 
+    /**
+     * Not used.
+     */
     @Override
     public void onNothingSelected(AdapterView<?> arg0)
     {
