@@ -8,6 +8,11 @@ import android.widget.EditText;
 public class EditTextCodeListener implements View.OnKeyListener
 {
     private Communicator communicator;
+    
+    /**
+     * Constructor which takes a communicator as a parameter which is needed to show any error messages.
+     * @param communicator
+     */
     public EditTextCodeListener(Communicator communicator)
     {
         this.communicator = communicator;

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
+import net.danielkvist.receipttracker.content.ReceiptSettingsTabHost;
 import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
@@ -16,18 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 /**
@@ -48,11 +43,13 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     private Communicator communicator;
     private MenuItem deleteItem;
     private MenuItem saveItem;
-    private ReceiptAccountAdapter adapter;
     private MenuItem addItem;
+    private ReceiptAccountAdapter adapter;
+    
     private int currentTab;
     private View currentView;
     private View previousView;
+    private ReceiptSettingsTabHost tabHost;
 
     /**
      * Just an empty constructor
@@ -75,7 +72,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     }
 
     /**
-     * Adds the save icon to the options menu.
+     * Adds the save icon to the options menu and sets the items in the custom tab host
      */
     @Override
     public void onPrepareOptionsMenu(Menu menu)
@@ -83,6 +80,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         deleteItem = menu.findItem(R.id.item_delete);
         saveItem = menu.findItem(R.id.item_save);
         addItem = menu.findItem(R.id.item_add);
+        tabHost.setOptionItems(deleteItem, saveItem, addItem);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -164,99 +162,8 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
      */
     private void setupTabs(View rootView)
     {
-        // FIXME refactor out tabhost to own class
-        final TabHost tabHost = (TabHost) rootView.findViewById(android.R.id.tabhost);
-
+        tabHost = (ReceiptSettingsTabHost) rootView.findViewById(android.R.id.tabhost);
         tabHost.setup();
-
-        TabSpec spec = tabHost.newTabSpec("tag1");
-
-        spec.setContent(R.id.storage);
-        spec.setIndicator(getString(R.string.storage));
-        tabHost.addTab(spec);
-
-        spec = tabHost.newTabSpec("tag2");
-        spec.setContent(R.id.receipt);
-        spec.setIndicator(getString(R.string.receipt));
-        tabHost.addTab(spec);
-
-        spec = tabHost.newTabSpec("tag3");
-        spec.setContent(R.id.account);
-        spec.setIndicator(getString(R.string.account));
-        tabHost.addTab(spec);
-        previousView = tabHost.getCurrentView();
-        tabHost.setOnTabChangedListener(new OnTabChangeListener()
-        {
-
-            
-
-            @Override
-            public void onTabChanged(String tabId)
-            {
-                if (tabId.equals("tag3"))
-                {
-                    deleteItem.setVisible(true);
-                    saveItem.setVisible(true);
-                    addItem.setVisible(true);
-                }
-                else
-                {
-                    deleteItem.setVisible(false);
-                    saveItem.setVisible(false);
-                    addItem.setVisible(false);
-                }
-                currentView = tabHost.getCurrentView();
-                if (tabHost.getCurrentTab() > currentTab)
-                {
-                    previousView.setAnimation(outToLeftAnimation());
-                    currentView.setAnimation(inFromRightAnimation());
-                }
-                else
-                {
-                    previousView.setAnimation(outToRightAnimation());
-                    currentView.setAnimation(inFromLeftAnimation());
-                }
-                previousView = currentView;
-                currentTab = tabHost.getCurrentTab();
-            }
-        });
-
-    }
-
-    private Animation inFromRightAnimation()
-    {
-        Animation inFromRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
-        inFromRight.setDuration(240);
-        inFromRight.setInterpolator(new AccelerateInterpolator());
-        return inFromRight;
-    }
-
-    private Animation outToRightAnimation()
-    {
-        Animation outToRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 1.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
-        outToRight.setDuration(240);
-        outToRight.setInterpolator(new AccelerateInterpolator());
-        return outToRight;
-    }
-    
-    private Animation inFromLeftAnimation()
-    {
-        Animation inFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
-        inFromLeft.setDuration(240);
-        inFromLeft.setInterpolator(new AccelerateInterpolator());
-        return inFromLeft;
-    }
-
-    private Animation outToLeftAnimation()
-    {
-        Animation outtoLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, -1.0f,
-                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
-        outtoLeft.setDuration(240);
-        outtoLeft.setInterpolator(new AccelerateInterpolator());
-        return outtoLeft;
     }
 
     /**
