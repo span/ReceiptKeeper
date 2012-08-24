@@ -146,21 +146,35 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
         return sb.toString();
     }
 
+    /**
+     * Compares the codes of the receipt. Used for ascending sort.
+     */
     @Override
     public int compareTo(ReceiptAccount another)
     {
         return (int) (this.getCode() - another.getCode());
     }
 
+    /**
+     * Checks if the name and code are the same on the current receipt account and the other but does not compare the
+     * exact references. Also note that the other must have a rowId greater then 0 to be true.
+     */
     @Override
     public boolean equals(Object other)
     {
         if (!(other instanceof ReceiptAccount))
             return false;
         ReceiptAccount receiptAccount = (ReceiptAccount) other;
-        return receiptAccount.getName().equals(this.getName()) && receiptAccount.getCode() == this.getCode() && receiptAccount.getRowId() > 0;
+        return receiptAccount.getName().equals(this.getName()) && receiptAccount.getCode() == this.getCode()
+                && receiptAccount.getRowId() > 0;
     }
 
+    /**
+     * Checks if a receipt account is unique and doesn't already exist in the list.
+     * @param receiptAccount the account to check
+     * @param receiptAccounts the list of all accounts
+     * @return true if unique
+     */
     private static boolean isUnique(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
     {
         boolean result = true;
@@ -173,10 +187,17 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
         }
         return result;
     }
-    
+
+    /**
+     * Checks to see if the receipt account is valid by first making sure it's unique and then that its name is not an empty string
+     * and that the code is greater then 0.
+     * @param receiptAccount
+     * @param receiptAccounts
+     * @return
+     */
     public static boolean isValid(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
     {
-        return isUnique(receiptAccount, receiptAccounts) && !receiptAccount.getName().equals("") && receiptAccount.getCode() > -1;
+        return isUnique(receiptAccount, receiptAccounts) && !receiptAccount.getName().equals("") && receiptAccount.getCode() > 0;
     }
 
 }
