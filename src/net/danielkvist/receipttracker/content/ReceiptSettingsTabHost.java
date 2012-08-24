@@ -81,7 +81,7 @@ public class ReceiptSettingsTabHost extends TabHost
         spec.setContent(R.id.account);
         spec.setIndicator(context.getString(R.string.account));
         addTab(spec);
-        setOnTabChangedListener(new AnimatedTabHostListener(this)
+        setOnTabChangedListener(new AnimatedTabHostListener(context, this)
         {
             @Override
             public void onTabChanged(String tabId)
