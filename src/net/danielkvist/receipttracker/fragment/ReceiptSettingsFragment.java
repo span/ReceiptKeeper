@@ -6,20 +6,22 @@ import java.util.HashMap;
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
+import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -27,7 +29,6 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * This Fragment controls the visibility of settings through 3 tabs. The each setting is set to auto save when it is
@@ -49,6 +50,9 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     private MenuItem saveItem;
     private ReceiptAccountAdapter adapter;
     private MenuItem addItem;
+    private int currentTab;
+    private View currentView;
+    private View previousView;
 
     /**
      * Just an empty constructor
@@ -93,14 +97,20 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
             case R.id.item_delete:
                 deleteReceiptAccount(receiptAccount);
                 adapter.notifyDataSetChanged();
+                updateFields();
                 return true;
             case R.id.item_save:
-                saveReceiptAccount(receiptAccount);
-                adapter.notifyDataSetChanged();
+                if (saveReceiptAccount(receiptAccount))
+                {
+                    adapter.notifyDataSetChanged();
+                }
                 return true;
             case R.id.item_add:
-                addReceiptAccount();
+                ReceiptAccount newAccount = new ReceiptAccount(-1, ReceiptAccount.DEFAULT_ACCOUNT, "");
+                receiptAccounts.add(newAccount);
                 adapter.notifyDataSetChanged();
+                accountSpinner.setSelection(adapter.findReceiptPosition(newAccount.getCode()));
+                updateFields();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -108,34 +118,28 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
 
     private void deleteReceiptAccount(ReceiptAccount receiptAccount)
     {
+        receiptAccounts.remove(receiptAccount);
         communicator.deleteReceiptAccount(receiptAccount);
     }
 
-    private void saveReceiptAccount(ReceiptAccount receiptAccount)
+    private boolean saveReceiptAccount(ReceiptAccount receiptAccount)
     {
+        boolean result;
         String name = accountName.getText().toString();
         long code = Long.parseLong(accountCode.getText().toString());
-        if(name.equals(""))
-        {
-            showToast("You need to enter a name for your account before saving");
-            return;
-        }
-        if(code < 0) // FIXME Add proper code checking, we do not want duplicate codes
-        {
-            showToast("You must enter a valid code before saving, duplicates are not allowed nor is an empty field.");
-            return;
-        }
         receiptAccount.setName(name);
         receiptAccount.setCode(code);
-        communicator.saveReceiptAccount(receiptAccount);
-    }
-    
-    private void addReceiptAccount()
-    {
-        accountName.setText("");
-        accountName.setHint(R.string.account_name);
-        accountCode.setText("");
-        accountCode.setHint(R.string.account_code);
+        if (ReceiptAccount.isValid(receiptAccount, receiptAccounts))
+        {
+            communicator.saveReceiptAccount(receiptAccount);
+            result = true;
+        }
+        else
+        {
+            communicator.showToast(ReceiptAccount.INVALID_ACCOUNT_MESSAGE);
+            result = false;
+        }
+        return result;
     }
 
     /**
@@ -160,7 +164,8 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
      */
     private void setupTabs(View rootView)
     {
-        TabHost tabHost = (TabHost) rootView.findViewById(android.R.id.tabhost);
+        // FIXME refactor out tabhost to own class
+        final TabHost tabHost = (TabHost) rootView.findViewById(android.R.id.tabhost);
 
         tabHost.setup();
 
@@ -179,13 +184,16 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
         spec.setContent(R.id.account);
         spec.setIndicator(getString(R.string.account));
         tabHost.addTab(spec);
-
+        previousView = tabHost.getCurrentView();
         tabHost.setOnTabChangedListener(new OnTabChangeListener()
         {
+
+            
+
             @Override
             public void onTabChanged(String tabId)
             {
-                if(tabId.equals("tag3"))
+                if (tabId.equals("tag3"))
                 {
                     deleteItem.setVisible(true);
                     saveItem.setVisible(true);
@@ -197,9 +205,58 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
                     saveItem.setVisible(false);
                     addItem.setVisible(false);
                 }
+                currentView = tabHost.getCurrentView();
+                if (tabHost.getCurrentTab() > currentTab)
+                {
+                    previousView.setAnimation(outToLeftAnimation());
+                    currentView.setAnimation(inFromRightAnimation());
+                }
+                else
+                {
+                    previousView.setAnimation(outToRightAnimation());
+                    currentView.setAnimation(inFromLeftAnimation());
+                }
+                previousView = currentView;
+                currentTab = tabHost.getCurrentTab();
             }
         });
 
+    }
+
+    private Animation inFromRightAnimation()
+    {
+        Animation inFromRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromRight.setDuration(240);
+        inFromRight.setInterpolator(new AccelerateInterpolator());
+        return inFromRight;
+    }
+
+    private Animation outToRightAnimation()
+    {
+        Animation outToRight = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
+        outToRight.setDuration(240);
+        outToRight.setInterpolator(new AccelerateInterpolator());
+        return outToRight;
+    }
+    
+    private Animation inFromLeftAnimation()
+    {
+        Animation inFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
+        inFromLeft.setDuration(240);
+        inFromLeft.setInterpolator(new AccelerateInterpolator());
+        return inFromLeft;
+    }
+
+    private Animation outToLeftAnimation()
+    {
+        Animation outtoLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
+        outtoLeft.setDuration(240);
+        outtoLeft.setInterpolator(new AccelerateInterpolator());
+        return outtoLeft;
     }
 
     /**
@@ -211,7 +268,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
      */
     private void setupSettingControls(View rootView)
     {
-        Communicator communicator = new Communicator(getActivity());
+        final Communicator communicator = new Communicator(getActivity());
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
 
         ((RadioGroup) rootView.findViewById(R.id.radio_group_storage)).setOnCheckedChangeListener(this);
@@ -245,25 +302,7 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
 
         accountName = (TextView) rootView.findViewById(R.id.account_name);
         accountCode = (TextView) rootView.findViewById(R.id.account_code);
-        accountCode.setOnKeyListener(new View.OnKeyListener()
-        {
-            /**
-             * An onKeyListener that keeps track of the number of chars we have in the field. It allows for erasing with
-             * keycode 67.
-             */
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event)
-            {
-                EditText e = (EditText) v;
-
-                if (e.getText().length() == 3 && keyCode != 67) // FIXME Check for back key as well
-                {
-                    showToast("You can only use 3 numbers for the receipt account code.");
-                    return true;
-                }
-                return false;
-            }
-        });
+        accountCode.setOnKeyListener(new EditTextCodeListener(communicator));
     }
 
     /**
@@ -323,9 +362,21 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
     {
+        updateFields();
+    }
+
+    private void updateFields()
+    {
         String displayName;
-        String name = receiptAccounts.get(accountSpinner.getSelectedItemPosition()).getName();
-        long code = receiptAccounts.get(accountSpinner.getSelectedItemPosition()).getCode();
+        int position = accountSpinner.getSelectedItemPosition();
+        if (position >= receiptAccounts.size())
+        {
+            // If we remove the last item in the list, it will be out of bounds when we update the fields
+            // so we have to decrement with one to get the last item.
+            position--;
+        }
+        String name = receiptAccounts.get(position).getName();
+        long code = receiptAccounts.get(position).getCode();
         if (code >= 1000)
         {
             accountName.setEnabled(false);
@@ -347,9 +398,5 @@ public class ReceiptSettingsFragment extends Fragment implements CompoundButton.
     {
         /* Nothing selected in spinner so we don't have to do anything, yawn */
     }
-    
-    private void showToast(String message)
-    {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-    }
+
 }

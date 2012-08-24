@@ -1,6 +1,8 @@
 package net.danielkvist.receipttracker.fragment;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.listener.EditTextCodeListener;
+import net.danielkvist.util.Communicator;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -36,12 +38,14 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
     private EditText accountCodeView;
     private EditText accountNameView;
     private AddReceiptAccountDialogListener callback;
+    private Communicator communicator;
 
     /**
      * Empty constructor required by DialogFragment.
      */
-    public AddReceiptAccountDialog()
+    public AddReceiptAccountDialog(Communicator communicator)
     {
+        this.communicator = communicator;
     }
 
     /**
@@ -52,6 +56,7 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
     {
         View view = inflater.inflate(R.layout.fragment_account_add, container);
         accountCodeView = (EditText) view.findViewById(R.id.account_add_code);
+        accountCodeView.setOnKeyListener(new EditTextCodeListener(communicator));
         accountNameView = (EditText) view.findViewById(R.id.account_add_name);
         Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener()

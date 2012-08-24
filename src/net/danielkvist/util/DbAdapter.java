@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import net.danielkvist.receipttracker.content.ReceiptAccount;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -188,10 +189,13 @@ public class DbAdapter
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteReceiptAccount(long rowId)
+    public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
     {
         SELECTED_TABLE = DATABASE_TABLE_ACCOUNTS;
-        return deleteItem(rowId);
+        ContentValues values = new ContentValues();
+        values.put(KEY_ACCOUNT_ID, ReceiptAccount.DEFAULT_ACCOUNT);
+        db.update(DATABASE_TABLE_RECEIPTS, values, KEY_ACCOUNT_ID + "=" + receiptAccount.getCode(), null);
+        return deleteItem(receiptAccount.getRowId());
     }
 
     /**

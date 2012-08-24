@@ -28,3 +28,4 @@ INSERT INTO "accounts" VALUES(25,'R9','depreciation_and_impairments_of_property'
 INSERT INTO "accounts" VALUES(26,'R10','depreciation_and_impairments_of_inventory_and_immaterial_assets',7830);
 INSERT INTO "accounts" VALUES(27,'R4','interest_income',8310);
 INSERT INTO "accounts" VALUES(28,'R8','interest_cost',8410);
+INSERT INTO "accounts" VALUES(29,'NA','no_account_selected',9999);
