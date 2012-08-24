@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -46,7 +45,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * This fragment contains the UI that is used to add a new Receipt. It contains all the form fields necessary and hooks
@@ -134,6 +132,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         if (receipt == null)
         {
             receipt = new Receipt();
+            receipt.setReceiptAccountId(9999);
         }
 
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
@@ -247,7 +246,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private void showEditDialog()
     {
         FragmentManager fm = getFragmentManager();
-        AddReceiptAccountDialog dialog = new AddReceiptAccountDialog();
+        AddReceiptAccountDialog dialog = new AddReceiptAccountDialog(communicator);
         dialog.setCallback(this);
         dialog.show(fm, "fragment_add_receipt_account");
     }
@@ -259,30 +258,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         adapter = new ReceiptAccountAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
         accountSpinner.setAdapter(adapter);
-        if (receipt.getReceiptAccountId() > -1)
-        {
-            int position = findReceiptPosition(receipt.getReceiptAccountId());
-            accountSpinner.setSelection(position);
-        }
-    }
-
-    /**
-     * Find out which receipt in the original unfiltered list that was selected.
-     * 
-     * @param receiptAccountId
-     *            the id of the selected ReceiptAccount
-     * @return the position in the original List
-     */
-    private int findReceiptPosition(long receiptAccountId)
-    {
-        int i = 0;
-        while (i < receiptAccounts.size())
-        {
-            if (receiptAccountId == receiptAccounts.get(i).getCode())
-                break;
-            i++;
-        }
-        return i;
+        int position = adapter.findReceiptPosition(receipt.getReceiptAccountCode());
+        accountSpinner.setSelection(position);
     }
 
     /**
@@ -429,7 +406,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
                 if (resultCode == Activity.RESULT_OK)
                 {
                     String path = receipt.getPhoto();
-                    Toast.makeText(getActivity(), "The image was saved to: " + path, Toast.LENGTH_LONG).show();
+                    communicator.showToast("The image was saved to: " + path);
                     bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
                     bitmapLoader.resizeBitmap(path, 1280, 800);
                     bitmapLoader.loadBitmap(imageView, path);
@@ -445,11 +422,17 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         ReceiptAccount receiptAccount = new ReceiptAccount(-1, receiptAccountCode, receiptAccountName);
         receiptAccounts.add(receiptAccount);
-        Collections.sort(receiptAccounts);
-        receipt.setReceiptAccountId(receiptAccountCode);
-        accountSpinner.setSelection(findReceiptPosition(receiptAccountCode));
-        communicator.saveReceiptAccount(receiptAccount);
         adapter.notifyDataSetChanged();
+        if(ReceiptAccount.isValid(receiptAccount, receiptAccounts))
+        {
+            receipt.setReceiptAccountId(receiptAccountCode);
+            accountSpinner.setSelection(adapter.findReceiptPosition(receiptAccountCode));
+            communicator.saveReceiptAccount(receiptAccount);
+        }
+        else
+        {
+            communicator.showToast(ReceiptAccount.INVALID_ACCOUNT_MESSAGE);
+        }
     }
 
 }

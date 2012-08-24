@@ -130,6 +130,5 @@ public class ReceiptSearchAdapter extends ArrayAdapter<Receipt>
             }
 
         };
-
     }
 }

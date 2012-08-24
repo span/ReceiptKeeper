@@ -179,7 +179,7 @@ public class Communicator
         if (openDatabase())
         {
             result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
-                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountId());
+                    receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountCode());
             closeDatabase();
         }
         showResult(result);
@@ -199,7 +199,7 @@ public class Communicator
         {
             result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
                     receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(),
-                    receipt.getReceiptAccountId());
+                    receipt.getReceiptAccountCode());
             closeDatabase();
         }
         showResult(result);
@@ -218,7 +218,7 @@ public class Communicator
         boolean result = false;
         if (openDatabase())
         {
-            result = dbAdapter.deleteReceiptAccount(receiptAccount.getCode());
+            result = dbAdapter.deleteReceiptAccount(receiptAccount);
             closeDatabase();
         }
         showResult(result);

@@ -1,5 +1,7 @@
 package net.danielkvist.receipttracker.content;
 
+import java.util.List;
+
 import android.content.Context;
 
 /**
@@ -12,6 +14,8 @@ import android.content.Context;
 public class ReceiptAccount implements Comparable<ReceiptAccount>
 {
 
+    public static final String INVALID_ACCOUNT_MESSAGE = "You must enter a valid code before saving, duplicates are not allowed nor is an empty field.";
+    public static long DEFAULT_ACCOUNT = 9999;
     private String name;
     private long code;
     private boolean userAdded;
@@ -59,7 +63,7 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
      */
     public void setName(String name)
     {
-        this.name = name;
+        this.name = name.trim();
     }
 
     /**
@@ -146,6 +150,33 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
     public int compareTo(ReceiptAccount another)
     {
         return (int) (this.getCode() - another.getCode());
+    }
+
+    @Override
+    public boolean equals(Object other)
+    {
+        if (!(other instanceof ReceiptAccount))
+            return false;
+        ReceiptAccount receiptAccount = (ReceiptAccount) other;
+        return receiptAccount.getName().equals(this.getName()) && receiptAccount.getCode() == this.getCode() && receiptAccount.getRowId() > 0;
+    }
+
+    private static boolean isUnique(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
+    {
+        boolean result = true;
+        for (ReceiptAccount ra : receiptAccounts)
+        {
+            if (receiptAccount.equals(ra) && receiptAccount.getRowId() < 0)
+            {
+                result = false;
+            }
+        }
+        return result;
+    }
+    
+    public static boolean isValid(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
+    {
+        return isUnique(receiptAccount, receiptAccounts) && !receiptAccount.getName().equals("") && receiptAccount.getCode() > -1;
     }
 
 }

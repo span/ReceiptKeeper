@@ -1,5 +1,6 @@
 package net.danielkvist.receipttracker.adapter;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.danielkvist.receipttracker.content.ReceiptAccount;
@@ -73,6 +74,32 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
         }
         
         return label;
+    }
+    
+    /**
+     * Find out which receipt in the list that was selected.
+     * 
+     * @param code
+     *            the code of the receipt account whose position you want
+     * @return the position in the original List
+     */
+    public int findReceiptPosition(long code)
+    {
+        int i = 0;
+        while (i < receiptAccountList.size())
+        {
+            if (code == receiptAccountList.get(i).getCode())
+                break;
+            i++;
+        }
+        return i;
+    }
+    
+    @Override
+    public void notifyDataSetChanged()
+    {
+        super.notifyDataSetChanged();
+        Collections.sort(receiptAccountList);
     }
 
 }

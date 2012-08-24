@@ -131,12 +131,14 @@
                         android:id="@+id/account_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/account_name"
                         android:inputType="text" />
 
                     <EditText
                         android:id="@+id/account_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/account_code"
                         android:inputType="number" />
                 </LinearLayout>
             </FrameLayout>

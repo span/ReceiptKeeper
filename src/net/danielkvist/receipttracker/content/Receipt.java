@@ -28,7 +28,7 @@ public class Receipt implements Parcelable
     private String tax;
     private String comment;
 
-    private long account_id;
+    private long accountCode;
 
     /**
      * Constructor for the class that initiates all strings to empty strings, sets the timestamp to the current time in
@@ -45,7 +45,7 @@ public class Receipt implements Parcelable
         sum = "";
         tax = "";
         comment = "";
-        account_id = -1;
+        accountCode = -1;
     }
 
     /**
@@ -58,7 +58,7 @@ public class Receipt implements Parcelable
     {
         this.id = in.readInt();
         this.timestamp = in.readLong();
-        this.account_id = in.readLong();
+        this.accountCode = in.readLong();
 
         String[] stringData = new String[7];
         in.readStringArray(stringData);
@@ -93,8 +93,8 @@ public class Receipt implements Parcelable
      *            the tax on the receipt
      * @param comment
      *            any comment on the receipt
-     * @param account_id
-     *            the account id that should be associated with the receipt
+     * @param accountCode
+     *            the account code that should be associated with the receipt
      */
     public Receipt(int id, String name, String photo, long timestamp, String locationLat, String locationLong, String sum, String tax,
             String comment, long account_id)
@@ -108,7 +108,7 @@ public class Receipt implements Parcelable
         this.sum = sum;
         this.tax = tax;
         this.comment = comment;
-        this.account_id = account_id;
+        this.accountCode = account_id;
     }
 
     /**
@@ -311,20 +311,20 @@ public class Receipt implements Parcelable
 
     /**
      * 
-     * @return account_id
+     * @return accountCode
      */
-    public long getReceiptAccountId()
+    public long getReceiptAccountCode()
     {
-        return account_id;
+        return accountCode;
     }
 
     /**
-     * @param accountId
-     *            the accountId to set
+     * @param accountCode
+     *            the account code to set
      */
-    public void setReceiptAccountId(long accountId)
+    public void setReceiptAccountId(long accountCode)
     {
-        this.account_id = accountId;
+        this.accountCode = accountCode;
     }
 
     /**
@@ -364,7 +364,7 @@ public class Receipt implements Parcelable
     {
         dest.writeInt(id);
         dest.writeLong(timestamp);
-        dest.writeLong(account_id);
+        dest.writeLong(accountCode);
         dest.writeStringArray(new String[] { name, photo, locationLat, locationLong, sum, tax, comment });
     }
 
