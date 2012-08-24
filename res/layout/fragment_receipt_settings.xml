@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".ReceiptSettingsFragment" >
 
-    <TabHost
+    <net.danielkvist.receipttracker.content.ReceiptSettingsTabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -143,6 +143,6 @@
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
-    </TabHost>
+    </net.danielkvist.receipttracker.content.ReceiptSettingsTabHost>
 
 </LinearLayout>
