@@ -5,6 +5,12 @@
     android:layout_gravity="center"
     android:orientation="vertical" >
 
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/details" />
+
     <EditText
         android:id="@+id/account_add_code"
         android:layout_width="match_parent"
@@ -20,6 +26,12 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:maxLines="1" />
+
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/category" />
 
     <Spinner
         android:id="@+id/category_spinner"

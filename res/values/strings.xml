@@ -85,8 +85,8 @@
     <string name="interest_income">Ränteintäkter</string>
     <string name="interest_cost">Räntekostnader m.m.</string>
     <string name="no_account_selected">No account selected</string>
-    <string name="account_name">Account name:</string>
-    <string name="account_code">Account code:</string>
+    <string name="account_name">Account name</string>
+    <string name="account_code">Account code</string>
     <string name="add_account">Add account</string>
     <string name="click_to_add_a_receipt_account">Click to add a receipt account</string>
     <string name="add">Add</string>
@@ -100,6 +100,7 @@
     <string name="menu">Menu</string>
     <string name="send_to">Send to</string>
     <string name="receipt_account">Receipt account</string>
+    <string name="category">Category</string>
     <string name="select_receipt_account">Select receipt account</string>
 
 </resources>

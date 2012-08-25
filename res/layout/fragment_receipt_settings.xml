@@ -125,7 +125,7 @@
                         style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/receipt_account" />
+                        android:text="@string/account_name" />
 
                     <EditText
                         android:id="@+id/account_name"
@@ -134,13 +134,25 @@
                         android:hint="@string/account_name"
                         android:inputType="text" />
 
+                    <TextView
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account_code" />
+
                     <EditText
                         android:id="@+id/account_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/account_code"
                         android:inputType="number" />
-                    
+
+                    <TextView
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/category" />
+
                     <Spinner
                         android:id="@+id/category_spinner"
                         android:layout_width="match_parent"
