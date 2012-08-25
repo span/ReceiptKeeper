@@ -140,6 +140,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/account_code"
                         android:inputType="number" />
+                    
+                    <Spinner
+                        android:id="@+id/category_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

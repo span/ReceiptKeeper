@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
+import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
 import net.danielkvist.receipttracker.listener.AnimatedTabHostListener;
 import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
@@ -42,6 +43,8 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
     private TextView accountName;
     private TextView accountCode;
     private Communicator communicator;
+    private Spinner categorySpinner;
+    private ReceiptAccountCategoryAdapter categoryAdapter;
 
     /**
      * Only calls super for the parent constructor
@@ -196,18 +199,23 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
         locationSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE);
         locationSwitch.setOnCheckedChangeListener(this);
 
+        receiptAccounts = communicator.getReceiptAccounts();
+        adapter = new ReceiptAccountAdapter(context, android.R.layout.simple_spinner_item, receiptAccounts);
         accountSpinner = (Spinner) findViewById(R.id.account_spinner);
         accountSpinner.setOnItemSelectedListener(this);
-        receiptAccounts = communicator.getReceiptAccounts();
-
-        adapter = new ReceiptAccountAdapter(context, android.R.layout.simple_spinner_item, receiptAccounts);
         accountSpinner.setAdapter(adapter);
 
         accountName = (TextView) findViewById(R.id.account_name);
         accountCode = (TextView) findViewById(R.id.account_code);
         accountCode.setOnKeyListener(new EditTextCodeListener(communicator));
         
+        categoryAdapter = new ReceiptAccountCategoryAdapter(context, android.R.layout.simple_spinner_item, receiptAccounts);
+        categorySpinner = (Spinner) findViewById(R.id.category_spinner);
+        categorySpinner.setAdapter(categoryAdapter);
+        
     }
+    
+    
 
     /**
      * Listener for the RadioGroup which contains the radio buttons that saves the current setting to the database.
@@ -285,6 +293,7 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
         }
         ReceiptAccount receiptAccount = receiptAccounts.get(position);
         String name = receiptAccount.getName();
+        String category = receiptAccount.getCategory();
         long code = receiptAccount.getCode();
         if (!receiptAccount.isUserAdded())
         {
@@ -300,6 +309,7 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
         }
         accountName.setText(displayName);
         accountCode.setText(String.valueOf(code));
+        categorySpinner.setSelection(categoryAdapter.findCategoryPosition(category));
     }
 
     /**
@@ -327,6 +337,11 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
     {
         adapter.notifyDataSetChanged();
         
+    }
+
+    public String getCurrentCategory()
+    {
+        return categorySpinner.getSelectedItem().toString();
     }
 
 }

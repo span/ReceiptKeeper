@@ -1,6 +1,10 @@
 package net.danielkvist.receipttracker.fragment;
 
+import java.util.List;
+
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
+import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
 import android.app.DialogFragment;
@@ -13,6 +17,7 @@ import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -32,20 +37,24 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
      */
     public interface AddReceiptAccountDialogListener
     {
-        void onFinishEditDialog(int receiptAccountCode, String receiptAccountName);
+        void onFinishEditDialog(int receiptAccountCode, String receiptAccountName, String receiptAccountCategory);
     }
 
     private EditText accountCodeView;
     private EditText accountNameView;
     private AddReceiptAccountDialogListener callback;
     private Communicator communicator;
+    private ReceiptAccountCategoryAdapter categoryAdapter;
+    private Spinner categorySpinner;
+    private List<ReceiptAccount> receiptAccounts;
 
     /**
      * Empty constructor required by DialogFragment.
      */
-    public AddReceiptAccountDialog(Communicator communicator)
+    public AddReceiptAccountDialog(Communicator communicator, List<ReceiptAccount> receiptAccounts)
     {
         this.communicator = communicator;
+        this.receiptAccounts = receiptAccounts;
     }
 
     /**
@@ -57,7 +66,13 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
         View view = inflater.inflate(R.layout.fragment_account_add, container);
         accountCodeView = (EditText) view.findViewById(R.id.account_add_code);
         accountCodeView.setOnKeyListener(new EditTextCodeListener(communicator));
+
         accountNameView = (EditText) view.findViewById(R.id.account_add_name);
+
+        categoryAdapter = new ReceiptAccountCategoryAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
+        categorySpinner = (Spinner) view.findViewById(R.id.category_spinner);
+        categorySpinner.setAdapter(categoryAdapter);
+
         Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener()
         {
@@ -104,7 +119,8 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
     {
         if (EditorInfo.IME_ACTION_DONE == actionId)
         {
-            callback.onFinishEditDialog(Integer.parseInt(accountCodeView.getText().toString()), accountNameView.getText().toString());
+            callback.onFinishEditDialog(Integer.parseInt(accountCodeView.getText().toString()), accountNameView.getText().toString(),
+                    categorySpinner.getSelectedItem().toString());
             this.dismiss();
             return true;
         }

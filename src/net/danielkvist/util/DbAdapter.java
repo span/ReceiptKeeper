@@ -43,7 +43,7 @@ public class DbAdapter
     public static final String KEY_COMMENT = "comment";
     public static final String KEY_ACCOUNT_ID = "account_id";
     public static final String KEY_CODE = "code";
-    public static final String KEY_ROW = "row";
+    public static final String KEY_CATEGORY = "category";
     public static final String KEY_SETTING_VALUE = "setting_value";
 
     private DatabaseHelper dbHelper;
@@ -126,13 +126,13 @@ public class DbAdapter
      *            any comment on the receipt
      * @param account_id
      *            which receipt accound id to associate with the receipt
-     * @return the new rowId or -1
+     * @return new rowId or -1
      */
-    public boolean createReceipt(String name, String photo, long timestamp, String locLat, String locLong, String sum, String tax,
+    public long createReceipt(String name, String photo, long timestamp, String locLat, String locLong, String sum, String tax,
             String comment, long account_id)
     {
         ContentValues values = putReceiptValues(name, photo, timestamp, locLat, locLong, sum, tax, comment, account_id);
-        return db.insert(DATABASE_TABLE_RECEIPTS, null, values) > 0;
+        return db.insert(DATABASE_TABLE_RECEIPTS, null, values);
     }
 
     /**
@@ -144,11 +144,11 @@ public class DbAdapter
      *            the account name
      * @return the new rowId or -1
      */
-    public boolean createReceiptAccount(long code, String name)
+    public boolean createReceiptAccount(long code, String name, String category)
     {
         ContentValues values = new ContentValues();
         values.put(KEY_CODE, code);
-        values.put(KEY_ROW, "user");
+        values.put(KEY_CATEGORY, category);
         values.put(KEY_NAME, name);
         return db.insert(DATABASE_TABLE_ACCOUNTS, null, values) > 0;
     }
@@ -206,7 +206,8 @@ public class DbAdapter
     public Cursor fetchReceiptAccounts()
     {
         Cursor cursor;
-        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME, KEY_CODE }, null, null, null, null, KEY_CODE);
+        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME, KEY_CODE, KEY_CATEGORY }, null, null, null, null,
+                KEY_CODE);
         if (cursor != null)
         {
             cursor.moveToFirst();
@@ -366,11 +367,12 @@ public class DbAdapter
      *            the code to update
      * @return true if successful
      */
-    public boolean updateReceiptAccount(long rowId, long code, String name)
+    public boolean updateReceiptAccount(long rowId, long code, String name, String category)
     {
         ContentValues values = new ContentValues();
         values.put(KEY_CODE, code);
         values.put(KEY_NAME, name);
+        values.put(KEY_CATEGORY, category);
         return db.update(DATABASE_TABLE_ACCOUNTS, values, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
@@ -395,14 +397,14 @@ public class DbAdapter
      * @param comment
      *            any comment on the receipt
      * @param account_id
-     *            which receipt accound id to associate with the receipt
-     * @return true if successful
+     *            which receipt account id to associate with the receipt
+     * @return int with number of rows affected
      */
-    public boolean updateReceipt(long rowId, String name, String photo, long timestamp, String locLat, String locLong, String sum,
-            String tax, String comment, long account_id)
+    public int updateReceipt(long rowId, String name, String photo, long timestamp, String locLat, String locLong, String sum, String tax,
+            String comment, long account_id)
     {
         ContentValues values = putReceiptValues(name, photo, timestamp, locLat, locLong, sum, tax, comment, account_id);
-        return db.update(DATABASE_TABLE_RECEIPTS, values, KEY_ROWID + "=" + rowId, null) > 0;
+        return db.update(DATABASE_TABLE_RECEIPTS, values, KEY_ROWID + "=" + rowId, null);
     }
 
     /**

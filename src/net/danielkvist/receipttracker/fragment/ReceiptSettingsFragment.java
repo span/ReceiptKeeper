@@ -87,7 +87,7 @@ public class ReceiptSettingsFragment extends Fragment
                 }
                 return true;
             case R.id.item_add:
-                ReceiptAccount newAccount = new ReceiptAccount(-1, 0, "");
+                ReceiptAccount newAccount = new ReceiptAccount(-1, 0, "", "none");
                 receiptAccounts.add(newAccount);
                 tabHost.notifyDataSetChanged();
                 tabHost.setSelectedSpinnerItem(newAccount.getCode());
@@ -117,8 +117,10 @@ public class ReceiptSettingsFragment extends Fragment
     {
         boolean result;
         String name = tabHost.getCurrentName();
+        String category = tabHost.getCurrentCategory();
         long code = tabHost.getCurrentCode();
         receiptAccount.setName(name);
+        receiptAccount.setCategory(category);
         receiptAccount.setCode(code);
         if (ReceiptAccount.isValid(receiptAccount, receiptAccounts))
         {
