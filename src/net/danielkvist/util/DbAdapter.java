@@ -204,24 +204,18 @@ public class DbAdapter
     /**
      * Fetches all receipt accounts from the database and returns a Cursor pointing to the first row.
      * 
-     * @return Cursor pointing to the first row or null
+     * @return Cursor or null
      */
     public Cursor fetchReceiptAccounts()
     {
-        Cursor cursor;
-        cursor = db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME, KEY_CODE, KEY_CATEGORY }, null, null, null, null,
+        return db.query(DATABASE_TABLE_ACCOUNTS, new String[] { KEY_ROWID, KEY_NAME, KEY_CODE, KEY_CATEGORY }, null, null, null, null,
                 KEY_CODE);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
     }
 
     /**
      * Return a Cursor over the list entries in the receipt table
      * 
-     * @return Cursor pointing to the first row or null
+     * @return Cursor or null
      */
     public Cursor fetchReceipts(int limit)
     {
@@ -237,28 +231,18 @@ public class DbAdapter
             cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
                     KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null, null, null, null);
         }
-
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
         return cursor;
     }
 
     /**
      * Return a Cursor over the list of all entries in the settings table
      * 
-     * @return Cursor pointing to the first row or null
+     * @return Cursor or null
      */
     public Cursor fetchAllSettings()
     {
-        Cursor cursor = db.query(DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, null, null, null, null,
+        return db.query(DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, null, null, null, null,
                 null);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
     }
 
     /**
@@ -266,19 +250,14 @@ public class DbAdapter
      * 
      * @param rowId
      *            the id of receipt to retrieve
-     * @return Cursor pointing to the first row or null
+     * @return Cursor or null
      */
     public Cursor fetchReceipt(long rowId)
     {
 
-        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+        return db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
                 KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_ROWID + "=" + rowId, null, null,
                 null, null, null);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
 
     }
 
@@ -289,35 +268,25 @@ public class DbAdapter
      *            lower time restriction
      * @param timeTo
      *            upper time restriction
-     * @return Cursor pointing to the first row or null
+     * @return Cursor or null
      */
     public Cursor fetchReceipts(long timeFrom, long timeTo)
     {
-        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+        return db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
                 KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_TIMESTAMP + ">" + timeFrom
                 + " AND " + KEY_TIMESTAMP + "<" + timeTo, null, null, null, KEY_TIMESTAMP + " DESC", null);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
     }
 
     /**
      * Return a Cursor pointing to the last receipt
      * 
-     * @return Cursor pointing to the first row or null
+     * @return Cursor or null
      */
     public Cursor fetchLastReceipt()
     {
-        Cursor cursor = db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
+        return db.query(true, DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
                 KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null, null, null, KEY_ROWID
                 + " DESC", "1");
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
     }
 
     /**
@@ -325,18 +294,13 @@ public class DbAdapter
      * 
      * @param rowId
      *            the id of setting to retrieve
-     * @return Cursor pointing to first row or null
+     * @return Cursor or null
      */
     public Cursor fetchSetting(String name)
     {
 
-        Cursor cursor = db.query(true, DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, KEY_NAME + "='"
+        return db.query(true, DATABASE_TABLE_SETTINGS, new String[] { KEY_ROWID, KEY_NAME, KEY_SETTING_VALUE }, KEY_NAME + "='"
                 + name + "'", null, null, null, null, null);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
 
     }
 
@@ -345,18 +309,13 @@ public class DbAdapter
      * 
      * @param query
      *            the string to search for
-     * @return Cursor pointing to first row or null
+     * @return Cursor or null
      */
     public Cursor searchReceiptName(String query)
     {
-        Cursor cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
+        return db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP, KEY_LOCATION_LAT,
                 KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, KEY_NAME + " LIKE ?",
                 new String[] { "%" + query + "%" }, null, null, null);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
     }
 
     /**
@@ -426,15 +385,13 @@ public class DbAdapter
         return db.update(DATABASE_TABLE_SETTINGS, values, KEY_NAME + "='" + name + "'", null) > 0;
     }
     
-    // FIXME document and implement and test
+    /**
+     * Fetches a cursor that points to rows with unique categories
+     * @return Cursor or null
+     */
     public Cursor fetchReceiptAccountCategories()
     {
-        Cursor cursor = db.query(true, DATABASE_TABLE_ACCOUNTS, new String[] {KEY_CATEGORY}, null, null, null, null, KEY_CATEGORY + " ASC", null);
-        if (cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-        return cursor;
+        return db.query(true, DATABASE_TABLE_ACCOUNTS, new String[] {KEY_CATEGORY}, null, null, null, null, KEY_CATEGORY + " ASC", null);
     }
 
     /**
