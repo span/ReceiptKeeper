@@ -153,9 +153,9 @@ public class Communicator
      * creates a new row.
      * 
      * @param receipt
-     * @return true if successful
+     * @return int with new row id or updated rows or -1
      */
-    public boolean saveReceipt(Receipt receipt)
+    public int saveReceipt(Receipt receipt)
     {
         if (receipt.getId() > 0)
         {
@@ -163,7 +163,7 @@ public class Communicator
         }
         else
         {
-            return insertReceipt(receipt);
+            return (int) insertReceipt(receipt);
         }
     }
 
@@ -171,18 +171,18 @@ public class Communicator
      * Creates a new row out of the supplied Receipt
      * 
      * @param receipt
-     * @return true if successful
+     * @return new rowId or -1
      */
-    private boolean insertReceipt(Receipt receipt)
+    private long insertReceipt(Receipt receipt)
     {
-        boolean result = false;
+        long result = -1;
         if (openDatabase())
         {
             result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(), receipt.getLocationLat(),
                     receipt.getLocationLong(), receipt.getSum(), receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountCode());
             closeDatabase();
         }
-        showResult(result);
+        showResult(result > 0);
         return result;
     }
 
@@ -190,11 +190,11 @@ public class Communicator
      * Updates a row out with the supplied Receipt
      * 
      * @param receipt
-     * @return true if successful
+     * @return number of rows affected
      */
-    public boolean updateReceipt(Receipt receipt)
+    public int updateReceipt(Receipt receipt)
     {
-        boolean result = false;
+        int result = -1;
         if (openDatabase())
         {
             result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
@@ -202,7 +202,7 @@ public class Communicator
                     receipt.getReceiptAccountCode());
             closeDatabase();
         }
-        showResult(result);
+        showResult(result > 0);
         return result;
     }
 
@@ -243,7 +243,8 @@ public class Communicator
                 while (!cursor.isAfterLast())
                 {
                     receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getInt(cursor
-                            .getColumnIndex(DbAdapter.KEY_CODE)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)));
+                            .getColumnIndex(DbAdapter.KEY_CODE)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
+                            cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_CATEGORY)));
                     receiptAccountList.add(receiptAccount);
                     cursor.moveToNext();
                 }
@@ -283,7 +284,7 @@ public class Communicator
         boolean result = false;
         if (openDatabase())
         {
-            result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName());
+            result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName(), receiptAccount.getCategory());
             closeDatabase();
         }
         showResult(result);
@@ -301,7 +302,8 @@ public class Communicator
         boolean result = false;
         if (openDatabase())
         {
-            result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(), receiptAccount.getName());
+            result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(), receiptAccount.getName(),
+                    receiptAccount.getCategory());
             closeDatabase();
         }
         showResult(result);

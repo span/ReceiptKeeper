@@ -132,7 +132,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         if (receipt == null)
         {
             receipt = new Receipt();
-            receipt.setReceiptAccountId(9999);
+            receipt.setReceiptAccountCode(ReceiptAccount.DEFAULT_ACCOUNT);
         }
 
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
@@ -141,6 +141,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         imageView = (ImageView) rootView.findViewById(R.id.receipt_photo_image_view);
         imageView.setOnClickListener(new View.OnClickListener()
         {
+            /**
+             * Either take a photo if we don't have one set already or show the photo in the gallery app when the user clicks
+             */
             @Override
             public void onClick(View v)
             {
@@ -246,7 +249,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private void showEditDialog()
     {
         FragmentManager fm = getFragmentManager();
-        AddReceiptAccountDialog dialog = new AddReceiptAccountDialog(communicator);
+        AddReceiptAccountDialog dialog = new AddReceiptAccountDialog(communicator, receiptAccounts);
         dialog.setCallback(this);
         dialog.show(fm, "fragment_add_receipt_account");
     }
@@ -314,8 +317,10 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         if (setViewValues())
         {
-            if (communicator.saveReceipt(receipt))
+            int id = communicator.saveReceipt(receipt);
+            if (id >= 0)
             {
+                receipt.setId(id);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
                 getActivity().startActivity(intent);
@@ -362,7 +367,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
         if (selectedPosition >= 0)
         {
-            receipt.setReceiptAccountId(receiptAccounts.get(selectedPosition).getCode());
+            receipt.setReceiptAccountCode(receiptAccounts.get(selectedPosition).getCode());
         }
 
         return true;
@@ -418,14 +423,14 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
      * Saves the information that was added in the ReceiptAccount dialog and updates the Spinner and it's adapter.
      */
     @Override
-    public void onFinishEditDialog(int receiptAccountCode, String receiptAccountName)
+    public void onFinishEditDialog(int receiptAccountCode, String receiptAccountName, String receiptAccountCategory)
     {
-        ReceiptAccount receiptAccount = new ReceiptAccount(-1, receiptAccountCode, receiptAccountName);
+        ReceiptAccount receiptAccount = new ReceiptAccount(-1, receiptAccountCode, receiptAccountName, receiptAccountCategory);
         receiptAccounts.add(receiptAccount);
         adapter.notifyDataSetChanged();
         if(ReceiptAccount.isValid(receiptAccount, receiptAccounts))
         {
-            receipt.setReceiptAccountId(receiptAccountCode);
+            receipt.setReceiptAccountCode(receiptAccountCode);
             accountSpinner.setSelection(adapter.findReceiptPosition(receiptAccountCode));
             communicator.saveReceiptAccount(receiptAccount);
         }

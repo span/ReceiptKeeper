@@ -322,19 +322,9 @@ public class Receipt implements Parcelable
      * @param accountCode
      *            the account code to set
      */
-    public void setReceiptAccountId(long accountCode)
+    public void setReceiptAccountCode(long accountCode)
     {
         this.accountCode = accountCode;
-    }
-
-    /**
-     * Private helper method to the toString() method
-     * 
-     * @return
-     */
-    private String getDateAndTime()
-    {
-        return String.valueOf(timestamp);
     }
 
     /**
@@ -343,11 +333,7 @@ public class Receipt implements Parcelable
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getName());
-        // sb.append(" ");
-        // sb.append(getDateAndTime());
-        return sb.toString();
+        return getName();
     }
 
     @Override

@@ -5,77 +5,52 @@ import java.util.List;
 
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import android.content.Context;
-import android.graphics.Color;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
+/**
+ * This is a custom adapter for the Spinners that show a receipt accounts code and name. Since the ReceiptAccounts
+ * toString method needs a context to be able to get the string resources we override the getItem method and make sure
+ * we set a context before toString is executed.
+ * 
+ * @author Daniel Kvist
+ * 
+ */
 public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 {
     private Context context;
     private List<ReceiptAccount> receiptAccountList;
 
+    /**
+     * Constructor that takes the context and text view resource together with a List of the receipt accounts. It calls
+     * the super method and then sets a default dropdown resource and also stores the list for future reference.
+     * 
+     * @param context
+     *            the context
+     * @param resource
+     *            the text view resource
+     * @param receiptAccountList
+     *            the list with receipt accounts
+     */
     public ReceiptAccountAdapter(Context context, int resource, List<ReceiptAccount> receiptAccountList)
     {
-        super(context, resource);
+        super(context, resource, receiptAccountList);
         this.context = context;
         this.receiptAccountList = receiptAccountList;
         this.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
 
-    public int getCount()
-    {
-        return receiptAccountList.size();
-    }
-
+    /**
+     * We override getItem to make sure we have a Context set on the ReceiptAccount instance since the toString method
+     * of the instance needs it to be able to properly process the text resorces.
+     */
+    @Override
     public ReceiptAccount getItem(int position)
     {
-        return receiptAccountList.get(position);
-    }
-
-    public long getItemId(int position)
-    {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        return getCustomView(position, convertView, parent, android.R.layout.simple_spinner_item);
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent)
-    {
-        return getCustomView(position, convertView, parent, android.R.layout.simple_spinner_dropdown_item);
-    }
-    
-    private View getCustomView(int position, View convertView, ViewGroup parent, int layoutItem)
-    {
-        TextView label = null;
-        View view = convertView;
-        
-        if (view == null)
-        {
-            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = vi.inflate(layoutItem, null);
-        }
         ReceiptAccount receiptAccount = receiptAccountList.get(position);
-        if(receiptAccount != null)
-        {
-            receiptAccount.setContext(context);
-            
-            label = (TextView) view;
-            label.setPadding(15, 15, 15, 15);
-            label.setTextColor(Color.BLACK);
-            label.setText(receiptAccount.toString());
-        }
-        
-        return label;
+        receiptAccount.setContext(context);
+        return receiptAccount;
     }
-    
+
     /**
      * Find out which receipt in the list that was selected.
      * 
@@ -94,12 +69,16 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
         }
         return i;
     }
-    
+
+    /**
+     * Sorts the list after a new addition and the calls the super method. We want to sort to have the dropdown in a
+     * nice ascending order.
+     */
     @Override
     public void notifyDataSetChanged()
     {
-        super.notifyDataSetChanged();
         Collections.sort(receiptAccountList);
+        super.notifyDataSetChanged();
     }
 
 }

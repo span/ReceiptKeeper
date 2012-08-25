@@ -21,6 +21,7 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
     private boolean userAdded;
     private long rowId;
     private Context context;
+    private String category;
 
     /**
      * Constructor of the receipt account, initiates the parameters and sets a flag if it's a user added account or not
@@ -32,12 +33,15 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
      *            the account code
      * @param name
      *            the account name
+     * @param category
+     *            the category name
      */
-    public ReceiptAccount(long rowId, long code, String name)
+    public ReceiptAccount(long rowId, long code, String name, String category)
     {
         this.rowId = rowId;
         this.code = code;
         this.setName(name);
+        this.category = category;
         this.setUserAdded(code < 1000);
     }
 
@@ -171,8 +175,11 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
 
     /**
      * Checks if a receipt account is unique and doesn't already exist in the list.
-     * @param receiptAccount the account to check
-     * @param receiptAccounts the list of all accounts
+     * 
+     * @param receiptAccount
+     *            the account to check
+     * @param receiptAccounts
+     *            the list of all accounts
      * @return true if unique
      */
     private static boolean isUnique(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
@@ -189,8 +196,9 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
     }
 
     /**
-     * Checks to see if the receipt account is valid by first making sure it's unique and then that its name is not an empty string
-     * and that the code is greater then 0.
+     * Checks to see if the receipt account is valid by first making sure it's unique and then that its name is not an
+     * empty string and that the code is greater then 0.
+     * 
      * @param receiptAccount
      * @param receiptAccounts
      * @return
@@ -198,6 +206,27 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
     public static boolean isValid(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
     {
         return isUnique(receiptAccount, receiptAccounts) && !receiptAccount.getName().equals("") && receiptAccount.getCode() > 0;
+    }
+
+    /**
+     * Sets the category of this ReceiptAccount
+     * 
+     * @param category
+     *            the category to set
+     */
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    /**
+     * Gets the category of this ReceiptAccount
+     * 
+     * @return the category
+     */
+    public String getCategory()
+    {
+        return category;
     }
 
 }
