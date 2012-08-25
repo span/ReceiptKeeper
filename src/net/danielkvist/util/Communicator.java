@@ -3,6 +3,7 @@ package net.danielkvist.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -84,7 +86,7 @@ public class Communicator
         {
             Cursor cursor = dbAdapter.fetchLastReceipt();
             receipt = buildReceipt(cursor);
-            closeDatabase();
+            closeDatabase(cursor);
         }
         return receipt;
     }
@@ -103,7 +105,7 @@ public class Communicator
         {
             Cursor cursor = dbAdapter.fetchReceipts(limit);
             receiptList = buildReceiptList(cursor);
-            closeDatabase();
+            closeDatabase(cursor);
         }
         return receiptList;
     }
@@ -124,7 +126,7 @@ public class Communicator
         {
             Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
             receiptList = buildReceiptList(cursor);
-            closeDatabase();
+            closeDatabase(cursor);
         }
         return receiptList;
     }
@@ -143,7 +145,7 @@ public class Communicator
         {
             Cursor cursor = dbAdapter.searchReceiptName(query);
             receiptList = buildReceiptList(cursor);
-            closeDatabase();
+            closeDatabase(cursor);
         }
         return receiptList;
     }
@@ -239,17 +241,23 @@ public class Communicator
             if (cursor != null)
             {
                 ReceiptAccount receiptAccount;
+                int visible = getSettingValue(Setting.SETTING_ACCOUNT_DEFAULTS);
                 receiptAccountList = new ArrayList<ReceiptAccount>();
                 while (!cursor.isAfterLast())
                 {
                     receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getInt(cursor
                             .getColumnIndex(DbAdapter.KEY_CODE)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
                             cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_CATEGORY)));
-                    receiptAccountList.add(receiptAccount);
+
+                    if(visible == View.VISIBLE || (visible == View.GONE && receiptAccount.isUserAdded()))
+                    {
+                        receiptAccountList.add(receiptAccount);
+                    }
+                    
                     cursor.moveToNext();
                 }
             }
-            closeDatabase();
+            closeDatabase(cursor);
         }
         return receiptAccountList;
     }
@@ -331,7 +339,7 @@ public class Communicator
                     cursor.moveToNext();
                 }
             }
-            closeDatabase();
+            closeDatabase(cursor);
         }
 
         return settingsMap;
@@ -354,7 +362,7 @@ public class Communicator
             {
                 value = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
             }
-            closeDatabase();
+            closeDatabase(cursor);
         }
         return value;
     }
@@ -385,6 +393,26 @@ public class Communicator
             closeDatabase();
         }
         return result;
+    }
+    
+    // FIXME document
+    public List<String> getReceiptAccountCategories()
+    {
+        List<String> list = new ArrayList<String>();
+        if(openDatabase())
+        {
+            Cursor cursor = dbAdapter.fetchReceiptAccountCategories();
+            if (cursor != null)
+            {
+                while (!cursor.isAfterLast())
+                {
+                    list.add(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_CATEGORY)));
+                    cursor.moveToNext();
+                }
+            }
+            closeDatabase(cursor);
+        }
+        return list;
     }
 
     /**
@@ -462,13 +490,23 @@ public class Communicator
             return false;
         }
     }
-
+    
     /**
      * Closes the database
      */
     private void closeDatabase()
     {
         dbAdapter.close();
+    }
+
+    /**
+     * Closes the database and cursor
+     * @param cursor the cursor to close
+     */
+    private void closeDatabase(Cursor cursor)
+    {
+        cursor.close();
+        closeDatabase();
     }
 
     /**

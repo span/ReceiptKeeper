@@ -17,7 +17,7 @@ import android.util.Log;
  * This class handles all the database IO together with creating and updating tables and the database when necessary. It
  * also is responsibile for adding the default data in the settings and accounts tables.
  * 
- * @author daniel
+ * @author Daniel Kvist
  * 
  */
 public class DbAdapter
@@ -72,6 +72,9 @@ public class DbAdapter
 
     private static final String DATABASE_INIT_SETTING_ACCOUNT = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
             + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_FIELD_ACCOUNT + "',0" + ");";
+    
+    private static final String DATABASE_INIT_SETTING_DEFAULT_ACCOUNTS = "INSERT INTO " + DATABASE_TABLE_SETTINGS + " (" + KEY_NAME + ","
+            + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_ACCOUNT_DEFAULTS + "',0" + ");";
 
     /**
      * Constructor that saves the context that is passed in
@@ -422,6 +425,17 @@ public class DbAdapter
         values.put(KEY_SETTING_VALUE, value);
         return db.update(DATABASE_TABLE_SETTINGS, values, KEY_NAME + "='" + name + "'", null) > 0;
     }
+    
+    // FIXME document and implement and test
+    public Cursor fetchReceiptAccountCategories()
+    {
+        Cursor cursor = db.query(true, DATABASE_TABLE_ACCOUNTS, new String[] {KEY_CATEGORY}, null, null, null, null, KEY_CATEGORY + " ASC", null);
+        if (cursor != null)
+        {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
 
     /**
      * Saves the values in a ContentValues object that is then return to the caller
@@ -485,6 +499,7 @@ public class DbAdapter
             db.execSQL(DATABASE_INIT_SETTING_COMMENT);
             db.execSQL(DATABASE_INIT_SETTING_LOCATION);
             db.execSQL(DATABASE_INIT_SETTING_ACCOUNT);
+            db.execSQL(DATABASE_INIT_SETTING_DEFAULT_ACCOUNTS);
             initDatabaseData(db);
         }
 

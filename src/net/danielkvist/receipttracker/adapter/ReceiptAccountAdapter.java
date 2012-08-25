@@ -41,14 +41,14 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 
     /**
      * We override getItem to make sure we have a Context set on the ReceiptAccount instance since the toString method
-     * of the instance needs it to be able to properly process the text resorces.
+     * of the instance needs it to be able to properly process the text resources.
      */
     @Override
     public ReceiptAccount getItem(int position)
     {
         ReceiptAccount receiptAccount = receiptAccountList.get(position);
         receiptAccount.setContext(context);
-        return receiptAccount;
+        return receiptAccount;   
     }
 
     /**
@@ -56,7 +56,7 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
      * 
      * @param code
      *            the code of the receipt account whose position you want
-     * @return the position in the original List
+     * @return the position in the original List or 0
      */
     public int findReceiptPosition(long code)
     {
@@ -64,10 +64,10 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
         while (i < receiptAccountList.size())
         {
             if (code == receiptAccountList.get(i).getCode())
-                break;
+                return i;
             i++;
         }
-        return i;
+        return 0;
     }
 
     /**

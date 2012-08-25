@@ -2,6 +2,7 @@ package net.danielkvist.receipttracker.content;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
@@ -30,8 +31,8 @@ import android.widget.TextView;
  * @author Daniel Kvist
  * 
  */
-public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.OnCheckedChangeListener,
-RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
+public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener,
+        OnItemSelectedListener
 {
     private MenuItem deleteItem;
     private MenuItem saveItem;
@@ -45,6 +46,7 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
     private Communicator communicator;
     private Spinner categorySpinner;
     private ReceiptAccountCategoryAdapter categoryAdapter;
+    private List<String> categoryList;
 
     /**
      * Only calls super for the parent constructor
@@ -129,46 +131,55 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
                 }
             }
         });
-        
+
         setupViews();
     }
-    
+
     /**
      * Gets the current code in the code field
+     * 
      * @return the code
      */
     public long getCurrentCode()
     {
         return Long.parseLong(accountCode.getText().toString());
     }
-    
+
     /**
      * Gets the current name in the name field
+     * 
      * @return the name
      */
     public String getCurrentName()
     {
         return accountName.getText().toString();
     }
-    
+
     /**
      * Gets the receipt accounts list
+     * 
      * @return the list with all the accounts
      */
     public ArrayList<ReceiptAccount> getReceiptAccounts()
     {
         return receiptAccounts;
     }
-    
+
     /**
      * Gets the currently selected receipt account
-     * @return
+     * 
+     * @return the selected ReceiptAccount or null
      */
     public ReceiptAccount getSelectedReceiptAccount()
     {
-        return receiptAccounts.get(accountSpinner.getSelectedItemPosition());
+        int position = accountSpinner.getSelectedItemPosition();
+        if (position == Spinner.INVALID_POSITION)
+        {
+            return null;
+        }
+        return receiptAccounts.get(position);
     }
-    
+
     /**
      * Sets up the basic views and controls that the user can see and interact with on the screen.
      */
@@ -208,14 +219,17 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
         accountName = (TextView) findViewById(R.id.account_name);
         accountCode = (TextView) findViewById(R.id.account_code);
         accountCode.setOnKeyListener(new EditTextCodeListener(communicator));
-        
-        categoryAdapter = new ReceiptAccountCategoryAdapter(context, android.R.layout.simple_spinner_item, receiptAccounts);
+
+        categoryList = communicator.getReceiptAccountCategories();
+        categoryAdapter = new ReceiptAccountCategoryAdapter(context, android.R.layout.simple_spinner_item, categoryList);
         categorySpinner = (Spinner) findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(categoryAdapter);
-        
+
+        Switch turnoffSwitch = (Switch) findViewById(R.id.turnoff);
+        turnoffSwitch.setChecked(settingsMap.get(Setting.SETTING_ACCOUNT_DEFAULTS) == View.VISIBLE);
+        turnoffSwitch.setOnCheckedChangeListener(this);
+
     }
-    
-    
 
     /**
      * Listener for the RadioGroup which contains the radio buttons that saves the current setting to the database.
@@ -262,6 +276,14 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
             case R.id.switch_account:
                 setting.setName(Setting.SETTING_FIELD_ACCOUNT);
                 break;
+            case R.id.turnoff:
+                setting.setName(Setting.SETTING_ACCOUNT_DEFAULTS);
+                setting.setValue(isChecked ? View.VISIBLE : View.GONE);
+                communicator.saveSetting(setting);
+                receiptAccounts.clear();
+                receiptAccounts.addAll(communicator.getReceiptAccounts());
+                adapter.notifyDataSetChanged();
+                return;
         }
         setting.setValue(isChecked ? View.VISIBLE : View.GONE);
 
@@ -323,7 +345,9 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
 
     /**
      * Sets the selected spinner item with the corresponding code
-     * @param code the receipt code
+     * 
+     * @param code
+     *            the receipt code
      */
     public void setSelectedSpinnerItem(long code)
     {
@@ -336,12 +360,12 @@ RadioGroup.OnCheckedChangeListener, OnItemSelectedListener
     public void notifyDataSetChanged()
     {
         adapter.notifyDataSetChanged();
-        
+
     }
 
     public String getCurrentCategory()
     {
-        return categorySpinner.getSelectedItem().toString();
+        return categoryList.get(categorySpinner.getSelectedItemPosition());
     }
 
 }
