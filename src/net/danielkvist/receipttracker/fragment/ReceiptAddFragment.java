@@ -249,7 +249,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private void showEditDialog()
     {
         FragmentManager fm = getFragmentManager();
-        AddReceiptAccountDialog dialog = new AddReceiptAccountDialog(communicator, receiptAccounts);
+        AddReceiptAccountDialog dialog = new AddReceiptAccountDialog(communicator);
         dialog.setCallback(this);
         dialog.show(fm, "fragment_add_receipt_account");
     }

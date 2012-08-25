@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
-import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
 import android.app.DialogFragment;
@@ -46,15 +45,14 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
     private Communicator communicator;
     private ReceiptAccountCategoryAdapter categoryAdapter;
     private Spinner categorySpinner;
-    private List<ReceiptAccount> receiptAccounts;
+    private List<String> categoryList;
 
     /**
      * Empty constructor required by DialogFragment.
      */
-    public AddReceiptAccountDialog(Communicator communicator, List<ReceiptAccount> receiptAccounts)
+    public AddReceiptAccountDialog(Communicator communicator)
     {
         this.communicator = communicator;
-        this.receiptAccounts = receiptAccounts;
     }
 
     /**
@@ -69,7 +67,8 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
 
         accountNameView = (EditText) view.findViewById(R.id.account_add_name);
 
-        categoryAdapter = new ReceiptAccountCategoryAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
+        categoryList = communicator.getReceiptAccountCategories();
+        categoryAdapter = new ReceiptAccountCategoryAdapter(getActivity(), android.R.layout.simple_spinner_item, categoryList);
         categorySpinner = (Spinner) view.findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(categoryAdapter);
 
@@ -119,8 +118,10 @@ public class AddReceiptAccountDialog extends DialogFragment implements OnEditorA
     {
         if (EditorInfo.IME_ACTION_DONE == actionId)
         {
-            callback.onFinishEditDialog(Integer.parseInt(accountCodeView.getText().toString()), accountNameView.getText().toString(),
-                    categorySpinner.getSelectedItem().toString());
+            int code = Integer.parseInt(accountCodeView.getText().toString());
+            String name = accountNameView.getText().toString();
+            String category = categoryList.get(categorySpinner.getSelectedItemPosition());
+            callback.onFinishEditDialog(code, name, category);
             this.dismiss();
             return true;
         }

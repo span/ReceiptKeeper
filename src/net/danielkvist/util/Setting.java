@@ -18,6 +18,7 @@ public class Setting
     public static final String SETTING_FIELD_TAX = "tax";
     public static final String SETTING_FIELD_COMMENT = "comment";
     public static final String SETTING_FIELD_ACCOUNT = "account";
+    public static final String SETTING_ACCOUNT_DEFAULTS = "default_accounts";
 
     private int value;
     private String name;

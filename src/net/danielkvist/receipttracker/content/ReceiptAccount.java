@@ -1,6 +1,8 @@
 package net.danielkvist.receipttracker.content;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 
@@ -117,6 +119,28 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
     {
         this.context = context;
     }
+    
+
+    /**
+     * Sets the category of this ReceiptAccount
+     * 
+     * @param category
+     *            the category to set
+     */
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    /**
+     * Gets the category of this ReceiptAccount
+     * 
+     * @return the category
+     */
+    public String getCategory()
+    {
+        return category;
+    }
 
     /**
      * This toString method needs a context to be provided with setContext to be able to return the appropriate name and
@@ -207,26 +231,19 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
     {
         return isUnique(receiptAccount, receiptAccounts) && !receiptAccount.getName().equals("") && receiptAccount.getCode() > 0;
     }
-
+    
     /**
-     * Sets the category of this ReceiptAccount
-     * 
-     * @param category
-     *            the category to set
+     * Creates a Set with strings representing the categories that are in the receiptAccounts List and returns it.
+     * @param receiptAccounts the list with receipt accounts
+     * @return a Set of strings with the categories
      */
-    public void setCategory(String category)
+    public static Set<String> getCategoriesFromList(List<ReceiptAccount> receiptAccounts)
     {
-        this.category = category;
+        Set<String> set = new HashSet<String>();
+        for(ReceiptAccount ra : receiptAccounts)
+        {
+            set.add(ra.getCategory());
+        }
+        return set;
     }
-
-    /**
-     * Gets the category of this ReceiptAccount
-     * 
-     * @return the category
-     */
-    public String getCategory()
-    {
-        return category;
-    }
-
 }

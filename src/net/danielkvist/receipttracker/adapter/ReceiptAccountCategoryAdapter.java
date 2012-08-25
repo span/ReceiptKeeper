@@ -1,11 +1,8 @@
 package net.danielkvist.receipttracker.adapter;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import net.danielkvist.receipttracker.content.ReceiptAccount;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
@@ -20,38 +17,33 @@ import android.widget.ArrayAdapter;
 public class ReceiptAccountCategoryAdapter extends ArrayAdapter<String>
 {
 
-    private Set<String> set;
+    private List<String> list;
 
     /**
-     * The constructor that calls the super method and then creates a Set of Strings which is used to power the adapter.
+     * The constructor that calls the super method and then adds the list to the adapter and saves it for future
+     * reference
      * 
      * @param context
+     *            the context
      * @param textViewResourceId
-     * @param receiptAccountList
+     *            the text view id
+     * @param list
+     *            the list
      */
-    public ReceiptAccountCategoryAdapter(Context context, int textViewResourceId, List<ReceiptAccount> receiptAccountList)
+    public ReceiptAccountCategoryAdapter(Context context, int textViewResourceId, List<String> list)
     {
         super(context, textViewResourceId);
-        this.set = getCategorySet(receiptAccountList);
+        this.list = list;
         this.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.addAll(set);
+        this.addAll(list);
     }
 
-    /**
-     * Helper method to loop through the List of receipt accounts and create the Set
-     * 
-     * @param receiptAccountList
-     *            the list of accounts
-     * @return a Set of Strings
-     */
-    private Set<String> getCategorySet(List<ReceiptAccount> receiptAccountList)
+    // FIXME document
+    @Override
+    public String getItem(int position)
     {
-        Set<String> categorySet = new HashSet<String>();
-        for (ReceiptAccount ra : receiptAccountList)
-        {
-            categorySet.add(ra.getCategory());
-        }
-        return categorySet;
+        return getContext().getResources().getString(
+                getContext().getResources().getIdentifier(list.get(position), "string", "net.danielkvist.receipttracker"));
     }
 
     /**
@@ -59,20 +51,24 @@ public class ReceiptAccountCategoryAdapter extends ArrayAdapter<String>
      * 
      * @param category
      *            the category to find the position for
-     * @return an int representing the position
+     * @return an int representing the position if the category exists, 0 otherwise
      */
     public int findCategoryPosition(String category)
     {
         int i = 0;
-        Iterator<String> iterator = set.iterator();
-        while (iterator.hasNext())
+        if (list.contains(category))
         {
-            if (category.equals(iterator.next()))
+            Iterator<String> iterator = list.iterator();
+            while (iterator.hasNext())
             {
-                return i;
+                if (category.equals(iterator.next()))
+                {
+                    return i;
+                }
+                i++;
             }
-            i++;
+            return findCategoryPosition("none");
         }
-        return findCategoryPosition("none");
+        return 0;
     }
 }
