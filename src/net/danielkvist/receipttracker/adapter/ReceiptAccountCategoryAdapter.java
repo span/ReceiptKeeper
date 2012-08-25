@@ -38,7 +38,10 @@ public class ReceiptAccountCategoryAdapter extends ArrayAdapter<String>
         this.addAll(list);
     }
 
-    // FIXME document
+    /**
+     * We override getItem to be able to load the string resource instead of the resource name that is stored in the
+     * database.
+     */
     @Override
     public String getItem(int position)
     {

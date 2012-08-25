@@ -243,17 +243,18 @@ public class Communicator
                 ReceiptAccount receiptAccount;
                 int visible = getSettingValue(Setting.SETTING_ACCOUNT_DEFAULTS);
                 receiptAccountList = new ArrayList<ReceiptAccount>();
+                cursor.moveToFirst();
                 while (!cursor.isAfterLast())
                 {
                     receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getInt(cursor
                             .getColumnIndex(DbAdapter.KEY_CODE)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
                             cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_CATEGORY)));
 
-                    if(visible == View.VISIBLE || (visible == View.GONE && receiptAccount.isUserAdded()))
+                    if (visible == View.VISIBLE || (visible == View.GONE && receiptAccount.isUserAdded()))
                     {
                         receiptAccountList.add(receiptAccount);
                     }
-                    
+
                     cursor.moveToNext();
                 }
             }
@@ -332,6 +333,7 @@ public class Communicator
             settingsMap = new HashMap<String, Integer>();
             if (cursor != null)
             {
+                cursor.moveToFirst();
                 while (!cursor.isAfterLast())
                 {
                     settingsMap.put(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
@@ -360,6 +362,7 @@ public class Communicator
             Cursor cursor = dbAdapter.fetchSetting(name);
             if (cursor != null)
             {
+                cursor.moveToFirst();
                 value = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
             }
             closeDatabase(cursor);
@@ -394,16 +397,21 @@ public class Communicator
         }
         return result;
     }
-    
-    // FIXME document
+
+    /**
+     * Gets a List of string representations of the name of the resources that make up the receipt account categories.
+     * 
+     * @return a list of resource names
+     */
     public List<String> getReceiptAccountCategories()
     {
         List<String> list = new ArrayList<String>();
-        if(openDatabase())
+        if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchReceiptAccountCategories();
             if (cursor != null)
             {
+                cursor.moveToFirst();
                 while (!cursor.isAfterLast())
                 {
                     list.add(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_CATEGORY)));
@@ -428,6 +436,7 @@ public class Communicator
         if (cursor != null)
         {
             Receipt receipt;
+            cursor.moveToFirst();
             receiptList = new ArrayList<Receipt>();
             while (!cursor.isAfterLast())
             {
@@ -490,7 +499,7 @@ public class Communicator
             return false;
         }
     }
-    
+
     /**
      * Closes the database
      */
@@ -501,7 +510,9 @@ public class Communicator
 
     /**
      * Closes the database and cursor
-     * @param cursor the cursor to close
+     * 
+     * @param cursor
+     *            the cursor to close
      */
     private void closeDatabase(Cursor cursor)
     {
