@@ -34,6 +34,7 @@ public class MainActivity extends Activity implements View.OnClickListener
     private ImageView addButton;
     private ImageView searchButton;
     private ImageView settingsButton;
+    private ImageView resultsButton;
 
     /**
      * Sets the content view and title of the Application.
@@ -57,6 +58,8 @@ public class MainActivity extends Activity implements View.OnClickListener
         addButton.setOnClickListener(this);
         searchButton = (ImageView) findViewById(R.id.search_button);
         searchButton.setOnClickListener(this);
+        resultsButton = (ImageView) findViewById(R.id.results_button);
+        resultsButton.setOnClickListener(this);
         settingsButton = (ImageView) findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(this);
     }
@@ -208,13 +211,13 @@ public class MainActivity extends Activity implements View.OnClickListener
             switch (v.getId())
             {
                 case R.id.add_button:
-                    id = 1;
+                    id = ReceiptAddFragment.ID;
                     break;
                 case R.id.search_button:
-                    id = 2;
+                    id = ReceiptSearchFragment.ID;
                     break;
                 case R.id.settings_button:
-                    id = 3;
+                    id = ReceiptSettingsFragment.ID;
                     break;
             }
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);

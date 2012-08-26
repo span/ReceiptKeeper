@@ -113,6 +113,7 @@
     <string name="costs">Costs</string>    
     <string name="depreciation">Depreciation and impairments</string>    
     <string name="none">None</string>    
+    <string name="click_to_view_results">Click to view results</string>    
     
 
 </resources>

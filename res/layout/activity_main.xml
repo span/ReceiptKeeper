@@ -25,12 +25,18 @@
             android:src="@drawable/search" />
 
         <ImageView
+            android:id="@+id/results_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/click_to_view_results"
+            android:src="@drawable/pie_chart" />
+
+        <ImageView
             android:id="@+id/settings_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/click_to_view_settings"
             android:src="@drawable/settings" />
-
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"

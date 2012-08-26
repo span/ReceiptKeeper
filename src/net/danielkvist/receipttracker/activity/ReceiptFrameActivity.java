@@ -29,10 +29,6 @@ import android.widget.ShareActionProvider;
 public class ReceiptFrameActivity extends Activity implements CustomListFragment.Callbacks, ReceiptDetailFragment.Callbacks
 {
     private static final int RECEIPT_FRAME_CONTAINER = R.id.receipt_frame_container;
-    private static final int ADD_FRAGMENT_ID = 1;
-    private static final int SEARCH_FRAGMENT_ID = 2;
-    private static final int SETTINGS_FRAGMENT_ID = 3;
-    private static final int DETAIL_FRAGMENT_ID = 4;
     private Fragment fragment = null;
     private Receipt currentReceipt;
     public ShareActionProvider shareActionProvider;
@@ -52,7 +48,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
         if (savedInstanceState == null)
         {
             Receipt r = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-            int fid = getIntent().getIntExtra(ReceiptDetailFragment.ARG_ITEM_ID, 1);
+            int fid = getIntent().getIntExtra(ReceiptDetailFragment.ARG_ITEM_ID, ReceiptDetailFragment.ID);
             replaceFragment(fid, r, false);
         }
     }
@@ -99,7 +95,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        replaceFragment(DETAIL_FRAGMENT_ID, receipt, true);
+        replaceFragment(ReceiptDetailFragment.ID, receipt, true);
     }
 
     /**
@@ -109,7 +105,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     @Override
     public void editSelected(Receipt receipt)
     {
-        replaceFragment(ADD_FRAGMENT_ID, receipt, true);
+        replaceFragment(ReceiptAddFragment.ID, receipt, true);
     }
 
     /**
@@ -135,7 +131,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
 
         switch (newFragmentId)
         {
-            case ADD_FRAGMENT_ID:
+            case ReceiptAddFragment.ID:
                 fragment = new ReceiptAddFragment();
                 if (currentReceipt == null)
                 {
@@ -146,15 +142,15 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
                     setTitle(getString(R.string.edit));
                 }
                 break;
-            case SEARCH_FRAGMENT_ID:
+            case ReceiptSearchFragment.ID:
                 fragment = new ReceiptSearchFragment();
                 setTitle(getString(R.string.search));
                 break;
-            case SETTINGS_FRAGMENT_ID:
+            case ReceiptSettingsFragment.ID:
                 fragment = new ReceiptSettingsFragment();
                 setTitle(getString(R.string.settings));
                 break;
-            case DETAIL_FRAGMENT_ID:
+            case ReceiptDetailFragment.ID:
                 fragment = new ReceiptDetailFragment();
                 setTitle(getString(R.string.details));
                 break;
