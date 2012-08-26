@@ -4,39 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <GridLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical" >
+        android:layout_centerInParent="true"
+        android:paddingBottom="90dp"
+        android:columnCount="2"
+        android:rowCount="2" >
 
         <ImageView
             android:id="@+id/add_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/click_to_add_receipt"
-            android:src="@drawable/add" />
+            android:src="@drawable/add"
+            android:layout_margin="10dp" />
 
         <ImageView
             android:id="@+id/search_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/click_to_search_receipts"
-            android:src="@drawable/search" />
+            android:src="@drawable/search" android:layout_margin="10dp"  />
 
         <ImageView
             android:id="@+id/results_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/click_to_view_results"
-            android:src="@drawable/pie_chart" />
+            android:src="@drawable/pie_chart" android:layout_margin="10dp" />
 
         <ImageView
             android:id="@+id/settings_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/click_to_view_settings"
-            android:src="@drawable/settings" />
+            android:src="@drawable/settings" android:layout_margin="10dp"  />
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
 
         <TextView
             style="?android:attr/listSeparatorTextViewStyle"
