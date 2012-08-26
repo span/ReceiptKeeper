@@ -39,7 +39,7 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
     private MenuItem addItem;
     private Context context;
     private Spinner accountSpinner;
-    private ArrayList<ReceiptAccount> receiptAccounts;
+    private List<ReceiptAccount> receiptAccounts;
     private ReceiptAccountAdapter adapter;
     private TextView accountName;
     private TextView accountCode;

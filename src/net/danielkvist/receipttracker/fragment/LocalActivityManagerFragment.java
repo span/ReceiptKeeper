@@ -12,8 +12,6 @@ import android.os.Bundle;
 @SuppressWarnings("deprecation")
 public class LocalActivityManagerFragment extends Fragment
 {
-
-    private static final String TAG = LocalActivityManagerFragment.class.getSimpleName();
     private static final String KEY_STATE_BUNDLE = "localActivityManagerState";
 
     private LocalActivityManager mLocalActivityManager;

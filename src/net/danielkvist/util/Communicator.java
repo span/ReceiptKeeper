@@ -102,9 +102,9 @@ public class Communicator
 	 *            the number of receipts
 	 * @return an ArrayList with receipts
 	 */
-	public ArrayList<Receipt> getReceipts(int limit)
+	public List<Receipt> getReceipts(int limit)
 	{
-		ArrayList<Receipt> receiptList = null;
+		List<Receipt> receiptList = null;
 		if (openDatabase())
 		{
 			Cursor cursor = dbAdapter.fetchReceipts(limit);
@@ -123,9 +123,9 @@ public class Communicator
 	 *            upper date restriction
 	 * @return an ArrayList with receipts
 	 */
-	public ArrayList<Receipt> getReceipts(long timeFrom, long timeTo)
+	public List<Receipt> getReceipts(long timeFrom, long timeTo)
 	{
-		ArrayList<Receipt> receiptList = null;
+		List<Receipt> receiptList = null;
 		if (openDatabase())
 		{
 			Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
@@ -191,9 +191,9 @@ public class Communicator
 	 *            the query to search for
 	 * @return an ArrayList with receipts
 	 */
-	public ArrayList<Receipt> searchReceipts(String query)
+	public List<Receipt> searchReceipts(String query)
 	{
-		ArrayList<Receipt> receiptList = null;
+		List<Receipt> receiptList = null;
 		if (openDatabase())
 		{
 			Cursor cursor = dbAdapter.searchReceiptName(query);
@@ -285,9 +285,9 @@ public class Communicator
 	 * 
 	 * @return an ArrayList of accounts
 	 */
-	public ArrayList<ReceiptAccount> getReceiptAccounts()
+	public List<ReceiptAccount> getReceiptAccounts()
 	{
-		ArrayList<ReceiptAccount> receiptAccountList = null;
+		List<ReceiptAccount> receiptAccountList = null;
 		if (openDatabase())
 		{
 			Cursor cursor = dbAdapter.fetchReceiptAccounts();
@@ -484,9 +484,9 @@ public class Communicator
 	 *            the cursor from the query
 	 * @return an ArrayList with the receipts
 	 */
-	private ArrayList<Receipt> buildReceiptList(Cursor cursor)
+	private List<Receipt> buildReceiptList(Cursor cursor)
 	{
-		ArrayList<Receipt> receiptList = null;
+		List<Receipt> receiptList = null;
 		if (cursor != null)
 		{
 			Receipt receipt;

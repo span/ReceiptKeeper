@@ -29,6 +29,7 @@ import android.widget.TextView;
  */
 public class ReceiptResultsFragment extends Fragment implements OnItemSelectedListener
 {
+	private static final String STRING_RESOURCE_ALL = "all";
 	private Communicator communicator;
 	private Spinner categorySpinner;
 	private List<String> categoryList;
@@ -73,7 +74,7 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		View rootView = inflater.inflate(R.layout.fragment_receipt_results, container, false);
 
 		categoryList = new ArrayList<String>();
-		categoryList.add("all");
+		categoryList.add(STRING_RESOURCE_ALL);
 		categoryList.addAll(communicator.getReceiptAccountCategories());
 
 		accountList = communicator.getReceiptAccounts();
@@ -93,10 +94,9 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		accountSpinner.setAdapter(receiptAccountAdapter);
 		accountSpinner.setOnItemSelectedListener(this);
 		accountTotalView = (TextView) rootView.findViewById(R.id.account_result);
-		// setAccountTotalView(0);
 
 		categoryAccountMap = new HashMap<String, List<ReceiptAccount>>();
-		categoryAccountMap.put("all", accountList);
+		categoryAccountMap.put(STRING_RESOURCE_ALL, accountList);
 
 		int income = getCategoryTotal("income");
 		incomeView = (TextView) rootView.findViewById(R.id.income);
@@ -144,6 +144,10 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		return communicator.getReceiptsSum(accounts);
 	}
 
+	/**
+	 * Runs when a spinner item has been selected and checks which spinner was used. It then either updates the account
+	 * spinner and sets the category total view or sets the account view.
+	 */
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
 	{
@@ -154,6 +158,7 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 				String category = categoryList.get(position);
 				updateAccountSpinner(category);
 				setCategoryTotalView(category);
+				setAccountTotalView(0);
 				break;
 			case R.id.account_spinner:
 				setAccountTotalView(position);
@@ -161,9 +166,16 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		}
 	}
 
+	/**
+	 * Sets the category total view based on which category is passed in. If the category is 'all' there is no result to
+	 * show so the 'select for details' text is shown to the user.
+	 * 
+	 * @param category
+	 *            the category name
+	 */
 	private void setCategoryTotalView(String category)
 	{
-		if(category.equals("all"))
+		if (category.equals(STRING_RESOURCE_ALL))
 		{
 			categoryTotalView.setText(R.string.select_a_category_for_details);
 		}
@@ -172,9 +184,17 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 			int val = getCategoryTotal(category);
 			categoryTotalView.setText(String.valueOf(val));
 		}
-		setAccountTotalView(0);
 	}
 
+	/**
+	 * Updates the account spinner to match the accounts that use the passed in category and nothing else. If the
+	 * category has been viewed before it can be gotten from a hash map which has a mapping between categories and lists
+	 * of accounts. If it's a new category a new list is created and stored in the map. Lastly we change clear and add
+	 * the new list to the current account list and notify the adapter that is has to update.
+	 * 
+	 * @param category
+	 *            the category name
+	 */
 	private void updateAccountSpinner(String category)
 	{
 		List<ReceiptAccount> list = categoryAccountMap.get(category);
