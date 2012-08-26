@@ -38,6 +38,7 @@
     <string name="search">Search</string>
     <string name="details">Details</string>
     <string name="search_hint">Search receipts</string>
+    <string name="all">All</string>
 
     <string name="comment">Comment</string>
     <string name="cloud_storage">Cloud storage</string>
@@ -115,6 +116,9 @@
     <string name="depreciation">Depreciation and impairments</string>    
     <string name="none">None</string>    
     <string name="click_to_view_results">Click to view results</string>    
+    <string name="sub_total">Sub total</string>    
+    <string name="select_a_category_for_details">Select a category for details</string>    
+    <string name="select_an_account_for_details">Select an account for details</string>    
     
 
 </resources>
