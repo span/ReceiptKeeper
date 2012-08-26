@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
@@ -72,7 +73,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private Context applicationContext;
     private DatePickerFragment datePickerFragment;
     private Spinner accountSpinner;
-    private ArrayList<ReceiptAccount> receiptAccounts;
+    private List<ReceiptAccount> receiptAccounts;
     private ImageView accountAddButton;
     private BitmapLoader bitmapLoader;
     private ReceiptAccountAdapter adapter;

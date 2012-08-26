@@ -160,7 +160,7 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
      * 
      * @return the list with all the accounts
      */
-    public ArrayList<ReceiptAccount> getReceiptAccounts()
+    public List<ReceiptAccount> getReceiptAccounts()
     {
         return receiptAccounts;
     }
