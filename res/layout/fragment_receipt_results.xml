@@ -14,12 +14,13 @@
         android:text="@string/sub_total" />
 
     <LinearLayout
+        style="@style/mainContainerPadding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/income" />
 
@@ -30,12 +31,13 @@
     </LinearLayout>
 
     <LinearLayout
+        style="@style/mainContainerPadding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/costs" />
 
@@ -44,16 +46,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-    
+
     <LinearLayout
+        style="@style/mainContainerPadding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/total_sum" />
+            android:text="@string/total" />
 
         <TextView
             android:id="@+id/total"
@@ -72,11 +75,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/category_result"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        style="@style/mainContainerPadding"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/select_a_category_for_details" />
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/total" />
+
+        <TextView
+            android:id="@+id/category_result"
+            style="@style/mainContainerPadding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_a_category_for_details" />
+    </LinearLayout>
 
     <TextView
         style="?android:attr/listSeparatorTextViewStyle"
@@ -89,9 +105,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/account_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        style="@style/mainContainerPadding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/total" />
+
+        <TextView
+            android:id="@+id/account_result"
+            style="@style/mainContainerPadding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </LinearLayout>
