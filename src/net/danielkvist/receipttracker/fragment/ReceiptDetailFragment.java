@@ -32,8 +32,6 @@ import android.widget.TextView;
  */
 public class ReceiptDetailFragment extends Fragment
 {
-    public static final String ARG_ITEM_ID = "item_id";
-    public static final int ID = 4;
     private Receipt receipt;
     private TextView nameView;
     private TextView sumView;

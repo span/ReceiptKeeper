@@ -60,7 +60,6 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    public static final int ID = 1;
     private String filename;
     private TextView timeView;
     private EditText nameView;

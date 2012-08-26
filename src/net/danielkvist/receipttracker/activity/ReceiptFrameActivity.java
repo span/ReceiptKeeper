@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.activity;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
@@ -48,7 +49,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
         if (savedInstanceState == null)
         {
             Receipt r = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
-            int fid = getIntent().getIntExtra(ReceiptDetailFragment.ARG_ITEM_ID, ReceiptDetailFragment.ID);
+            int fid = getIntent().getIntExtra(ReceiptTrackerApp.ARG_ITEM_ID, ReceiptTrackerApp.RECEIPT_DETAIL_FRAGMENT_ID);
             replaceFragment(fid, r, false);
         }
     }
@@ -95,7 +96,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     @Override
     public void onItemSelected(Receipt receipt)
     {
-        replaceFragment(ReceiptDetailFragment.ID, receipt, true);
+        replaceFragment(ReceiptTrackerApp.RECEIPT_DETAIL_FRAGMENT_ID, receipt, true);
     }
 
     /**
@@ -105,7 +106,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
     @Override
     public void editSelected(Receipt receipt)
     {
-        replaceFragment(ReceiptAddFragment.ID, receipt, true);
+        replaceFragment(ReceiptTrackerApp.RECEIPT_ADD_FRAGMENT_ID, receipt, true);
     }
 
     /**
@@ -131,7 +132,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
 
         switch (newFragmentId)
         {
-            case ReceiptAddFragment.ID:
+            case ReceiptTrackerApp.RECEIPT_ADD_FRAGMENT_ID:
                 fragment = new ReceiptAddFragment();
                 if (currentReceipt == null)
                 {
@@ -142,15 +143,15 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
                     setTitle(getString(R.string.edit));
                 }
                 break;
-            case ReceiptSearchFragment.ID:
+            case ReceiptTrackerApp.RECEIPT_SEARCH_FRAGMENT_ID:
                 fragment = new ReceiptSearchFragment();
                 setTitle(getString(R.string.search));
                 break;
-            case ReceiptSettingsFragment.ID:
+            case ReceiptTrackerApp.RECEIPT_SETTINGS_FRAGMENT_ID:
                 fragment = new ReceiptSettingsFragment();
                 setTitle(getString(R.string.settings));
                 break;
-            case ReceiptDetailFragment.ID:
+            case ReceiptTrackerApp.RECEIPT_DETAIL_FRAGMENT_ID:
                 fragment = new ReceiptDetailFragment();
                 setTitle(getString(R.string.details));
                 break;
