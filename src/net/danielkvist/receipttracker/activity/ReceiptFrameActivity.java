@@ -6,6 +6,7 @@ import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.fragment.CustomListFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptAddFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
+import net.danielkvist.receipttracker.fragment.ReceiptResultsFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import android.app.Activity;
@@ -51,7 +52,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
             Receipt r = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
             int fid = getIntent().getIntExtra(ReceiptTrackerApp.ARG_ITEM_ID, ReceiptTrackerApp.RECEIPT_DETAIL_FRAGMENT_ID);
             replaceFragment(fid, r, false);
-        }
+        } // FIXME Why is this needed?
     }
 
     /**
@@ -63,7 +64,6 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
         // XXX Add this and opOptionsIte... for two pane in MainActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-
         return true;
     }
 
@@ -79,7 +79,6 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -146,6 +145,10 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
             case ReceiptTrackerApp.RECEIPT_SEARCH_FRAGMENT_ID:
                 fragment = new ReceiptSearchFragment();
                 setTitle(getString(R.string.search));
+                break;
+            case ReceiptTrackerApp.RECEIPT_RESULTS_FRAGMENT_ID:
+                fragment = new ReceiptResultsFragment();
+                setTitle(getString(R.string.results));
                 break;
             case ReceiptTrackerApp.RECEIPT_SETTINGS_FRAGMENT_ID:
                 fragment = new ReceiptSettingsFragment();
