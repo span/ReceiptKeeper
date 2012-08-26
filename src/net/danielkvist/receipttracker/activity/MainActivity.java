@@ -158,7 +158,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         else
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
-            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, 4);
+            detailIntent.putExtra(ReceiptTrackerApp.ARG_ITEM_ID, 4);
             // XXX Refactor out these id's and replace with something more semantic?
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
@@ -211,17 +211,20 @@ public class MainActivity extends Activity implements View.OnClickListener
             switch (v.getId())
             {
                 case R.id.add_button:
-                    id = ReceiptAddFragment.ID;
+                    id = ReceiptTrackerApp.RECEIPT_ADD_FRAGMENT_ID;
                     break;
                 case R.id.search_button:
-                    id = ReceiptSearchFragment.ID;
+                    id = ReceiptTrackerApp.RECEIPT_SEARCH_FRAGMENT_ID;
+                    break;
+                case R.id.results_button:
+                    id = ReceiptTrackerApp.RECEIPT_RESULTS_FRAGMENT_ID;
                     break;
                 case R.id.settings_button:
-                    id = ReceiptSettingsFragment.ID;
+                    id = ReceiptTrackerApp.RECEIPT_SETTINGS_FRAGMENT_ID;
                     break;
             }
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
-            detailIntent.putExtra(ReceiptDetailFragment.ARG_ITEM_ID, id);
+            detailIntent.putExtra(ReceiptTrackerApp.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
 

@@ -12,6 +12,12 @@ import android.app.Application;
  */
 public class ReceiptTrackerApp extends Application
 {
+    public static final int RECEIPT_ADD_FRAGMENT_ID = 1;
+    public static final int RECEIPT_SEARCH_FRAGMENT_ID = 2;
+    public static final int RECEIPT_RESULTS_FRAGMENT_ID = 3;
+    public static final int RECEIPT_DETAIL_FRAGMENT_ID = 4;
+    public static final int RECEIPT_SETTINGS_FRAGMENT_ID = 5;
+    public static final String ARG_ITEM_ID = "item_id";
     public BitmapLoader bitmapLoader;
 
     @Override

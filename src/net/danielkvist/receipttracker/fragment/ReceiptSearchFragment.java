@@ -49,7 +49,6 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     private static final int TIME_NOT_SET = -1;
     private static final int TIME_FROM = 0;
     private static final int TIME_TO = 1;
-    public static final int ID = 2;
     private int timeToSet = TIME_NOT_SET;
     private int containerHeight;
     private ArrayList<Receipt> receiptList;
