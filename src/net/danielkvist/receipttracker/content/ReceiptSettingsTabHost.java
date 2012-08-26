@@ -294,7 +294,7 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
      * When an item in the Spinner has been selected we want to update the fields with the correct information.
      */
     @Override
-    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         updateFields();
     }

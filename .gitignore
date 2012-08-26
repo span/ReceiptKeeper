@@ -3,3 +3,5 @@
 *gen*
 *.properties
 .DS*
+*.settings*
+*.classpath
