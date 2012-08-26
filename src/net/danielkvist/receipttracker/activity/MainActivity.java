@@ -158,7 +158,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         else
         {
             Intent detailIntent = new Intent(this, ReceiptFrameActivity.class);
-            detailIntent.putExtra(ReceiptTrackerApp.ARG_ITEM_ID, 4);
+            detailIntent.putExtra(ReceiptTrackerApp.ARG_ITEM_ID, ReceiptTrackerApp.RECEIPT_DETAIL_FRAGMENT_ID);
             // XXX Refactor out these id's and replace with something more semantic?
             detailIntent.putExtra(Receipt.EXTRA_RECEIPT, receipt);
             startActivity(detailIntent);
@@ -182,16 +182,16 @@ public class MainActivity extends Activity implements View.OnClickListener
             // XXX This switch is the same as in receiptFrameActivity, refactor if tablet version
             {
             // XXX change 1,2,3,4 to id of view
-                case 1:
+                case ReceiptTrackerApp.RECEIPT_ADD_FRAGMENT_ID:
                     fragment = new ReceiptAddFragment();
                     break;
-                case 2:
+                case ReceiptTrackerApp.RECEIPT_SEARCH_FRAGMENT_ID:
                     fragment = new ReceiptSearchFragment();
                     break;
-                case 3:
+                case ReceiptTrackerApp.RECEIPT_SETTINGS_FRAGMENT_ID:
                     fragment = new ReceiptSettingsFragment();
                     break;
-                case 4:
+                case ReceiptTrackerApp.RECEIPT_DETAIL_FRAGMENT_ID:
                     Receipt receipt = (Receipt) getIntent().getParcelableExtra(Receipt.EXTRA_RECEIPT);
                     // XXX maybe the intent will be empty? Make a field out of it instead
                     fragment = new ReceiptDetailFragment();
