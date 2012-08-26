@@ -85,7 +85,11 @@ public class Communicator
         if (openDatabase())
         {
             Cursor cursor = dbAdapter.fetchLastReceipt();
-            receipt = buildReceipt(cursor);
+            if(cursor != null)
+            {
+                cursor.moveToFirst();
+                receipt = buildReceipt(cursor);
+            }
             closeDatabase(cursor);
         }
         return receipt;

@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 public class ReceiptSettingsFragment extends Fragment
 {
 
+    public static final int ID = 5;
     private ArrayList<ReceiptAccount> receiptAccounts;
     private Communicator communicator;
     private MenuItem deleteItem;
