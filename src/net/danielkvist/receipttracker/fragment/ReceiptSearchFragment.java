@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
@@ -51,7 +52,7 @@ public class ReceiptSearchFragment extends CustomListFragment implements OnDateS
     private static final int TIME_TO = 1;
     private int timeToSet = TIME_NOT_SET;
     private int containerHeight;
-    private ArrayList<Receipt> receiptList;
+    private List<Receipt> receiptList;
     private Communicator communicator;
     private String searchQuery = "";
     private TextView dateFromView;

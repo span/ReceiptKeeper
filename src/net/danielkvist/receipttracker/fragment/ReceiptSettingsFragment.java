@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.fragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
@@ -24,7 +25,7 @@ import android.view.ViewGroup;
  */
 public class ReceiptSettingsFragment extends Fragment
 {
-    private ArrayList<ReceiptAccount> receiptAccounts;
+    private List<ReceiptAccount> receiptAccounts;
     private Communicator communicator;
     private MenuItem deleteItem;
     private MenuItem saveItem;

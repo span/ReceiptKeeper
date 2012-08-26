@@ -1,6 +1,7 @@
 package net.danielkvist.util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.drawable.Drawable;
 
@@ -15,7 +16,7 @@ import com.google.android.maps.OverlayItem;
  */
 public class MyOverlays extends ItemizedOverlay
 {
-    private ArrayList<OverlayItem> overlays = new ArrayList<OverlayItem>();
+    private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 
     /**
      * Constructor which uses a Drawable as a default marker

@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.content.Receipt;
@@ -22,8 +23,8 @@ import android.widget.TextView;
 public class ReceiptSearchAdapter extends ArrayAdapter<Receipt>
 {
 
-    private ArrayList<Receipt> items;
-    private ArrayList<Receipt> originalItems;
+    private List<Receipt> items;
+    private List<Receipt> originalItems;
     private Context context;
     private BitmapLoader bitmapLoader;
 
@@ -37,7 +38,7 @@ public class ReceiptSearchAdapter extends ArrayAdapter<Receipt>
      * @param items
      *            an ArrayList of the items to populate the list
      */
-    public ReceiptSearchAdapter(Context context, int textViewResourceId, ArrayList<Receipt> items, BitmapLoader bitmapLoader)
+    public ReceiptSearchAdapter(Context context, int textViewResourceId, List<Receipt> items, BitmapLoader bitmapLoader)
     {
         super(context, textViewResourceId, items);
         this.items = items;
