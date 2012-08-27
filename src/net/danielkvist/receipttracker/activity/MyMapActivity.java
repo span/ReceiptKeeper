@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.activity;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.MyOverlays;
@@ -88,9 +89,11 @@ public class MyMapActivity extends MapActivity
         if (mlo != null)
         {
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            ReceiptTrackerApp app = (ReceiptTrackerApp) getApplication();
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !app.userHasBeenPromptedAboutGPS)
             {
                 showAlertMessageGps();
+                app.userHasBeenPromptedAboutGPS = true;
             }
             mlo.enableMyLocation();
             mlo.runOnFirstFix(new Runnable()
