@@ -3,6 +3,7 @@ package net.danielkvist.receipttracker.adapter;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
