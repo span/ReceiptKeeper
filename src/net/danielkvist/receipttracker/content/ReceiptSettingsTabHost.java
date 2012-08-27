@@ -1,6 +1,5 @@
 package net.danielkvist.receipttracker.content;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -237,7 +236,6 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        // XXX Add cloud storage Setting and make it do something :P
         Setting setting = new Setting();
         setting.setName("storage");
         switch (checkedId)

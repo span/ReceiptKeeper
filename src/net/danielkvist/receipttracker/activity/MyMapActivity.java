@@ -33,133 +33,135 @@ import com.google.android.maps.OverlayItem;
  */
 public class MyMapActivity extends MapActivity
 {
-    public static GeoPoint currentGeoPoint;
-    private MapView mapView;
-    private MyLocationOverlay mlo;
-    private Receipt receipt;
-    private MapController mapController;
+	public static GeoPoint currentGeoPoint;
+	private MapView mapView;
+	private MyLocationOverlay mlo;
+	private Receipt receipt;
+	private MapController mapController;
 
-    /**
-     * Sets up the views in the activity and adds location overlays depending on if a receipt location is available or
-     * if we're showing the current location.
-     */
-    @Override
-    protected void onCreate(Bundle icicle)
-    {
-        super.onCreate(icicle);
-        setContentView(R.layout.my_map_activity);
+	/**
+	 * Sets up the views in the activity and adds location overlays depending on if a receipt location is available or
+	 * if we're showing the current location.
+	 */
+	@Override
+	protected void onCreate(Bundle icicle)
+	{
+		super.onCreate(icicle);
+		setContentView(R.layout.my_map_activity);
 
-        ReceiptFrameActivity parent = (ReceiptFrameActivity) getParent();
-        receipt = parent.getReceipt();
+		ReceiptFrameActivity parent = (ReceiptFrameActivity) getParent();
+		receipt = parent.getReceipt();
 
-        mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
+		mapView = (MapView) findViewById(R.id.mapview);
+		mapView.setBuiltInZoomControls(true);
 
-        mapController = mapView.getController();
-        mapController.setZoom(16);
+		mapController = mapView.getController();
+		mapController.setZoom(16);
 
-        if (receipt != null)
-        {
-            currentGeoPoint = new GeoPoint(Integer.parseInt(receipt.getLocationLat()), Integer.parseInt(receipt.getLocationLong()));
-            OverlayItem item = new OverlayItem(currentGeoPoint, "", "");
-            Drawable marker = this.getResources().getDrawable(R.drawable.ic_launcher);
-            MyOverlays mo = new MyOverlays(marker);
-            mo.addOverlay(item);
-            mapView.getOverlays().add(mo);
-        }
-        else
-        {
-            mlo = new MyLocationOverlay(this, mapView);
-            mapView.getOverlays().add(mlo);
-        }
+		if (receipt != null)
+		{
+			currentGeoPoint = new GeoPoint(Integer.parseInt(receipt.getLocationLat()), Integer.parseInt(receipt
+					.getLocationLong()));
+			OverlayItem item = new OverlayItem(currentGeoPoint, "", "");
+			Drawable marker = this.getResources().getDrawable(R.drawable.ic_launcher);
+			MyOverlays mo = new MyOverlays(marker);
+			mo.addOverlay(item);
+			mapView.getOverlays().add(mo);
+		}
+		else
+		{
+			mlo = new MyLocationOverlay(this, mapView);
+			mapView.getOverlays().add(mlo);
+		}
 
-        mapView.postInvalidate();
-        Communicator communicator = new Communicator(this);
-        mapView.setVisibility(communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION));
-    }
+		mapView.postInvalidate();
+		Communicator communicator = new Communicator(this);
+		mapView.setVisibility(communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION));
+	}
 
-    /**
-     * Sets the actual GeoPoint data to the map. Shows an alert to the user if GPS is disabled and allows the user to
-     * enable it.
-     */
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        if (mlo != null)
-        {
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            ReceiptTrackerApp app = (ReceiptTrackerApp) getApplication();
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !app.userHasBeenPromptedAboutGPS)
-            {
-                showAlertMessageGps();
-                app.userHasBeenPromptedAboutGPS = true;
-            }
-            mlo.enableMyLocation();
-            mlo.runOnFirstFix(new Runnable()
-            {
-                public void run()
-                {
-                    currentGeoPoint = mlo.getMyLocation();
-                    mapView.getController().animateTo(currentGeoPoint);
-                }
-            });
-            if (currentGeoPoint == null)
-            {
-                Criteria criteria = new Criteria();
-                String bestProvider = locationManager.getBestProvider(criteria, false);
-                Location location = locationManager.getLastKnownLocation(bestProvider);
-                if (location != null)
-                {
-                    currentGeoPoint = new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6));
-                }
-                else
-                {
-                    currentGeoPoint = new GeoPoint((int) (0 * 1E6), (int) (0 * 1E6));
-                }
-            }
-        }
-    }
+	/**
+	 * Sets the actual GeoPoint data to the map. Shows an alert to the user if GPS is disabled and allows the user to
+	 * enable it.
+	 */
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		if (mlo != null)
+		{
+			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+			ReceiptTrackerApp app = (ReceiptTrackerApp) getApplication();
+			if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !app.userHasBeenPromptedAboutGPS)
+			{
+				showAlertMessageGps();
+				app.userHasBeenPromptedAboutGPS = true;
+			}
+			mlo.enableMyLocation();
+			mlo.runOnFirstFix(new Runnable()
+			{
+				public void run()
+				{
+					currentGeoPoint = mlo.getMyLocation();
+					mapView.getController().animateTo(currentGeoPoint);
+				}
+			});
+			if (currentGeoPoint == null)
+			{
+				Criteria criteria = new Criteria();
+				String bestProvider = locationManager.getBestProvider(criteria, false);
+				Location location = locationManager.getLastKnownLocation(bestProvider);
+				if (location != null)
+				{
+					currentGeoPoint = new GeoPoint((int) (location.getLatitude() * 1E6),
+							(int) (location.getLongitude() * 1E6));
+				}
+				else
+				{
+					currentGeoPoint = new GeoPoint((int) (0 * 1E6), (int) (0 * 1E6));
+				}
+			}
+		}
+	}
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        if (mlo != null)
-        {
-            mlo.disableMyLocation();
-        }
-    }
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		if (mlo != null)
+		{
+			mlo.disableMyLocation();
+		}
+	}
 
-    @Override
-    protected boolean isRouteDisplayed()
-    {
-        return false;
-    }
+	@Override
+	protected boolean isRouteDisplayed()
+	{
+		return false;
+	}
 
-    /**
-     * Shows the actual alert message to the user about enabling GPS. This method also lanches an Intent to get into the
-     * settings to enable it.
-     */
-    private void showAlertMessageGps()
-    {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.enable_gps_message).setCancelable(false)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(final DialogInterface dialog, final int id)
-                    {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
-                {
-                    public void onClick(final DialogInterface dialog, final int id)
-                    {
-                        dialog.cancel();
-                    }
-                }).setTitle(R.string.enable_gps_title);
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
+	/**
+	 * Shows the actual alert message to the user about enabling GPS. This method also lanches an Intent to get into the
+	 * settings to enable it.
+	 */
+	private void showAlertMessageGps()
+	{
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.enable_gps_message).setCancelable(false)
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+				{
+					public void onClick(final DialogInterface dialog, final int id)
+					{
+						startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+					}
+				}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+				{
+					public void onClick(final DialogInterface dialog, final int id)
+					{
+						dialog.cancel();
+					}
+				}).setTitle(R.string.enable_gps_title);
+		final AlertDialog alert = builder.create();
+		alert.show();
+	}
 
 }

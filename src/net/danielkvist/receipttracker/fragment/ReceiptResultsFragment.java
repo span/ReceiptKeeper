@@ -131,8 +131,6 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		return rootView;
 	}
 
-	
-
 	/**
 	 * Gets the sum of all receipts that has the receipt account that is passed in as a parameter
 	 * 

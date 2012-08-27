@@ -215,7 +215,8 @@ public class Communicator
 		if (receipt.getId() > 0)
 		{
 			return updateReceipt(receipt);
-		} else
+		}
+		else
 		{
 			return (int) insertReceipt(receipt);
 		}
@@ -329,7 +330,8 @@ public class Communicator
 		if (receiptAccount.getRowId() > 0)
 		{
 			return updateReceiptAccount(receiptAccount);
-		} else
+		}
+		else
 		{
 			return insertReceiptAccount(receiptAccount);
 		}
@@ -548,7 +550,8 @@ public class Communicator
 		{
 			dbAdapter.open();
 			return true;
-		} catch (SQLException e)
+		}
+		catch (SQLException e)
 		{
 			catchSQLException(e);
 			return false;
@@ -586,7 +589,8 @@ public class Communicator
 		if (result)
 		{
 			showToast(MESSAGE_DATA_WAS_SAVED);
-		} else
+		}
+		else
 		{
 			showToast(MESSAGE_COULD_NOT_SAVE);
 		}

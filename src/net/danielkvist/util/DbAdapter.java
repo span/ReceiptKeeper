@@ -231,7 +231,8 @@ public class DbAdapter
 			cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
 					KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null,
 					null, null, KEY_TIMESTAMP + " DESC," + KEY_TIMESTAMP + " DESC", String.valueOf(limit));
-		} else
+		}
+		else
 		{
 			cursor = db.query(DATABASE_TABLE_RECEIPTS, new String[] { KEY_ROWID, KEY_NAME, KEY_PHOTO, KEY_TIMESTAMP,
 					KEY_LOCATION_LAT, KEY_LOCATION_LONG, KEY_SUM, KEY_TAX, KEY_COMMENT, KEY_ACCOUNT_ID }, null, null,
@@ -293,7 +294,8 @@ public class DbAdapter
 	 */
 	public Cursor fetchReceiptsSum(String codeWhereArgs)
 	{
-		return db.rawQuery("SELECT SUM(" + KEY_SUM + ") FROM " + DATABASE_TABLE_RECEIPTS + " WHERE " + KEY_ACCOUNT_ID + "=" + codeWhereArgs, null);
+		return db.rawQuery("SELECT SUM(" + KEY_SUM + ") FROM " + DATABASE_TABLE_RECEIPTS + " WHERE " + KEY_ACCOUNT_ID
+				+ "=" + codeWhereArgs, null);
 	}
 
 	/**
@@ -500,10 +502,12 @@ public class DbAdapter
 					db.execSQL(line);
 				}
 				db.setTransactionSuccessful();
-			} catch (IOException e)
+			}
+			catch (IOException e)
 			{
 				Log.e("test", "read database init file error");
-			} finally
+			}
+			finally
 			{
 				db.endTransaction();
 				if (br != null)
@@ -511,7 +515,8 @@ public class DbAdapter
 					try
 					{
 						br.close();
-					} catch (IOException e)
+					}
+					catch (IOException e)
 					{
 						Log.e("test", "buffer reader close error");
 					}
@@ -534,7 +539,5 @@ public class DbAdapter
 			onCreate(db);
 		}
 	}
-
-	
 
 }
