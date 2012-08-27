@@ -26,5 +26,10 @@ public class ReceiptTrackerApp extends Application
         super.onCreate();
         bitmapLoader = BitmapLoader.getInstance(this);
     }
+    
+    public String translateString(String resourceName)
+    {
+    	return getResources().getString(getResources().getIdentifier(resourceName, "string", "net.danielkvist.receipttracker"));
+    }
 
 }

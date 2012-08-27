@@ -4,19 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.model.CategorySeries;
+import org.achartengine.renderer.DefaultRenderer;
+import org.achartengine.renderer.SimpleSeriesRenderer;
+
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
+import net.danielkvist.receipttracker.content.PieChartView;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.util.Communicator;
+import android.app.Application;
 import android.app.Fragment;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.YuvImage;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -71,7 +84,7 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		View rootView = inflater.inflate(R.layout.fragment_receipt_results, container, false);
+		LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.fragment_receipt_results, container, false);
 
 		categoryList = new ArrayList<String>();
 		categoryList.add(STRING_RESOURCE_ALL);
@@ -101,16 +114,24 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		int income = getCategoryTotal("income");
 		incomeView = (TextView) rootView.findViewById(R.id.income);
 		incomeView.setText(String.valueOf(income));
+		incomeView.setTextColor(PieChartView.COLOR_GREEN);
 
 		int costs = getCategoryTotal("costs");
 		costView = (TextView) rootView.findViewById(R.id.cost);
 		costView.setText(String.valueOf(costs));
+		costView.setTextColor(PieChartView.COLOR_ORANGE);
 
 		totalView = (TextView) rootView.findViewById(R.id.total);
 		totalView.setText(String.valueOf(income - costs));
+		totalView.setTextColor(PieChartView.COLOR_BLUE);
 
+		LinearLayout chartContainer = (LinearLayout) rootView.findViewById(R.id.chart_container);
+		GraphicalView chartView = PieChartView.getNewInstance(getActivity(), income, costs);
+		chartContainer.addView(chartView);
 		return rootView;
 	}
+
+	
 
 	/**
 	 * Gets the sum of all receipts that has the receipt account that is passed in as a parameter
