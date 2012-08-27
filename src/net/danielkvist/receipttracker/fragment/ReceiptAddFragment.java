@@ -262,7 +262,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         adapter = new ReceiptAccountAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
         accountSpinner.setAdapter(adapter);
-        int position = adapter.findReceiptPosition(receipt.getReceiptAccountCode());
+        int position = adapter.findReceiptAccountPosition(receipt.getReceiptAccountCode());
         accountSpinner.setSelection(position);
     }
 
@@ -432,7 +432,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         if(ReceiptAccount.isValid(receiptAccount, receiptAccounts))
         {
             receipt.setReceiptAccountCode(receiptAccountCode);
-            accountSpinner.setSelection(adapter.findReceiptPosition(receiptAccountCode));
+            accountSpinner.setSelection(adapter.findReceiptAccountPosition(receiptAccountCode));
             communicator.saveReceiptAccount(receiptAccount);
         }
         else

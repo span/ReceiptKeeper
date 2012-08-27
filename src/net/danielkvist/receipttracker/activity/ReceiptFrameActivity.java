@@ -21,7 +21,7 @@ import android.view.MenuItem;
 import android.widget.ShareActionProvider;
 
 /**
- * The is a wrapper activity for the different Fragments that build up the application. This activity is responsible for
+ * This is a wrapper activity for the different Fragments that build up the application. This activity is responsible for
  * showing the right fragment according to what action was taken before the activity was launched. The class also
  * implements some custom callbacks to make it possible for the fragments to communicate with the activity.
  * 

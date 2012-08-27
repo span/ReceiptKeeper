@@ -349,7 +349,7 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
      */
     public void setSelectedSpinnerItem(long code)
     {
-        accountSpinner.setSelection(adapter.findReceiptPosition(code));
+        accountSpinner.setSelection(adapter.findReceiptAccountPosition(code));
     }
 
     /**

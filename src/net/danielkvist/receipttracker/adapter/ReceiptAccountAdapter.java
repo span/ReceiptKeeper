@@ -58,7 +58,7 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 	 *            the code of the receipt account whose position you want
 	 * @return the position in the original List or 0
 	 */
-	public int findReceiptPosition(long code)
+	public int findReceiptAccountPosition(long code)
 	{
 		int i = 0;
 		while (i < receiptAccountList.size())
