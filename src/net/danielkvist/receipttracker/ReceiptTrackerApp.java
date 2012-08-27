@@ -19,6 +19,7 @@ public class ReceiptTrackerApp extends Application
     public static final int RECEIPT_SETTINGS_FRAGMENT_ID = 5;
     public static final String ARG_ITEM_ID = "item_id";
     public BitmapLoader bitmapLoader;
+	public boolean userHasBeenPromptedAboutGPS = false;
 
     @Override
     public void onCreate()
