@@ -1,6 +1,5 @@
 package net.danielkvist.receipttracker.fragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.danielkvist.receipttracker.R;

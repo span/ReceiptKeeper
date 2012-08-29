@@ -507,7 +507,7 @@ public class Communicator
 	/**
 	 * Builds a Receipt from the passed in Cursor
 	 * 
-	 * @param cursor
+	 * @param cursor a cursor which is pointing to the row with the Receipt info
 	 * @return a new Receipt
 	 */
 	private Receipt buildReceipt(Cursor cursor)
@@ -601,7 +601,7 @@ public class Communicator
 	 */
 	public void showToast(String message)
 	{
-		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
 }

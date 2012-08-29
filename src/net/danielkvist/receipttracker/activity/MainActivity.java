@@ -25,11 +25,11 @@ import android.widget.TextView;
  */
 public class MainActivity extends Activity implements View.OnClickListener
 {
-	private boolean mTwoPane;
 	private ImageView addButton;
 	private ImageView searchButton;
 	private ImageView settingsButton;
 	private ImageView resultsButton;
+	private Communicator communicator;
 
 	/**
 	 * Sets the content view and title of the Application.
@@ -40,6 +40,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setTitle(getString(R.string.app_name));
+		communicator = new Communicator(this);
 		setupView();
 	}
 
@@ -67,7 +68,6 @@ public class MainActivity extends Activity implements View.OnClickListener
 		Receipt receipt = (Receipt) intent.getParcelableExtra(Receipt.EXTRA_RECEIPT);
 		if (receipt == null)
 		{
-			Communicator communicator = new Communicator(this);
 			receipt = communicator.getLatestReceipt();
 		}
 		showLastReceipt(receipt);
@@ -90,7 +90,6 @@ public class MainActivity extends Activity implements View.OnClickListener
 		else
 		{
 			LinearLayout container = ((LinearLayout) findViewById(R.id.receipt_added_container));
-			Communicator communicator = new Communicator(this);
 			HashMap<String, Integer> settings = communicator.getAllSettings();
 			container.setOnClickListener(new View.OnClickListener()
 			{

@@ -16,7 +16,7 @@ import android.util.Log;
 
 /**
  * This class handles all the database IO together with creating and updating tables and the database when necessary. It
- * also is responsibile for adding the default data in the settings and accounts tables.
+ * also is responsible for adding the default data in the settings and accounts tables.
  * 
  * @author Daniel Kvist
  * 
@@ -111,6 +111,7 @@ public class DbAdapter
 	 */
 	public void close()
 	{
+		db.close();
 		dbHelper.close();
 	}
 

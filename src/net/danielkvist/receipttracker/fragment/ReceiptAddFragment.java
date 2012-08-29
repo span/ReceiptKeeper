@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker.fragment;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -310,7 +313,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
     /**
      * Saves the current receipt by first setting all the values that are currently set in the View's. It then uses the
-     * Communicator to save the receipt. Then it launches an Intent which takes the user back to the MainActivity.
+     * Communicator to save the receipt. Then it launches an Intent which takes the user back to the MainActivity. Also
+     * plays a new sound if it is a new receipt.
      * 
      * @return
      */
@@ -318,6 +322,23 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         if (setViewValues())
         {
+        	if(receipt.getId() < 0)
+        	{
+        		AssetFileDescriptor afd;
+                MediaPlayer player = new MediaPlayer();
+                try
+    			{
+                	afd = getActivity().getAssets().openFd("sound/katsching.wav");
+                	player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                	player.setVolume(0.4f, 0.4f);
+    				player.prepare();
+    				player.start();
+    			}
+    			catch (IllegalArgumentException e) { Log.e(getActivity().getString(R.string.tag_receipttracker), e.getMessage()); }
+    			catch (IllegalStateException e) { Log.e(getActivity().getString(R.string.tag_receipttracker), e.getMessage()); }
+    			catch (IOException e) { Log.e(getActivity().getString(R.string.tag_receipttracker), e.getMessage()); }
+        	}
+        	
             int id = communicator.saveReceipt(receipt);
             if (id >= 0)
             {

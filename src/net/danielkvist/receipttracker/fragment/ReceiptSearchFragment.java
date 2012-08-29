@@ -1,7 +1,6 @@
 package net.danielkvist.receipttracker.fragment;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
