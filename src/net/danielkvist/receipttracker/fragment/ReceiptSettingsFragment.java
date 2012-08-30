@@ -8,7 +8,6 @@ import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.content.ReceiptSettingsTabHost;
 import net.danielkvist.util.Communicator;
 import net.danielkvist.util.DropboxHandler;
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
