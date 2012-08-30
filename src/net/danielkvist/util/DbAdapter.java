@@ -3,7 +3,6 @@ package net.danielkvist.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import android.content.ContentValues;
@@ -85,6 +84,10 @@ public class DbAdapter
 	private static final String DATABASE_INIT_SETTING_STORAGE = "INSERT INTO " + DATABASE_TABLE_SETTINGS
 	+ " (" + KEY_NAME + "," + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_STORAGE
 	+ "',0" + ");";
+	
+	private static final String DATABASE_INIT_SETTING_SOUND = "INSERT INTO " + DATABASE_TABLE_SETTINGS
+	        + " (" + KEY_NAME + "," + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_SOUND
+	        + "',0" + ");";
 
 	/**
 	 * Constructor that saves the context that is passed in
@@ -477,6 +480,7 @@ public class DbAdapter
 		@Override
 		public void onCreate(SQLiteDatabase db)
 		{
+		    // FIXME transasciton!
 			db.execSQL(DATABASE_CREATE_TABLE_RECEIPTS);
 			db.execSQL(DATABASE_CREATE_TABLE_SETTINGS);
 			db.execSQL(DATABASE_INIT_SETTING_SUM);
@@ -486,6 +490,7 @@ public class DbAdapter
 			db.execSQL(DATABASE_INIT_SETTING_ACCOUNT);
 			db.execSQL(DATABASE_INIT_SETTING_DEFAULT_ACCOUNTS);
 			db.execSQL(DATABASE_INIT_SETTING_STORAGE);
+			db.execSQL(DATABASE_INIT_SETTING_SOUND);
 			initDatabaseData(db);
 		}
 

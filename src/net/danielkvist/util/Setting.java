@@ -12,6 +12,9 @@ public class Setting
 
 	public static final int SETTING_STORAGE_LOCAL = 0;
 	public static final int SETTING_STORAGE_CLOUD = 1;
+	
+	public static final int SETTING_SOUND_ON = 0;
+	public static final int SETTING_SOUND_OFF = 8;
 
 	public static final String SETTING_FIELD_LOCATION = "location";
 	public static final String SETTING_FIELD_SUM = "sum";
@@ -20,6 +23,7 @@ public class Setting
 	public static final String SETTING_FIELD_ACCOUNT = "account";
 	public static final String SETTING_ACCOUNT_DEFAULTS = "default_accounts";
 	public static final String SETTING_STORAGE = "storage";
+	public static final String SETTING_SOUND = "sound";
 
 	private int value;
 	private String name;

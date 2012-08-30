@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.danielkvist.receipttracker.R;
-import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.receipttracker.listener.AnimatedTabHostListener;
 import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
-import net.danielkvist.util.DropboxHandler;
 import net.danielkvist.util.Setting;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -21,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TabHost;
@@ -102,8 +99,8 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
         super.setup();
         Context context = getContext();
         TabSpec spec = newTabSpec("tag1");
-        spec.setContent(R.id.storage);
-        spec.setIndicator(context.getString(R.string.storage));
+        spec.setContent(R.id.general);
+        spec.setIndicator(context.getString(R.string.general));
         addTab(spec);
 
         spec = newTabSpec("tag2");
@@ -224,6 +221,10 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
         	cloudRadio.setChecked(true);
         }
         
+        Switch soundSwitch = (Switch) findViewById(R.id.switch_sound);
+        soundSwitch.setChecked(settingsMap.get(Setting.SETTING_SOUND) == Setting.SETTING_SOUND_ON);
+        soundSwitch.setOnCheckedChangeListener(this);
+        
         Switch sumSwitch = (Switch) findViewById(R.id.switch_sum);
         sumSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_SUM) == View.VISIBLE);
         sumSwitch.setOnCheckedChangeListener(this);
@@ -274,6 +275,9 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
         Setting setting = new Setting();
         switch (buttonView.getId())
         {
+            case R.id.switch_sound:
+                setting.setName(Setting.SETTING_SOUND);
+                break;
             case R.id.switch_location:
                 setting.setName(Setting.SETTING_FIELD_LOCATION);
                 break;

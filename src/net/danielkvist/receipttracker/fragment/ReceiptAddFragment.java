@@ -3,7 +3,6 @@ package net.danielkvist.receipttracker.fragment;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,7 +51,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * This fragment contains the UI that is used to add a new Receipt. It contains all the form fields necessary and hooks
@@ -84,6 +83,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private BitmapLoader bitmapLoader;
     private ReceiptAccountAdapter adapter;
 	private DropboxHandler dropbox;
+    private HashMap<String, Integer> settingsMap;
 
     /**
      * Instantiates a Communicator, sets the Fragment to retain it's instance and fetches any Receipt that was passed
@@ -143,7 +143,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             receipt.setReceiptAccountCode(ReceiptAccount.DEFAULT_ACCOUNT);
         }
 
-        HashMap<String, Integer> settingsMap = communicator.getAllSettings();
+        settingsMap = communicator.getAllSettings();
 
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.receipt_photo_image_view);
@@ -318,7 +318,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     /**
      * Saves the current receipt by first setting all the values that are currently set in the View's. It then uses the
      * Communicator to save the receipt. Then it launches an Intent which takes the user back to the MainActivity. Also
-     * plays a new sound if it is a new receipt.
+     * plays a new sound if it is a new receipt and the device is in normal ringer mode.
      * 
      * @return
      */
@@ -326,7 +326,9 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         if (setViewValues())
         {
-        	if(receipt.getId() < 0)
+            final AudioManager manager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+            boolean allowSound = manager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+        	if((receipt.getId() < 0) && (settingsMap.get(Setting.SETTING_SOUND) == Setting.SETTING_SOUND_ON) && allowSound)
         	{
         		AssetFileDescriptor afd;
                 MediaPlayer player = new MediaPlayer();

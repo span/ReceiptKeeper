@@ -120,6 +120,9 @@
     <string name="total">Total</string>    
     <string name="select_a_category_for_details">Select a category for details</string>    
     <string name="select_an_account_for_details">Select an account for details</string>    
+    <string name="sound_on_off">Sound on/off</string>    
+    <string name="sound">Sound</string>    
+    <string name="general">General</string>    
     
 
 </resources>

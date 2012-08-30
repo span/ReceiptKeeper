@@ -29,13 +29,13 @@
                 android:layout_height="match_parent" >
 
                 <LinearLayout
-                    android:id="@+id/storage"
+                    android:id="@+id/general"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
 
                     <TextView
-                        style="?android:attr/textAppearanceLarge"
+                        style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/storage_settings" />
@@ -58,6 +58,18 @@
                             android:layout_height="wrap_content"
                             android:text="@string/dropbox_storage" />
                     </RadioGroup>
+
+                    <TextView
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sound" />
+
+                    <Switch
+                        android:id="@+id/switch_sound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sound_on_off" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -67,7 +79,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        style="?android:attr/textAppearanceLarge"
+                        style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/receipt_settings" />
