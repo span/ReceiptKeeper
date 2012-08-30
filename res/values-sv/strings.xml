@@ -117,5 +117,7 @@
     <string name="sound_on_off">Ljud på/av</string>
     <string name="sound">Ljud</string>
     <string name="general">Allmänna</string>
+    <string name="all">Alla</string>
+    <string name="results">Resultat</string>
 
 </resources>

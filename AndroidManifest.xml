@@ -37,6 +37,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="false"
             android:name=".activity.ReceiptFrameActivity"
             android:label="@string/title_receipt_detail"
             android:windowSoftInputMode="stateUnchanged" >
@@ -58,6 +59,7 @@
             android:name=".activity.MyMapActivity"
             android:label="@string/app_name" />
         <activity
+            android:exported="false"
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask" >

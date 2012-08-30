@@ -25,7 +25,7 @@ public class PieChartView extends GraphicalView
 	public static final int COLOR_GREEN = Color.parseColor("#62c51a");
 	public static final int COLOR_ORANGE = Color.parseColor("#ff6c0a");
 	public static final int COLOR_BLUE = Color.parseColor("#23bae9");
-
+	
 	/**
 	 * Constructor that only calls the super method. It is not used to instantiate the object from outside of this
 	 * class.
