@@ -478,8 +478,9 @@ public class DbAdapter
                 for (String query : queries)
                 {
                     db.execSQL(query);
+                    db.yieldIfContendedSafely();
                 }
-                initDatabaseData(db);
+                db.setTransactionSuccessful();
             }
             catch (SQLException e) 
             {
@@ -487,9 +488,9 @@ public class DbAdapter
             }
             finally
             {
-                db.setTransactionSuccessful();
                 db.endTransaction();
             }
+            initDatabaseData(db);
         }
 
         /**
@@ -509,6 +510,7 @@ public class DbAdapter
                 while ((line = br.readLine()) != null)
                 {
                     db.execSQL(line);
+                    db.yieldIfContendedSafely();
                 }
                 db.setTransactionSuccessful();
             }

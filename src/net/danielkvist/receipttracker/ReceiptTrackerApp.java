@@ -23,6 +23,9 @@ public class ReceiptTrackerApp extends Application
     private DropboxHandler dropbox;
     public boolean userHasBeenPromptedAboutGPS = false;	
 
+    /**
+     * Creates the dropbox and bitmap loader instances that are used app wide
+     */
     @Override
     public void onCreate()
     {
@@ -30,7 +33,22 @@ public class ReceiptTrackerApp extends Application
         bitmapLoader = BitmapLoader.getInstance(this);
         dropbox = new DropboxHandler(this);
     }
-    
+
+    /**
+     * When memory is being trimmed, clear the cache so we don't get killed.
+     */
+    @Override
+    public void onTrimMemory(int level)
+    {
+        super.onTrimMemory(level);
+        if(level >= TRIM_MEMORY_MODERATE)
+        {
+            bitmapLoader.clearCache();
+        }
+        // TODO When http://code.google.com/p/android/issues/detail?id=35349 is fixed, add check for TRIM_MEMORY_BACKGROUND and 
+        // do a trimToSize(size/2) on the cache.
+    }
+
     /**
      * Returns the app dropbox object
      * @return the dropbox api handler.

@@ -82,6 +82,11 @@ public class BitmapLoader
         }
     }
 
+    public void clearCache()
+    {
+        memoryCache.evictAll();
+    }
+
     /**
      * Called to load Bitmap into an ImageView.
      * 
@@ -89,7 +94,7 @@ public class BitmapLoader
      *            the ImageView to populate
      * @param path
      *            the path to the Bitmap
-     * @return a reference to the AsyncTask worker or null 
+     * @return a reference to the AsyncTask worker or null
      */
     public AsyncTask<Object, Integer, Bitmap> loadBitmap(ImageView imageView, String path)
     {
@@ -317,7 +322,7 @@ public class BitmapLoader
 
     /**
      * An AsyncTask that takes the path to a bitmap together with the new height and width that it should resized into.
-     * It reads the current Bitmap at the path provided and then creates a new Bitmap with the same name. It takes the 
+     * It reads the current Bitmap at the path provided and then creates a new Bitmap with the same name. It takes the
      * paramaters as an Object[] in the order, path, newHeight, newWidth (String, int, int).
      * 
      * @author Daniel Kvist
@@ -382,7 +387,7 @@ public class BitmapLoader
 
         /**
          * When the task is done we do some checking to make sure we have a proper Bitmap, ImageView and that the task
-         * that is related to the ImageView is this current task. 
+         * that is related to the ImageView is this current task.
          */
         @Override
         public void onPostExecute(Bitmap bitmap)
@@ -424,4 +429,5 @@ public class BitmapLoader
         }
 
     }
+
 }
