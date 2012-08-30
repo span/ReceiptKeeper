@@ -462,7 +462,7 @@ public class DbAdapter
         }
 
         /**
-         * Creates tables, initiates setting values and imports the accounts.sql file
+         * Creates tables, initiates setting values and imports the accounts.sql file by using a dbTransaction
          */
         @Override
         public void onCreate(SQLiteDatabase db)
@@ -473,13 +473,23 @@ public class DbAdapter
                     DATABASE_INIT_SETTING_SOUND };
 
             db.beginTransaction();
-            for (String query : queries)
+            try
             {
-                db.execSQL(query);
+                for (String query : queries)
+                {
+                    db.execSQL(query);
+                }
+                initDatabaseData(db);
             }
-            initDatabaseData(db);
-            db.setTransactionSuccessful();
-            db.endTransaction();
+            catch (SQLException e) 
+            {
+                Log.e("SQLite", "Error initiating database");
+            }
+            finally
+            {
+                db.setTransactionSuccessful();
+                db.endTransaction();
+            }
         }
 
         /**
