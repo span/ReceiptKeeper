@@ -97,7 +97,7 @@ public class Receipt implements Parcelable
      *            the account code that should be associated with the receipt
      */
     public Receipt(int id, String name, String photo, long timestamp, String locationLat, String locationLong, String sum, String tax,
-            String comment, long account_id)
+            String comment, long accountCode)
     {
         this.id = id;
         this.name = name;
@@ -108,7 +108,7 @@ public class Receipt implements Parcelable
         this.sum = sum;
         this.tax = tax;
         this.comment = comment;
-        this.accountCode = account_id;
+        this.accountCode = accountCode;
     }
 
     /**

@@ -196,7 +196,8 @@ public class DbAdapter
     /**
      * Deletes a receipt account
      * 
-     * @param rowId
+     * @param receiptAccount
+     *            the receipt account
      * @return true if deleted, false otherwise
      */
     public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
@@ -309,8 +310,8 @@ public class DbAdapter
     /**
      * Return a Cursor positioned at the setting that matches the given rowId
      * 
-     * @param rowId
-     *            the id of setting to retrieve
+     * @param name
+     *            the name of setting to retrieve
      * @return Cursor or null
      */
     public Cursor fetchSetting(String name)
@@ -358,7 +359,8 @@ public class DbAdapter
     /**
      * Updates the corresponding row in the database with the information passed in.
      * 
-     * @paran rowId the row id to update
+     * @param rowId
+     *            the row id to update
      * @param name
      *            name of the receipt
      * @param photo
@@ -482,7 +484,7 @@ public class DbAdapter
                 }
                 db.setTransactionSuccessful();
             }
-            catch (SQLException e) 
+            catch (SQLException e)
             {
                 Log.e("SQLite", "Error initiating database");
             }

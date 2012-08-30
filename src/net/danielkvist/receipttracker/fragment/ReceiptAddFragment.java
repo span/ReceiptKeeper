@@ -320,7 +320,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
      * Communicator to save the receipt. Then it launches an Intent which takes the user back to the MainActivity. Also
      * plays a new sound if it is a new receipt and the device is in normal ringer mode.
      * 
-     * @return
+     * @return the saved receipt
      */
     public Receipt saveReceipt()
     {

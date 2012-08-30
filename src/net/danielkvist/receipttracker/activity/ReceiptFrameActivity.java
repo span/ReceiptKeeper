@@ -176,7 +176,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
 	/**
 	 * Returns the current receipt that is being displayed
 	 * 
-	 * @return
+	 * @return the current receipt
 	 */
 	public Receipt getReceipt()
 	{

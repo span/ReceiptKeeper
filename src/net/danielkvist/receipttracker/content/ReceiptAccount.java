@@ -225,7 +225,7 @@ public class ReceiptAccount implements Comparable<ReceiptAccount>
      * 
      * @param receiptAccount
      * @param receiptAccounts
-     * @return
+     * @return true if valid
      */
     public static boolean isValid(ReceiptAccount receiptAccount, List<ReceiptAccount> receiptAccounts)
     {
