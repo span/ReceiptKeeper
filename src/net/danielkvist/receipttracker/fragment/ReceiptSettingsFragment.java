@@ -3,9 +3,12 @@ package net.danielkvist.receipttracker.fragment;
 import java.util.List;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.content.ReceiptSettingsTabHost;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.DropboxHandler;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,6 +33,7 @@ public class ReceiptSettingsFragment extends Fragment
 	private MenuItem saveItem;
 	private MenuItem addItem;
 	private ReceiptSettingsTabHost tabHost;
+	private DropboxHandler dropbox;
 
 	/**
 	 * Just an empty constructor
@@ -49,6 +53,56 @@ public class ReceiptSettingsFragment extends Fragment
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
 		communicator = new Communicator(getActivity());
+		dropbox = ((ReceiptFrameActivity) getActivity()).getDropbox();
+	}
+	
+	/**
+	 * Calls two helper methods that setup the tabs and the setting controls
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		View rootView = inflater.inflate(R.layout.fragment_receipt_settings, container, false);
+
+		setupTabs(rootView);
+		receiptAccounts = tabHost.getReceiptAccounts();
+		return rootView;
+	}
+
+	/**
+	 * Sets up the tab host and its indicators
+	 * 
+	 * @param rootView
+	 *            the container View
+	 */
+	private void setupTabs(View rootView)
+	{
+		tabHost = (ReceiptSettingsTabHost) rootView.findViewById(android.R.id.tabhost);
+		tabHost.setup();
+		tabHost.setCallback(this);
+	}
+	
+	/**
+	 * When the fragment is resumed, check if we have to reset the local radio button or if we're ok. This
+	 * depends on how and if the user has asked to be authenticated with cloud.
+	 */
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		dropbox.resumeAuthentication();
+		if(!dropbox.isValidSession())
+		{
+			tabHost.setLocalRadio();
+		}
+	}
+	
+	/**
+	 * Initiates the auth process
+	 */
+	public void authenticateCloudStorage()
+	{
+		dropbox.initAuthentication();
 	}
 
 	/**
@@ -139,28 +193,13 @@ public class ReceiptSettingsFragment extends Fragment
 	}
 
 	/**
-	 * Calls two helper methods that setup the tabs and the setting controls
+	 * Deauthenticates the user's cloud storage
 	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public void deAuthenticate()
 	{
-		View rootView = inflater.inflate(R.layout.fragment_receipt_settings, container, false);
-
-		setupTabs(rootView);
-		receiptAccounts = tabHost.getReceiptAccounts();
-		return rootView;
+		dropbox.deAuthenticate();
 	}
 
-	/**
-	 * Sets up the tab host and its indicators
-	 * 
-	 * @param rootView
-	 *            the container View
-	 */
-	private void setupTabs(View rootView)
-	{
-		tabHost = (ReceiptSettingsTabHost) rootView.findViewById(android.R.id.tabhost);
-		tabHost.setup();
-	}
+	
 
 }

@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.danielkvist.receipttracker.R;
+import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
+import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
 import net.danielkvist.receipttracker.listener.AnimatedTabHostListener;
 import net.danielkvist.receipttracker.listener.EditTextCodeListener;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.DropboxHandler;
 import net.danielkvist.util.Setting;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -30,7 +34,7 @@ import android.widget.TextView;
  * @author Daniel Kvist
  * 
  */
-public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener,
+public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.OnCheckedChangeListener,
         OnItemSelectedListener
 {
     private MenuItem deleteItem;
@@ -46,6 +50,8 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
     private Spinner categorySpinner;
     private ReceiptAccountCategoryAdapter categoryAdapter;
     private List<String> categoryList;
+	private RadioButton localRadio;
+	private ReceiptSettingsFragment callback;
 
     /**
      * Only calls super for the parent constructor
@@ -54,8 +60,7 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
      */
     public ReceiptSettingsTabHost(Context context)
     {
-        super(context);
-        this.context = context;
+    	this(context, null);
     }
 
     /**
@@ -187,8 +192,38 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
         communicator = new Communicator(context);
         HashMap<String, Integer> settingsMap = communicator.getAllSettings();
 
-        ((RadioGroup) findViewById(R.id.radio_group_storage)).setOnCheckedChangeListener(this);
-
+        
+        // Clicking local storage means we deauth cloud storage
+        localRadio = (RadioButton) findViewById(R.id.storage_local);
+        localRadio.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				Setting setting = new Setting();
+		        setting.setName(Setting.SETTING_STORAGE);
+		        setting.setValue(Setting.SETTING_STORAGE_LOCAL);
+                communicator.saveSetting(setting);
+				callback.deAuthenticate();
+			}
+		});
+        
+        // Clicking cloud means me auth for cloud storage
+        RadioButton cloudRadio = (RadioButton) findViewById(R.id.storage_cloud);
+        cloudRadio.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+                callback.authenticateCloudStorage();
+			}
+		});
+        if(settingsMap.get(Setting.SETTING_STORAGE) == Setting.SETTING_STORAGE_CLOUD)
+        {
+        	localRadio.setChecked(false);
+        	cloudRadio.setChecked(true);
+        }
+        
         Switch sumSwitch = (Switch) findViewById(R.id.switch_sum);
         sumSwitch.setChecked(settingsMap.get(Setting.SETTING_FIELD_SUM) == View.VISIBLE);
         sumSwitch.setOnCheckedChangeListener(this);
@@ -228,26 +263,6 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
         turnoffSwitch.setChecked(settingsMap.get(Setting.SETTING_ACCOUNT_DEFAULTS) == View.VISIBLE);
         turnoffSwitch.setOnCheckedChangeListener(this);
 
-    }
-
-    /**
-     * Listener for the RadioGroup which contains the radio buttons that saves the current setting to the database.
-     */
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId)
-    {
-        Setting setting = new Setting();
-        setting.setName("storage");
-        switch (checkedId)
-        {
-            case R.id.storage_local:
-                setting.setValue(Setting.SETTING_STORAGE_LOCAL);
-                break;
-            case R.id.storage_cloud:
-                setting.setValue(Setting.SETTING_STORAGE_CLOUD);
-                break;
-        }
-        communicator.saveSetting(setting);
     }
 
     /**
@@ -361,9 +376,30 @@ public class ReceiptSettingsTabHost extends TabHost implements CompoundButton.On
 
     }
 
+    /**
+     * Returns the current category
+     * @return
+     */
     public String getCurrentCategory()
     {
         return categoryList.get(categorySpinner.getSelectedItemPosition());
     }
+    
+    /**
+     * Resets the local radio button, used in case cloud auth goes awry
+     */
+    public void setLocalRadio()
+    {
+    	localRadio.setChecked(true);
+    }
+
+    /**
+     * Set a callback for the dropbox handling
+     * @param receiptSettingsFragment
+     */
+	public void setCallback(ReceiptSettingsFragment receiptSettingsFragment)
+	{
+		this.callback = receiptSettingsFragment;
+	}
 
 }

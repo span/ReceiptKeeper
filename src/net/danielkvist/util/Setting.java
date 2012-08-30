@@ -19,6 +19,7 @@ public class Setting
 	public static final String SETTING_FIELD_COMMENT = "comment";
 	public static final String SETTING_FIELD_ACCOUNT = "account";
 	public static final String SETTING_ACCOUNT_DEFAULTS = "default_accounts";
+	public static final String SETTING_STORAGE = "storage";
 
 	private int value;
 	private String name;

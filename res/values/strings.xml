@@ -24,10 +24,10 @@
     <string name="storage">Storage</string>
     <string name="account">Account</string>
     <string name="receipt">Receipt</string>
-    <string name="local_storage">Local storage</string>
+    <string name="local_storage">Local storage only</string>
     <string name="box_net_storage">Box.net storage</string>
     <string name="google_drive_storage">Google Drive storage</string>
-    <string name="dropbox_storage">Dropbox storage</string>
+    <string name="dropbox_storage">Local storage with dropbox backup</string>
     <string name="date">Date:</string>
     <string name="time">Time:</string>
     <string name="take_photo">Click icon to take photo</string>

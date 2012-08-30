@@ -56,8 +56,7 @@
                             android:id="@+id/storage_cloud"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/cloud_storage" />
+                            android:text="@string/dropbox_storage" />
                     </RadioGroup>
                 </LinearLayout>
 

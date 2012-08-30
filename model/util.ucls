@@ -4,7 +4,7 @@
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/BitmapLoader.java" 
     binary="false">    
-    <position x="733" y="372" width="-1" height="-1"/>    
+    <position x="525" y="328" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -14,7 +14,7 @@
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/BitmapLoader.java" 
     binary="false">    
-    <position x="498" y="285" width="-1" height="-1"/>    
+    <position x="290" y="241" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -24,7 +24,7 @@
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/BitmapLoader.java" 
     binary="false">    
-    <position x="507" y="372" width="-1" height="-1"/>    
+    <position x="299" y="328" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -34,7 +34,7 @@
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/BitmapLoader.java" 
     binary="false">    
-    <position x="351" y="372" width="-1" height="-1"/>    
+    <position x="143" y="328" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -44,7 +44,7 @@
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/Communicator.java" 
     binary="false">    
-    <position x="1121" y="372" width="-1" height="-1"/>    
+    <position x="913" y="328" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -53,7 +53,7 @@
   <class id="6" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.DbAdapter.DatabaseHelper" 
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/DbAdapter.java" binary="false">    
-    <position x="924" y="476" width="-1" height="-1"/>    
+    <position x="716" y="432" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -62,7 +62,7 @@
   <class id="7" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.DbAdapter" 
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/DbAdapter.java" binary="false">    
-    <position x="924" y="372" width="-1" height="-1"/>    
+    <position x="716" y="328" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -71,7 +71,7 @@
   <class id="8" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.MyOverlays" 
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/MyOverlays.java" binary="false">    
-    <position x="506" y="464" width="-1" height="-1"/>    
+    <position x="298" y="420" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
@@ -80,68 +80,122 @@
   <class id="9" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.Setting" 
     project="net.danielkvist.receipttracker.activity.MainActivity" 
     file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/Setting.java" binary="false">    
-    <position x="924" y="285" width="-1" height="-1"/>    
+    <position x="716" y="241" width="-1" height="-1"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <dependency id="10">    
+  <class id="10" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.DropboxHandler.AsyncDownloader" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/DropboxHandler.java" 
+    binary="false">    
+    <position x="1109" y="461" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.DropboxHandler.AsyncUploader" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/DropboxHandler.java" 
+    binary="false">    
+    <position x="1107" y="395" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.DropboxHandler" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/DropboxHandler.java" 
+    binary="false">    
+    <position x="1108" y="329" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <nesting id="13">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </nesting>  
+  <dependency id="14">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="9"/>  
   </dependency>  
-  <dependency id="11">    
+  <nesting id="15">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="10"/>  
+  </nesting>  
+  <association id="16">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="17" name="instance"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="19">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
+  <association id="20">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="21" name="dbAdapter"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <nesting id="24">    
+    <bendpoint x="368" y="277"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </nesting>  
+  <dependency id="25">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="26">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="27">    
     <end type="SOURCE" refId="5"/>    
     <end type="TARGET" refId="9"/>  
   </dependency>  
-  <association id="12">    
+  <dependency id="28">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <nesting id="29">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </nesting>  
+  <dependency id="30">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <association id="31">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="13" name="dbHelper">        
-        <position x="834" y="432" width="55" height="14"/>      
+      <attribute id="32" name="dbHelper">        
+        <position x="626" y="388" width="55" height="14"/>      
       </attribute>      
-      <multiplicity id="14" minimum="0" maximum="1">        
-        <position x="870" y="421" width="20" height="14"/>      
+      <multiplicity id="33" minimum="0" maximum="1">        
+        <position x="662" y="377" width="20" height="14"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="15">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="16" name="instance"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="18">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="4"/>  
-  </nesting>  
-  <nesting id="19">    
-    <bendpoint x="576" y="321"/>    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
-  </nesting>  
-  <dependency id="20">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="2"/>  
-  </dependency>  
-  <association id="21">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="22" name="dbAdapter"/>      
-      <multiplicity id="23" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="24">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="6"/>  
-  </nesting>  
-  <nesting id="25">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="1"/>  
+  <nesting id="34">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="11"/>  
   </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     visibility="true">    

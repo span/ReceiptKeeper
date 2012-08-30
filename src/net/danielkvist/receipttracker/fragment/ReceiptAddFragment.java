@@ -14,12 +14,14 @@ import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
+import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.fragment.AddReceiptAccountDialog.AddReceiptAccountDialogListener;
 import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.DropboxHandler;
 import net.danielkvist.util.Setting;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -49,6 +51,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This fragment contains the UI that is used to add a new Receipt. It contains all the form fields necessary and hooks
@@ -80,6 +83,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private ImageView accountAddButton;
     private BitmapLoader bitmapLoader;
     private ReceiptAccountAdapter adapter;
+	private DropboxHandler dropbox;
 
     /**
      * Instantiates a Communicator, sets the Fragment to retain it's instance and fetches any Receipt that was passed
@@ -437,6 +441,13 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
                     bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
                     bitmapLoader.resizeBitmap(path, 1280, 800);
                     bitmapLoader.loadBitmap(imageView, path);
+                    
+                    if(communicator.getSettingValue(Setting.SETTING_STORAGE) == Setting.SETTING_STORAGE_CLOUD)
+                    {
+                    	dropbox = ((ReceiptFrameActivity) getActivity()).getDropbox();
+                        dropbox.newSession();
+                        dropbox.uploadFile(path);
+                    }
                 }
         }
     }

@@ -9,6 +9,7 @@ import net.danielkvist.receipttracker.fragment.ReceiptDetailFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptResultsFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSearchFragment;
 import net.danielkvist.receipttracker.fragment.ReceiptSettingsFragment;
+import net.danielkvist.util.DropboxHandler;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -35,6 +36,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
 	private Fragment fragment = null;
 	private Receipt currentReceipt;
 	public ShareActionProvider shareActionProvider;
+	private DropboxHandler dropbox;
 
 	/**
 	 * Receives information about which fragment to show and calls replaceFragment with the information that is passed
@@ -46,6 +48,7 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_receipt_frame);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		dropbox = ((ReceiptTrackerApp) getApplication()).getDropbox();
 
 		if (savedInstanceState == null)
 		{
@@ -179,4 +182,14 @@ public class ReceiptFrameActivity extends Activity implements CustomListFragment
 	{
 		return currentReceipt;
 	}
+	
+	/**
+	 * Returns the app dropbox object
+	 * @return the dropbox object
+	 */
+	public DropboxHandler getDropbox()
+	{
+		return dropbox;
+	}
+
 }

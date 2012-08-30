@@ -81,6 +81,10 @@ public class DbAdapter
 	private static final String DATABASE_INIT_SETTING_DEFAULT_ACCOUNTS = "INSERT INTO " + DATABASE_TABLE_SETTINGS
 			+ " (" + KEY_NAME + "," + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_ACCOUNT_DEFAULTS
 			+ "',0" + ");";
+	
+	private static final String DATABASE_INIT_SETTING_STORAGE = "INSERT INTO " + DATABASE_TABLE_SETTINGS
+	+ " (" + KEY_NAME + "," + KEY_SETTING_VALUE + ") " + "values " + "('" + Setting.SETTING_STORAGE
+	+ "',0" + ");";
 
 	/**
 	 * Constructor that saves the context that is passed in
@@ -481,6 +485,7 @@ public class DbAdapter
 			db.execSQL(DATABASE_INIT_SETTING_LOCATION);
 			db.execSQL(DATABASE_INIT_SETTING_ACCOUNT);
 			db.execSQL(DATABASE_INIT_SETTING_DEFAULT_ACCOUNTS);
+			db.execSQL(DATABASE_INIT_SETTING_STORAGE);
 			initDatabaseData(db);
 		}
 
