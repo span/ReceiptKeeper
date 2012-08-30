@@ -118,7 +118,6 @@ public class ReceiptSearchAdapter extends ArrayAdapter<Receipt>
 			@Override
 			protected void publishResults(CharSequence constraint, FilterResults results)
 			{
-
 				items = (ArrayList<Receipt>) results.values;
 				notifyDataSetChanged();
 				clear();

@@ -357,7 +357,7 @@ public class Receipt implements Parcelable
     /**
      * Parcelable construction
      */
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    public static final Parcelable.Creator<Receipt> CREATOR = new Parcelable.Creator<Receipt>()
     {
         public Receipt createFromParcel(Parcel in)
         {

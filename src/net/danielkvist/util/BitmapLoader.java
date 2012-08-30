@@ -91,7 +91,7 @@ public class BitmapLoader
      *            the path to the Bitmap
      * @return a reference to the AsyncTask worker or null 
      */
-    public AsyncTask loadBitmap(ImageView imageView, String path)
+    public AsyncTask<Object, Integer, Bitmap> loadBitmap(ImageView imageView, String path)
     {
         final Bitmap bitmap = getBitmapFromMemCache(path);
         if (bitmap != null)
@@ -106,10 +106,10 @@ public class BitmapLoader
         {
             if (cancelPotentialWork(imageView, path))
             {
-                ScaleAndPlaceBitmapTask worker = new ScaleAndPlaceBitmapTask(imageView, path);
+                ScaleAndPlaceBitmapTask worker = new ScaleAndPlaceBitmapTask(imageView);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(context.getResources(), defaultBitmap, worker);
                 imageView.setImageDrawable(asyncDrawable);
-                worker.execute(thumbnailSize, thumbnailSize);
+                worker.execute(path, thumbnailSize, thumbnailSize);
                 return worker;
             }
         }
@@ -127,10 +127,10 @@ public class BitmapLoader
      *            the new width
      * @return a reference to the AsyncTask worker
      */
-    public AsyncTask resizeBitmap(String path, int newHeight, int newWidth)
+    public AsyncTask<Object, Integer, Void> resizeBitmap(String path, int newHeight, int newWidth)
     {
-        ResizeBitmapTask worker = (ResizeBitmapTask) new ResizeBitmapTask(path, newHeight, newWidth);
-        worker.execute();
+        ResizeBitmapTask worker = (ResizeBitmapTask) new ResizeBitmapTask();
+        worker.execute(path, newHeight, newWidth);
         return worker;
     }
 
@@ -301,12 +301,12 @@ public class BitmapLoader
      */
     private static class AsyncDrawable extends BitmapDrawable
     {
-        private final WeakReference workerReference;
+        private final WeakReference<ScaleAndPlaceBitmapTask> workerReference;
 
         public AsyncDrawable(Resources res, Bitmap bitmap, ScaleAndPlaceBitmapTask worker)
         {
             super(res, bitmap);
-            workerReference = new WeakReference(worker);
+            workerReference = new WeakReference<ScaleAndPlaceBitmapTask>(worker);
         }
 
         public ScaleAndPlaceBitmapTask getBitmapWorkerTask()
@@ -317,42 +317,24 @@ public class BitmapLoader
 
     /**
      * An AsyncTask that takes the path to a bitmap together with the new height and width that it should resized into.
-     * It reads the current Bitmap at the path provided and then creates a new Bitmap with the same name.
+     * It reads the current Bitmap at the path provided and then creates a new Bitmap with the same name. It takes the 
+     * paramaters as an Object[] in the order, path, newHeight, newWidth (String, int, int).
      * 
-     * @author daniel
+     * @author Daniel Kvist
      * 
      */
-    private static class ResizeBitmapTask extends AsyncTask
+    private static class ResizeBitmapTask extends AsyncTask<Object, Integer, Void>
     {
-
-        private int newWidth;
-        private int newHeight;
-        private String path;
-
-        /**
-         * Constructor of the task that takes the path, new height and new width and saves them as instance variables
-         * 
-         * @param path
-         *            the path to the image
-         * @param newHeight
-         *            the new height of the image
-         * @param newWidth
-         *            the new width of the image
-         */
-        public ResizeBitmapTask(String path, int newHeight, int newWidth)
-        {
-            this.path = path;
-            this.newHeight = newHeight;
-            this.newWidth = newWidth;
-        }
-
         /**
          * This method does all of the heavy lifting in the resizing. It decodes the original bitmap into a Bitmap, then
          * it resizes it and saves it back to the original location.
          */
         @Override
-        protected Object doInBackground(Object... params)
+        protected Void doInBackground(Object... params)
         {
+            String path = (String) params[0];
+            Integer newHeight = (Integer) params[1];
+            Integer newWidth = (Integer) params[2];
             Bitmap bitmap = BitmapFactory.decodeFile(path);
             Bitmap resizedBitmap = decodeSampledBitmap(path, newHeight, newWidth);
             File file = new File(path);
@@ -379,11 +361,11 @@ public class BitmapLoader
      * This is the AsyncTask that does the heavy lifting when it comes to loading and decoding the Bitmap into the
      * ImageView. It takes a reference to the ImageView it will populate together with a path to the Bitmap resource.
      */
-    private static class ScaleAndPlaceBitmapTask extends AsyncTask
+    private static class ScaleAndPlaceBitmapTask extends AsyncTask<Object, Integer, Bitmap>
     {
 
-        private final WeakReference imageViewReference;
-        public String pathToBitmap;
+        private final WeakReference<ImageView> imageViewReference;
+        private String pathToBitmap;
 
         /**
          * Constructor which takes a reference to the ImageView it will populate together with a path to the Bitmap
@@ -392,13 +374,10 @@ public class BitmapLoader
          * 
          * @param imageView
          *            the ImageView to populate
-         * @param pathToBitmap
-         *            the path to the bitmap resource
          */
-        public ScaleAndPlaceBitmapTask(ImageView imageView, String pathToBitmap)
+        public ScaleAndPlaceBitmapTask(ImageView imageView)
         {
-            imageViewReference = new WeakReference(imageView);
-            this.pathToBitmap = pathToBitmap;
+            imageViewReference = new WeakReference<ImageView>(imageView);
         }
 
         /**
@@ -406,9 +385,8 @@ public class BitmapLoader
          * that is related to the ImageView is this current task. 
          */
         @Override
-        public void onPostExecute(Object obj)
+        public void onPostExecute(Bitmap bitmap)
         {
-            Bitmap bitmap = (Bitmap) obj;
             if (isCancelled())
             {
                 bitmap = null;
@@ -432,10 +410,11 @@ public class BitmapLoader
          * and then decode the bitmap and add it to the cache.
          */
         @Override
-        protected Object doInBackground(Object... params)
+        protected Bitmap doInBackground(Object... params)
         {
-            int newHeight = (Integer) params[0];
-            int newWidth = (Integer) params[1];
+            pathToBitmap = (String) params[0];
+            int newHeight = (Integer) params[1];
+            int newWidth = (Integer) params[2];
             Bitmap bitmap = BitmapLoader.decodeSampledBitmap(pathToBitmap, newHeight, newWidth);
             if (bitmap != null)
             {
