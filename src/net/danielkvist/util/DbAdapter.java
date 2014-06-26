@@ -480,7 +480,6 @@ public class DbAdapter
                 for (String query : queries)
                 {
                     db.execSQL(query);
-                    db.yieldIfContendedSafely();
                 }
                 db.setTransactionSuccessful();
             }
@@ -512,7 +511,6 @@ public class DbAdapter
                 while ((line = br.readLine()) != null)
                 {
                     db.execSQL(line);
-                    db.yieldIfContendedSafely();
                 }
                 db.setTransactionSuccessful();
             }
