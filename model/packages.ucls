@@ -1,0 +1,140 @@
+<class-diagram version="1.0.10" icons="true" always-add-relationships="true" generalizations="false" 
+  realizations="false" associations="false" dependencies="true" nesting-relationships="false">  
+  <package id="1" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker" binary="false">    
+    <position x="398" y="232" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="false"/>  
+  </package>  
+  <package id="2" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.activity" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/activity" 
+    binary="false">    
+    <position x="747" y="161" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="false"/>  
+  </package>  
+  <package id="3" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.adapter" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/adapter" 
+    binary="false">    
+    <position x="747" y="328" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="false"/>  
+  </package>  
+  <package id="4" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.content" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/content" 
+    binary="false">    
+    <position x="747" y="267" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="false"/>  
+  </package>  
+  <package id="5" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.fragment" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/fragment" 
+    binary="false">    
+    <position x="747" y="209" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="false"/>  
+  </package>  
+  <package id="6" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.listener" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/listener" 
+    binary="false">    
+    <position x="608" y="357" width="278" height="41"/>    
+    <display autosize="false" stereotype="false"/>  
+  </package>  
+  <package id="7" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util" binary="false">    
+    <position x="747" y="509" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="false"/>  
+  </package>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="22">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="23">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="24">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="25">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="26">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="27">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="28">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="false" package="true" initial-value="false" signature="false" 
+    visibility="false">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="false"/>
+</class-diagram>

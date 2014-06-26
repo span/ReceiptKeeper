@@ -1,8 +1,8 @@
 package net.danielkvist.receipttracker.fragment;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,12 +13,14 @@ import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
 import net.danielkvist.receipttracker.activity.MyMapActivity;
 import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
+import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.content.Receipt;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.receipttracker.fragment.AddReceiptAccountDialog.AddReceiptAccountDialogListener;
 import net.danielkvist.util.BitmapLoader;
 import net.danielkvist.util.Communicator;
+import net.danielkvist.util.DropboxHandler;
 import net.danielkvist.util.Setting;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -29,6 +31,9 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -77,6 +82,8 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     private ImageView accountAddButton;
     private BitmapLoader bitmapLoader;
     private ReceiptAccountAdapter adapter;
+	private DropboxHandler dropbox;
+    private HashMap<String, Integer> settingsMap;
 
     /**
      * Instantiates a Communicator, sets the Fragment to retain it's instance and fetches any Receipt that was passed
@@ -136,7 +143,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
             receipt.setReceiptAccountCode(ReceiptAccount.DEFAULT_ACCOUNT);
         }
 
-        HashMap<String, Integer> settingsMap = communicator.getAllSettings();
+        settingsMap = communicator.getAllSettings();
 
         View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
         imageView = (ImageView) rootView.findViewById(R.id.receipt_photo_image_view);
@@ -262,7 +269,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
     {
         adapter = new ReceiptAccountAdapter(getActivity(), android.R.layout.simple_spinner_item, receiptAccounts);
         accountSpinner.setAdapter(adapter);
-        int position = adapter.findReceiptPosition(receipt.getReceiptAccountCode());
+        int position = adapter.findReceiptAccountPosition(receipt.getReceiptAccountCode());
         accountSpinner.setSelection(position);
     }
 
@@ -310,14 +317,34 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
 
     /**
      * Saves the current receipt by first setting all the values that are currently set in the View's. It then uses the
-     * Communicator to save the receipt. Then it launches an Intent which takes the user back to the MainActivity.
+     * Communicator to save the receipt. Then it launches an Intent which takes the user back to the MainActivity. Also
+     * plays a new sound if it is a new receipt and the device is in normal ringer mode.
      * 
-     * @return
+     * @return the saved receipt
      */
     public Receipt saveReceipt()
     {
         if (setViewValues())
         {
+            final AudioManager manager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+            boolean allowSound = manager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+        	if((receipt.getId() < 0) && (settingsMap.get(Setting.SETTING_SOUND) == Setting.SETTING_SOUND_ON) && allowSound)
+        	{
+        		AssetFileDescriptor afd;
+                MediaPlayer player = new MediaPlayer();
+                try
+    			{
+                	afd = getActivity().getAssets().openFd("sound/katsching.wav");
+                	player.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                	player.setVolume(0.4f, 0.4f);
+    				player.prepare();
+    				player.start();
+    			}
+    			catch (IllegalArgumentException e) { Log.e(getActivity().getString(R.string.tag_receipttracker), e.getMessage()); }
+    			catch (IllegalStateException e) { Log.e(getActivity().getString(R.string.tag_receipttracker), e.getMessage()); }
+    			catch (IOException e) { Log.e(getActivity().getString(R.string.tag_receipttracker), e.getMessage()); }
+        	}
+        	
             int id = communicator.saveReceipt(receipt);
             if (id >= 0)
             {
@@ -416,6 +443,13 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
                     bitmapLoader = ((ReceiptTrackerApp) getActivity().getApplication()).bitmapLoader;
                     bitmapLoader.resizeBitmap(path, 1280, 800);
                     bitmapLoader.loadBitmap(imageView, path);
+                    
+                    if(communicator.getSettingValue(Setting.SETTING_STORAGE) == Setting.SETTING_STORAGE_CLOUD)
+                    {
+                    	dropbox = ((ReceiptFrameActivity) getActivity()).getDropbox();
+                        dropbox.newSession();
+                        dropbox.uploadFile(path);
+                    }
                 }
         }
     }
@@ -432,7 +466,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener, D
         if(ReceiptAccount.isValid(receiptAccount, receiptAccounts))
         {
             receipt.setReceiptAccountCode(receiptAccountCode);
-            accountSpinner.setSelection(adapter.findReceiptPosition(receiptAccountCode));
+            accountSpinner.setSelection(adapter.findReceiptAccountPosition(receiptAccountCode));
             communicator.saveReceiptAccount(receiptAccount);
         }
         else

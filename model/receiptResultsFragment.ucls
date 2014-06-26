@@ -1,0 +1,126 @@
+<class-diagram version="1.0.10" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" 
+    name="net.danielkvist.receipttracker.fragment.ReceiptResultsFragment" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/fragment/ReceiptResultsFragment.java" 
+    binary="false">    
+    <position x="646" y="342" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" 
+    name="net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/adapter/ReceiptAccountAdapter.java" 
+    binary="false">    
+    <position x="833" y="222" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" 
+    name="net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/adapter/ReceiptAccountCategoryAdapter.java" 
+    binary="false">    
+    <position x="943" y="345" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.Communicator" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/Communicator.java" 
+    binary="false">    
+    <position x="383" y="342" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.content.ReceiptAccount" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/content/ReceiptAccount.java" 
+    binary="false">    
+    <position x="508" y="220" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="6">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="7" name="receiptAccountAdapter">        
+        <position x="813" y="257" width="128" height="14"/>      
+      </attribute>      
+      <multiplicity id="8" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="9">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="10" name="receiptAccountList"/>      
+      <multiplicity id="11" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="12">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="13" name="accountList">        
+        <position x="581" y="248" width="66" height="14"/>      
+      </attribute>      
+      <multiplicity id="14" minimum="0" maximum="2147483647">        
+        <position x="433" y="264" width="18" height="14"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <association id="16">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="17" name="communicator"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="19">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="20" name="currentAccountList">        
+        <position x="345" y="250" width="105" height="14"/>      
+      </attribute>      
+      <multiplicity id="21" minimum="0" maximum="2147483647">        
+        <position x="555" y="247" width="18" height="14"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="22">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="23" name="receiptAccountCategoryAdapter">        
+        <position x="631" y="372" width="178" height="14"/>      
+      </attribute>      
+      <multiplicity id="24" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

@@ -1,6 +1,6 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name">ReceiptTracker</string>
+    <string name="app_name">ReceiptKeeper</string>
     <string name="title_receipt_detail">Receipt Detail</string>
     <string name="title_receipt_list">Receipts</string>
     <string name="title_add_receipt">Add Receipt</string>
@@ -24,10 +24,10 @@
     <string name="storage">Storage</string>
     <string name="account">Account</string>
     <string name="receipt">Receipt</string>
-    <string name="local_storage">Local storage</string>
+    <string name="local_storage">Local storage only</string>
     <string name="box_net_storage">Box.net storage</string>
     <string name="google_drive_storage">Google Drive storage</string>
-    <string name="dropbox_storage">Dropbox storage</string>
+    <string name="dropbox_storage">Local storage with dropbox backup</string>
     <string name="date">Date:</string>
     <string name="time">Time:</string>
     <string name="take_photo">Click icon to take photo</string>
@@ -39,7 +39,6 @@
     <string name="details">Details</string>
     <string name="search_hint">Search receipts</string>
     <string name="all">All</string>
-
     <string name="comment">Comment</string>
     <string name="cloud_storage">Cloud storage</string>
     <string name="last_receipt_to_be_added_">Last receipt to be added:</string>
@@ -57,7 +56,6 @@
     <string name="click_to_set_date">Click to set date</string>
     <string name="click_to_view_details">Click to view details</string>
     <string name="results">Results</string>
-    
     <string name="immaterial_assets">Immaterial assets</string>
     <string name="buildings_and_property">Buildings and property</string>
     <string name="property_and_other_assets_non_taxrefund">Property and other assets non taxrefund</string>
@@ -106,20 +104,21 @@
     <string name="select_receipt_account">Select receipt account</string>
     <string name="default_accounts">Default accounts</string>
     <string name="default_accounts_on_off">Default accounts on/off</string>
-
-    <string name="property_assets">Property assets</string>    
-    <string name="turnover_assets">Turnover assets</string>     
-    <string name="funds">Funds</string>    
-    <string name="debts">Debts</string>    
-    <string name="income">Income</string>    
-    <string name="costs">Costs</string>    
-    <string name="depreciation">Depreciation and impairments</string>    
-    <string name="none">None</string>    
-    <string name="click_to_view_results">Click to view results</string>    
-    <string name="sub_total">Sub total</string>    
-    <string name="total">Total</string>    
-    <string name="select_a_category_for_details">Select a category for details</string>    
-    <string name="select_an_account_for_details">Select an account for details</string>    
-    
+    <string name="property_assets">Property assets</string>
+    <string name="turnover_assets">Turnover assets</string>
+    <string name="funds">Funds</string>
+    <string name="debts">Debts</string>
+    <string name="income">Income</string>
+    <string name="costs">Costs</string>
+    <string name="depreciation">Depreciation and impairments</string>
+    <string name="none">None</string>
+    <string name="click_to_view_results">Click to view results</string>
+    <string name="sub_total">Sub total</string>
+    <string name="total">Total</string>
+    <string name="select_a_category_for_details">Select a category for details</string>
+    <string name="select_an_account_for_details">Select an account for details</string>
+    <string name="sound_on_off">Sound on/off</string>
+    <string name="sound">Sound</string>
+    <string name="general">General</string>
 
 </resources>

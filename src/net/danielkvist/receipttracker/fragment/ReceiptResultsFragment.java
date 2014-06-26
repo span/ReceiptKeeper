@@ -4,31 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.GraphicalView;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
-
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountCategoryAdapter;
 import net.danielkvist.receipttracker.content.PieChartView;
 import net.danielkvist.receipttracker.content.ReceiptAccount;
 import net.danielkvist.util.Communicator;
-import android.app.Application;
+
+import org.achartengine.GraphicalView;
+
 import android.app.Fragment;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.YuvImage;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -130,8 +121,6 @@ public class ReceiptResultsFragment extends Fragment implements OnItemSelectedLi
 		chartContainer.addView(chartView);
 		return rootView;
 	}
-
-	
 
 	/**
 	 * Gets the sum of all receipts that has the receipt account that is passed in as a parameter

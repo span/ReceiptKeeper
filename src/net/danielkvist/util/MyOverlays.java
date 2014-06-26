@@ -14,49 +14,49 @@ import com.google.android.maps.OverlayItem;
  * @author Daniel Kvist
  * 
  */
-public class MyOverlays extends ItemizedOverlay
+public class MyOverlays extends ItemizedOverlay<OverlayItem>
 {
-    private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
+	private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 
-    /**
-     * Constructor which uses a Drawable as a default marker
-     * 
-     * @param defaultMarker
-     *            the default marker
-     */
-    public MyOverlays(Drawable defaultMarker)
-    {
-        super(boundCenterBottom(defaultMarker));
-    }
+	/**
+	 * Constructor which uses a Drawable as a default marker
+	 * 
+	 * @param defaultMarker
+	 *            the default marker
+	 */
+	public MyOverlays(Drawable defaultMarker)
+	{
+		super(boundCenterBottom(defaultMarker));
+	}
 
-    /**
-     * Adds the item to the overlays list
-     * 
-     * @param overlay
-     *            the item to add
-     */
-    public void addOverlay(OverlayItem overlay)
-    {
-        overlays.add(overlay);
-        populate();
-    }
+	/**
+	 * Adds the item to the overlays list
+	 * 
+	 * @param overlay
+	 *            the item to add
+	 */
+	public void addOverlay(OverlayItem overlay)
+	{
+		overlays.add(overlay);
+		populate();
+	}
 
-    /**
-     * Returns the item at the corresponding position to i
-     */
-    @Override
-    protected OverlayItem createItem(int i)
-    {
-        return overlays.get(i);
-    }
+	/**
+	 * Returns the item at the corresponding position to i
+	 */
+	@Override
+	protected OverlayItem createItem(int i)
+	{
+		return overlays.get(i);
+	}
 
-    /**
-     * Returns the size of the overlay list
-     */
-    @Override
-    public int size()
-    {
-        return overlays.size();
-    }
+	/**
+	 * Returns the size of the overlay list
+	 */
+	@Override
+	public int size()
+	{
+		return overlays.size();
+	}
 
 }

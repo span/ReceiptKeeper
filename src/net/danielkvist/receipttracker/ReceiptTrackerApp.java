@@ -1,6 +1,7 @@
 package net.danielkvist.receipttracker;
 
 import net.danielkvist.util.BitmapLoader;
+import net.danielkvist.util.DropboxHandler;
 import android.app.Application;
 
 /**
@@ -19,18 +20,41 @@ public class ReceiptTrackerApp extends Application
     public static final int RECEIPT_SETTINGS_FRAGMENT_ID = 5;
     public static final String ARG_ITEM_ID = "item_id";
     public BitmapLoader bitmapLoader;
-	public boolean userHasBeenPromptedAboutGPS = false;
+    private DropboxHandler dropbox;
+    public boolean userHasBeenPromptedAboutGPS = false;	
 
+    /**
+     * Creates the dropbox and bitmap loader instances that are used app wide
+     */
     @Override
     public void onCreate()
     {
         super.onCreate();
         bitmapLoader = BitmapLoader.getInstance(this);
-    }
-    
-    public String translateString(String resourceName)
-    {
-    	return getResources().getString(getResources().getIdentifier(resourceName, "string", "net.danielkvist.receipttracker"));
+        dropbox = new DropboxHandler(this);
     }
 
+    /**
+     * When memory is being trimmed, clear the cache so we don't get killed.
+     */
+    @Override
+    public void onTrimMemory(int level)
+    {
+        super.onTrimMemory(level);
+        if(level >= TRIM_MEMORY_MODERATE)
+        {
+            bitmapLoader.clearCache();
+        }
+        // TODO When http://code.google.com/p/android/issues/detail?id=35349 is fixed, add check for TRIM_MEMORY_BACKGROUND and 
+        // do a trimToSize(size/2) on the cache.
+    }
+
+    /**
+     * Returns the app dropbox object
+     * @return the dropbox api handler.
+     */
+    public DropboxHandler getDropbox()
+	{
+		return dropbox;
+	}
 }

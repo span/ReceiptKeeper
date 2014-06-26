@@ -1,0 +1,103 @@
+<class-diagram version="1.0.10" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <interface id="1" corner="BOTTOM_RIGHT" language="java" 
+    name="net.danielkvist.receipttracker.fragment.ReceiptDetailFragment.Callbacks" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/fragment/ReceiptDetailFragment.java" 
+    binary="false">    
+    <position x="938" y="325" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </interface>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" 
+    name="net.danielkvist.receipttracker.fragment.ReceiptDetailFragment" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/fragment/ReceiptDetailFragment.java" 
+    binary="false">    
+    <position x="688" y="196" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.receipttracker.content.Receipt" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/receipttracker/content/Receipt.java" 
+    binary="false">    
+    <position x="688" y="325" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="net.danielkvist.util.Communicator" 
+    project="net.danielkvist.receipttracker.activity.MainActivity" 
+    file="/net.danielkvist.receipttracker.activity.MainActivity/src/net/danielkvist/util/Communicator.java" 
+    binary="false">    
+    <position x="467" y="325" width="-1" height="-1"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false"/>      
+      <operations public="false" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <association id="5">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="6" name="receipt"/>      
+      <multiplicity id="7" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="8">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="9" name="dummyCallbacks">        
+        <position x="964" y="285" width="98" height="14"/>      
+      </attribute>      
+      <multiplicity id="10" minimum="0" maximum="1">        
+        <position x="972" y="270" width="20" height="14"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="11">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="12" name="communicator"/>      
+      <multiplicity id="13" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="14">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="15" name="callbacks">        
+        <position x="789" y="299" width="55" height="14"/>      
+      </attribute>      
+      <multiplicity id="16" minimum="0" maximum="1">        
+        <position x="844" y="286" width="20" height="14"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <nesting id="19">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false"/>    
+    <operations public="false" package="false" protected="false" private="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
