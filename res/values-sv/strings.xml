@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Kvitto kollen</string>
+    <string name="app_name">Kvittokoll</string>
     <string name="title_receipt_detail">Kvittodetaljer</string>
     <string name="title_receipt_list">Kvitton</string>
     <string name="title_add_receipt">Lägg till kvitto</string>
@@ -11,7 +11,7 @@
     <string name="name">Namn:</string>
     <string name="total_sum">Total summa</string>
     <string name="tax">Skatt:</string>
-    <string name="receipt_comment_">Kvitto kommentar…</string>
+    <string name="receipt_comment_">Kommentar…</string>
     <string name="add_receipt">Lägg till kvitto</string>
     <string name="image_of_the_receipt">Bild av kvittot</string>
     <string name="date_and_time">Datum och tid:</string>
@@ -23,7 +23,7 @@
     <string name="location">Plats</string>
     <string name="storage">Lagrig</string>
     <string name="account">Konto</string>
-    <string name="receipt">Kvitti</string>
+    <string name="receipt">Kvitto</string>
     <string name="local_storage">Lokal lagring</string>
     <string name="box_net_storage">Box.net lagring</string>
     <string name="google_drive_storage">Google Drive lagring</string>
@@ -82,8 +82,8 @@
     <string name="interest_income">Ränteintäkter</string>
     <string name="interest_cost">Räntekostnader</string>
     <string name="no_account_selected">Inget konto valt</string>
-    <string name="account_name">Konto namn</string>
-    <string name="account_code">Konto kod</string>
+    <string name="account_name">Kontonamn</string>
+    <string name="account_code">Kontokod</string>
     <string name="add_account">Lägg till konto</string>
     <string name="click_to_add_a_receipt_account">Klicka för att lägga till konto</string>
     <string name="add">Lägg till</string>

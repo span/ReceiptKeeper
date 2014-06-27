@@ -27,7 +27,7 @@
     <string name="local_storage">Local storage only</string>
     <string name="box_net_storage">Box.net storage</string>
     <string name="google_drive_storage">Google Drive storage</string>
-    <string name="dropbox_storage">Local storage with dropbox backup</string>
+    <string name="dropbox_storage">Local storage with Dropbox backup</string>
     <string name="date">Date:</string>
     <string name="time">Time:</string>
     <string name="take_photo">Click icon to take photo</string>
