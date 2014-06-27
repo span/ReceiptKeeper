@@ -16,15 +16,15 @@ import android.view.View;
 import android.widget.Toast;
 
 /**
- * This class handles communication with the user and the database. It provides a layer between the database handling
- * and the converting of data from the database provided Cursor to the more specific data types that are used in the
+ * This class handles communication with the user and the database. It provides
+ * a layer between the database handling and the converting of data from the
+ * database provided Cursor to the more specific data types that are used in the
  * Activities and Fragments.
  * 
  * @author Daniel Kvist
  * 
  */
-public class Communicator
-{
+public class Communicator {
 	private static final String MESSAGE_RECEIPT_WAS_DELETED = "Receipt was successfully deleted from the database.";
 	private static final String MESSAGE_DATA_WAS_SAVED = "Data was saved to database!";
 	private static final String MESSAGE_COULD_NOT_SAVE = "Could not save to database... try again and please report it to the developer!";
@@ -35,40 +35,38 @@ public class Communicator
 	private DbAdapter dbAdapter;
 
 	/**
-	 * Constructor that takes a context as parameter and instantiates a new database adapter
+	 * Constructor that takes a context as parameter and instantiates a new
+	 * database adapter
 	 * 
 	 * @param context
 	 */
-	public Communicator(Context context)
-	{
+	public Communicator(Context context) {
 		this.context = context;
 		this.dbAdapter = new DbAdapter(context);
 	}
 
 	/**
-	 * Deletes the receipt that is being passed in both from disk and from the database. Shows messages to the user on
-	 * results.
+	 * Deletes the receipt that is being passed in both from disk and from the
+	 * database. Shows messages to the user on results.
 	 * 
 	 * @param receipt
 	 *            the receipt to delete
 	 * @return true if file deletion and db-deletion are true
 	 */
-	public boolean deleteReceipt(Receipt receipt)
-	{
+	public boolean deleteReceipt(Receipt receipt) {
 		String pathToFile = receipt.getPhoto();
 		File file = new File(pathToFile);
 		boolean deleted = file.delete();
 		boolean result = false;
 
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			dbAdapter.deleteReceipt(receipt.getId());
 			showToast(MESSAGE_RECEIPT_WAS_DELETED);
 			closeDatabase();
 		}
-		if (!deleted)
-		{
-			Log.d(context.getString(R.string.tag_receipttracker), "Failed to delete file: " + pathToFile);
+		if (!deleted) {
+			Log.d(context.getString(R.string.tag_receipttracker),
+					"Failed to delete file: " + pathToFile);
 			showToast(MESSAGE_COULD_NOT_DELETE_FILE);
 		}
 		return result && deleted;
@@ -79,14 +77,11 @@ public class Communicator
 	 * 
 	 * @return the receipt
 	 */
-	public Receipt getLatestReceipt()
-	{
+	public Receipt getLatestReceipt() {
 		Receipt receipt = null;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchLastReceipt();
-			if (cursor != null)
-			{
+			if (cursor != null) {
 				cursor.moveToFirst();
 				receipt = buildReceipt(cursor);
 			}
@@ -102,11 +97,9 @@ public class Communicator
 	 *            the number of receipts
 	 * @return an ArrayList with receipts
 	 */
-	public List<Receipt> getReceipts(int limit)
-	{
+	public List<Receipt> getReceipts(int limit) {
 		List<Receipt> receiptList = null;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchReceipts(limit);
 			receiptList = buildReceiptList(cursor);
 			closeDatabase(cursor);
@@ -123,11 +116,9 @@ public class Communicator
 	 *            upper date restriction
 	 * @return an ArrayList with receipts
 	 */
-	public List<Receipt> getReceipts(long timeFrom, long timeTo)
-	{
+	public List<Receipt> getReceipts(long timeFrom, long timeTo) {
 		List<Receipt> receiptList = null;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchReceipts(timeFrom, timeTo);
 			receiptList = buildReceiptList(cursor);
 			closeDatabase(cursor);
@@ -136,46 +127,41 @@ public class Communicator
 	}
 
 	/**
-	 * Convenience method that gets a list of receipts that has the same code as the code passed in
+	 * Convenience method that gets a list of receipts that has the same code as
+	 * the code passed in
 	 * 
 	 * @param code
 	 *            the receipt account code
 	 * @return the sum of the receipts sum field
 	 */
-	public int getReceiptsSum(long code)
-	{
+	public int getReceiptsSum(long code) {
 		List<Long> accountCode = new ArrayList<Long>();
 		accountCode.add(code);
 		return getReceiptsSum(accountCode);
 	}
 
 	/**
-	 * Builds a where statement for the dbadapter and passes it. Gets a list of receipts that has the same codes as the
-	 * codes in the List that passed in
+	 * Builds a where statement for the dbadapter and passes it. Gets a list of
+	 * receipts that has the same codes as the codes in the List that passed in
 	 * 
 	 * @param accountCodes
 	 *            the receipt account codes in a List
 	 * @return the sum of the receipts sum field
 	 */
-	public int getReceiptsSum(List<Long> accountCodes)
-	{
+	public int getReceiptsSum(List<Long> accountCodes) {
 		int result = 0;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < accountCodes.size(); i++)
-			{
+			for (int i = 0; i < accountCodes.size(); i++) {
 				sb.append(accountCodes.get(i));
-				if (i < (accountCodes.size() - 1))
-				{
+				if (i < (accountCodes.size() - 1)) {
 					sb.append(" OR ");
 					sb.append(DbAdapter.KEY_ACCOUNT_ID);
 					sb.append("=");
 				}
 			}
 			Cursor cursor = dbAdapter.fetchReceiptsSum(sb.toString());
-			if (cursor != null)
-			{
+			if (cursor != null) {
 				cursor.moveToFirst();
 				result = cursor.getInt(0);
 			}
@@ -185,17 +171,16 @@ public class Communicator
 	}
 
 	/**
-	 * Searches for receipts that contains the provided query and returns a list of them
+	 * Searches for receipts that contains the provided query and returns a list
+	 * of them
 	 * 
 	 * @param query
 	 *            the query to search for
 	 * @return an ArrayList with receipts
 	 */
-	public List<Receipt> searchReceipts(String query)
-	{
+	public List<Receipt> searchReceipts(String query) {
 		List<Receipt> receiptList = null;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.searchReceiptName(query);
 			receiptList = buildReceiptList(cursor);
 			closeDatabase(cursor);
@@ -204,20 +189,16 @@ public class Communicator
 	}
 
 	/**
-	 * Saves the receipt to the databse. If the receipt has an id > 0 it updates the database row, if the id < 0 it
-	 * creates a new row.
+	 * Saves the receipt to the databse. If the receipt has an id > 0 it updates
+	 * the database row, if the id < 0 it creates a new row.
 	 * 
 	 * @param receipt
 	 * @return int with new row id or updated rows or -1
 	 */
-	public int saveReceipt(Receipt receipt)
-	{
-		if (receipt.getId() > 0)
-		{
+	public int saveReceipt(Receipt receipt) {
+		if (receipt.getId() > 0) {
 			return updateReceipt(receipt);
-		}
-		else
-		{
+		} else {
 			return (int) insertReceipt(receipt);
 		}
 	}
@@ -228,14 +209,14 @@ public class Communicator
 	 * @param receipt
 	 * @return new rowId or -1
 	 */
-	private long insertReceipt(Receipt receipt)
-	{
+	private long insertReceipt(Receipt receipt) {
 		long result = -1;
-		if (openDatabase())
-		{
-			result = dbAdapter.createReceipt(receipt.getName(), receipt.getPhoto(), receipt.getTimestamp(),
-					receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(), receipt.getTax(),
-					receipt.getComment(), receipt.getReceiptAccountCode());
+		if (openDatabase()) {
+			result = dbAdapter.createReceipt(receipt.getName(),
+					receipt.getPhoto(), receipt.getTimestamp(),
+					receipt.getLocationLat(), receipt.getLocationLong(),
+					receipt.getSum(), receipt.getTax(), receipt.getComment(),
+					receipt.getReceiptAccountCode());
 			closeDatabase();
 		}
 		showResult(result > 0);
@@ -248,14 +229,15 @@ public class Communicator
 	 * @param receipt
 	 * @return number of rows affected
 	 */
-	public int updateReceipt(Receipt receipt)
-	{
+	public int updateReceipt(Receipt receipt) {
 		int result = -1;
-		if (openDatabase())
-		{
-			result = dbAdapter.updateReceipt(receipt.getId(), receipt.getName(), receipt.getPhoto(),
-					receipt.getTimestamp(), receipt.getLocationLat(), receipt.getLocationLong(), receipt.getSum(),
-					receipt.getTax(), receipt.getComment(), receipt.getReceiptAccountCode());
+		if (openDatabase()) {
+			result = dbAdapter.updateReceipt(receipt.getId(),
+					receipt.getName(), receipt.getPhoto(),
+					receipt.getTimestamp(), receipt.getLocationLat(),
+					receipt.getLocationLong(), receipt.getSum(),
+					receipt.getTax(), receipt.getComment(),
+					receipt.getReceiptAccountCode());
 			closeDatabase();
 		}
 		showResult(result > 0);
@@ -269,11 +251,9 @@ public class Communicator
 	 *            the account to delete
 	 * @return true if successful
 	 */
-	public boolean deleteReceiptAccount(ReceiptAccount receiptAccount)
-	{
+	public boolean deleteReceiptAccount(ReceiptAccount receiptAccount) {
 		boolean result = false;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			result = dbAdapter.deleteReceiptAccount(receiptAccount);
 			closeDatabase();
 		}
@@ -286,27 +266,28 @@ public class Communicator
 	 * 
 	 * @return an ArrayList of accounts
 	 */
-	public List<ReceiptAccount> getReceiptAccounts()
-	{
+	public List<ReceiptAccount> getReceiptAccounts() {
 		List<ReceiptAccount> receiptAccountList = null;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchReceiptAccounts();
-			if (cursor != null)
-			{
+			if (cursor != null) {
 				ReceiptAccount receiptAccount;
 				int visible = getSettingValue(Setting.SETTING_ACCOUNT_DEFAULTS);
 				receiptAccountList = new ArrayList<ReceiptAccount>();
 				cursor.moveToFirst();
-				while (!cursor.isAfterLast())
-				{
-					receiptAccount = new ReceiptAccount(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
-							cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_CODE)), cursor.getString(cursor
-									.getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor
+				while (!cursor.isAfterLast()) {
+					receiptAccount = new ReceiptAccount(cursor.getInt(cursor
+							.getColumnIndex(DbAdapter.KEY_ROWID)),
+							cursor.getInt(cursor
+									.getColumnIndex(DbAdapter.KEY_CODE)),
+							cursor.getString(cursor
+									.getColumnIndex(DbAdapter.KEY_NAME)),
+							cursor.getString(cursor
 									.getColumnIndex(DbAdapter.KEY_CATEGORY)));
 
-					if (visible == View.VISIBLE || (visible == View.GONE && receiptAccount.isUserAdded()))
-					{
+					if (visible == View.VISIBLE
+							|| (visible == View.GONE && receiptAccount
+									.isUserAdded())) {
 						receiptAccountList.add(receiptAccount);
 					}
 
@@ -319,20 +300,16 @@ public class Communicator
 	}
 
 	/**
-	 * Saves the receipt account. If the account has an id > 0 it updates the database row, if the id < 0 it creates a
-	 * new row.
+	 * Saves the receipt account. If the account has an id > 0 it updates the
+	 * database row, if the id < 0 it creates a new row.
 	 * 
 	 * @param receiptAccount
 	 * @return true if successful
 	 */
-	public boolean saveReceiptAccount(ReceiptAccount receiptAccount)
-	{
-		if (receiptAccount.getRowId() > 0)
-		{
+	public boolean saveReceiptAccount(ReceiptAccount receiptAccount) {
+		if (receiptAccount.getRowId() > 0) {
 			return updateReceiptAccount(receiptAccount);
-		}
-		else
-		{
+		} else {
 			return insertReceiptAccount(receiptAccount);
 		}
 	}
@@ -343,13 +320,11 @@ public class Communicator
 	 * @param receiptAccount
 	 * @return true if successful
 	 */
-	private boolean insertReceiptAccount(ReceiptAccount receiptAccount)
-	{
+	private boolean insertReceiptAccount(ReceiptAccount receiptAccount) {
 		boolean result = false;
-		if (openDatabase())
-		{
-			result = dbAdapter.createReceiptAccount(receiptAccount.getCode(), receiptAccount.getName(),
-					receiptAccount.getCategory());
+		if (openDatabase()) {
+			result = dbAdapter.createReceiptAccount(receiptAccount.getCode(),
+					receiptAccount.getName(), receiptAccount.getCategory());
 			closeDatabase();
 		}
 		showResult(result);
@@ -362,13 +337,12 @@ public class Communicator
 	 * @param receiptAccount
 	 * @return true if successful
 	 */
-	private boolean updateReceiptAccount(ReceiptAccount receiptAccount)
-	{
+	private boolean updateReceiptAccount(ReceiptAccount receiptAccount) {
 		boolean result = false;
-		if (openDatabase())
-		{
-			result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(), receiptAccount.getCode(),
-					receiptAccount.getName(), receiptAccount.getCategory());
+		if (openDatabase()) {
+			result = dbAdapter.updateReceiptAccount(receiptAccount.getRowId(),
+					receiptAccount.getCode(), receiptAccount.getName(),
+					receiptAccount.getCategory());
 			closeDatabase();
 		}
 		showResult(result);
@@ -380,20 +354,19 @@ public class Communicator
 	 * 
 	 * @return a HashMap with the setting name and setting value
 	 */
-	public HashMap<String, Integer> getAllSettings()
-	{
+	public HashMap<String, Integer> getAllSettings() {
 		HashMap<String, Integer> settingsMap = null;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchAllSettings();
 			settingsMap = new HashMap<String, Integer>();
-			if (cursor != null)
-			{
+			if (cursor != null) {
 				cursor.moveToFirst();
-				while (!cursor.isAfterLast())
-				{
-					settingsMap.put(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
-							cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
+				while (!cursor.isAfterLast()) {
+					settingsMap
+							.put(cursor.getString(cursor
+									.getColumnIndex(DbAdapter.KEY_NAME)),
+									cursor.getInt(cursor
+											.getColumnIndex(DbAdapter.KEY_SETTING_VALUE)));
 					cursor.moveToNext();
 				}
 			}
@@ -410,16 +383,14 @@ public class Communicator
 	 *            the setting name
 	 * @return the setting value
 	 */
-	public int getSettingValue(String name)
-	{
+	public int getSettingValue(String name) {
 		int value = -1;
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchSetting(name);
-			if (cursor != null)
-			{
+			if (cursor != null) {
 				cursor.moveToFirst();
-				value = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
+				value = cursor.getInt(cursor
+						.getColumnIndex(DbAdapter.KEY_SETTING_VALUE));
 			}
 			closeDatabase(cursor);
 		}
@@ -432,8 +403,7 @@ public class Communicator
 	 * @param setting
 	 *            the setting to save
 	 */
-	public boolean saveSetting(Setting setting)
-	{
+	public boolean saveSetting(Setting setting) {
 		return updateSetting(setting);
 	}
 
@@ -443,34 +413,31 @@ public class Communicator
 	 * @param setting
 	 * @return true if successfull
 	 */
-	private boolean updateSetting(Setting setting)
-	{
+	private boolean updateSetting(Setting setting) {
 		boolean result = false;
-		if (openDatabase())
-		{
-			result = dbAdapter.updateSetting(setting.getName(), setting.getValue());
+		if (openDatabase()) {
+			result = dbAdapter.updateSetting(setting.getName(),
+					setting.getValue());
 			closeDatabase();
 		}
 		return result;
 	}
 
 	/**
-	 * Gets a List of string representations of the name of the resources that make up the receipt account categories.
+	 * Gets a List of string representations of the name of the resources that
+	 * make up the receipt account categories.
 	 * 
 	 * @return a list of resource names
 	 */
-	public List<String> getReceiptAccountCategories()
-	{
+	public List<String> getReceiptAccountCategories() {
 		List<String> list = new ArrayList<String>();
-		if (openDatabase())
-		{
+		if (openDatabase()) {
 			Cursor cursor = dbAdapter.fetchReceiptAccountCategories();
-			if (cursor != null)
-			{
+			if (cursor != null) {
 				cursor.moveToFirst();
-				while (!cursor.isAfterLast())
-				{
-					list.add(cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_CATEGORY)));
+				while (!cursor.isAfterLast()) {
+					list.add(cursor.getString(cursor
+							.getColumnIndex(DbAdapter.KEY_CATEGORY)));
 					cursor.moveToNext();
 				}
 			}
@@ -486,16 +453,13 @@ public class Communicator
 	 *            the cursor from the query
 	 * @return an ArrayList with the receipts
 	 */
-	private List<Receipt> buildReceiptList(Cursor cursor)
-	{
+	private List<Receipt> buildReceiptList(Cursor cursor) {
 		List<Receipt> receiptList = null;
-		if (cursor != null)
-		{
+		if (cursor != null) {
 			Receipt receipt;
 			cursor.moveToFirst();
 			receiptList = new ArrayList<Receipt>();
-			while (!cursor.isAfterLast())
-			{
+			while (!cursor.isAfterLast()) {
 				receipt = buildReceipt(cursor);
 				receiptList.add(receipt);
 				cursor.moveToNext();
@@ -507,34 +471,40 @@ public class Communicator
 	/**
 	 * Builds a Receipt from the passed in Cursor
 	 * 
-	 * @param cursor a cursor which is pointing to the row with the Receipt info
+	 * @param cursor
+	 *            a cursor which is pointing to the row with the Receipt info
 	 * @return a new Receipt
 	 */
-	private Receipt buildReceipt(Cursor cursor)
-	{
+	private Receipt buildReceipt(Cursor cursor) {
 		Receipt receipt = null;
-		if (cursor.getCount() > 0)
-		{
-			receipt = new Receipt(cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)), cursor.getString(cursor
-					.getColumnIndex(DbAdapter.KEY_NAME)), cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)),
-					cursor.getLong(cursor.getColumnIndex(DbAdapter.KEY_TIMESTAMP)), cursor.getString(cursor
-							.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)), cursor.getString(cursor
-							.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)), cursor.getString(cursor
-							.getColumnIndex(DbAdapter.KEY_SUM)), cursor.getString(cursor
-							.getColumnIndex(DbAdapter.KEY_TAX)), cursor.getString(cursor
-							.getColumnIndex(DbAdapter.KEY_COMMENT)), cursor.getInt(cursor
-							.getColumnIndex(DbAdapter.KEY_ACCOUNT_ID)));
+		if (cursor.getCount() > 0) {
+			receipt = new Receipt(
+					cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID)),
+					cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_NAME)),
+					cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_PHOTO)),
+					cursor.getLong(cursor
+							.getColumnIndex(DbAdapter.KEY_TIMESTAMP)),
+					cursor.getString(cursor
+							.getColumnIndex(DbAdapter.KEY_LOCATION_LAT)),
+					cursor.getString(cursor
+							.getColumnIndex(DbAdapter.KEY_LOCATION_LONG)),
+					cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_SUM)),
+					cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_TAX)),
+					cursor.getString(cursor
+							.getColumnIndex(DbAdapter.KEY_COMMENT)), cursor
+							.getInt(cursor
+									.getColumnIndex(DbAdapter.KEY_ACCOUNT_ID)));
 		}
 		return receipt;
 	}
 
 	/**
-	 * Handles logging and messaging to the user if there was a problem with the database
+	 * Handles logging and messaging to the user if there was a problem with the
+	 * database
 	 * 
 	 * @param e
 	 */
-	private void catchSQLException(SQLException e)
-	{
+	private void catchSQLException(SQLException e) {
 		Log.d(context.getString(R.string.tag_receipttracker), e.getMessage());
 		showToast(MESSAGE_COULD_NOT_OPEN);
 	}
@@ -544,15 +514,11 @@ public class Communicator
 	 * 
 	 * @return true if successful
 	 */
-	private boolean openDatabase()
-	{
-		try
-		{
+	private boolean openDatabase() {
+		try {
 			dbAdapter.open();
 			return true;
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			catchSQLException(e);
 			return false;
 		}
@@ -561,8 +527,7 @@ public class Communicator
 	/**
 	 * Closes the database
 	 */
-	private void closeDatabase()
-	{
+	private void closeDatabase() {
 		dbAdapter.close();
 	}
 
@@ -572,26 +537,22 @@ public class Communicator
 	 * @param cursor
 	 *            the cursor to close
 	 */
-	private void closeDatabase(Cursor cursor)
-	{
+	private void closeDatabase(Cursor cursor) {
 		cursor.close();
 		closeDatabase();
 	}
 
 	/**
-	 * Shows successful result if result is true and negative result if result is false
+	 * Shows successful result if result is true and negative result if result
+	 * is false
 	 * 
 	 * @param result
 	 *            the result
 	 */
-	private void showResult(boolean result)
-	{
-		if (result)
-		{
+	private void showResult(boolean result) {
+		if (result) {
 			showToast(MESSAGE_DATA_WAS_SAVED);
-		}
-		else
-		{
+		} else {
 			showToast(MESSAGE_COULD_NOT_SAVE);
 		}
 	}
@@ -599,8 +560,7 @@ public class Communicator
 	/**
 	 * Shows the passed in message to the user as a Toast.
 	 */
-	public void showToast(String message)
-	{
+	public void showToast(String message) {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 

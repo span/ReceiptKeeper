@@ -8,21 +8,22 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 
 /**
- * This is a custom adapter for the Spinners that show a receipt accounts code and name. Since the ReceiptAccounts
- * toString method needs a context to be able to get the string resources we override the getItem method and make sure
+ * This is a custom adapter for the Spinners that show a receipt accounts code
+ * and name. Since the ReceiptAccounts toString method needs a context to be
+ * able to get the string resources we override the getItem method and make sure
  * we set a context before toString is executed.
  * 
  * @author Daniel Kvist
  * 
  */
-public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
-{
+public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount> {
 	private Context context;
 	private List<ReceiptAccount> receiptAccountList;
 
 	/**
-	 * Constructor that takes the context and text view resource together with a List of the receipt accounts. It calls
-	 * the super method and then sets a default dropdown resource and also stores the list for future reference.
+	 * Constructor that takes the context and text view resource together with a
+	 * List of the receipt accounts. It calls the super method and then sets a
+	 * default dropdown resource and also stores the list for future reference.
 	 * 
 	 * @param context
 	 *            the context
@@ -31,8 +32,8 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 	 * @param receiptAccountList
 	 *            the list with receipt accounts
 	 */
-	public ReceiptAccountAdapter(Context context, int resource, List<ReceiptAccount> receiptAccountList)
-	{
+	public ReceiptAccountAdapter(Context context, int resource,
+			List<ReceiptAccount> receiptAccountList) {
 		super(context, resource, receiptAccountList);
 		this.context = context;
 		this.receiptAccountList = receiptAccountList;
@@ -40,12 +41,12 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 	}
 
 	/**
-	 * We override getItem to make sure we have a Context set on the ReceiptAccount instance since the toString method
-	 * of the instance needs it to be able to properly process the text resources.
+	 * We override getItem to make sure we have a Context set on the
+	 * ReceiptAccount instance since the toString method of the instance needs
+	 * it to be able to properly process the text resources.
 	 */
 	@Override
-	public ReceiptAccount getItem(int position)
-	{
+	public ReceiptAccount getItem(int position) {
 		ReceiptAccount receiptAccount = receiptAccountList.get(position);
 		receiptAccount.setContext(context);
 		return receiptAccount;
@@ -58,11 +59,9 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 	 *            the code of the receipt account whose position you want
 	 * @return the position in the original List or 0
 	 */
-	public int findReceiptAccountPosition(long code)
-	{
+	public int findReceiptAccountPosition(long code) {
 		int i = 0;
-		while (i < receiptAccountList.size())
-		{
+		while (i < receiptAccountList.size()) {
 			if (code == receiptAccountList.get(i).getCode())
 				return i;
 			i++;
@@ -71,12 +70,11 @@ public class ReceiptAccountAdapter extends ArrayAdapter<ReceiptAccount>
 	}
 
 	/**
-	 * Sorts the list after a new addition and the calls the super method. We want to sort to have the dropdown in a
-	 * nice ascending order.
+	 * Sorts the list after a new addition and the calls the super method. We
+	 * want to sort to have the dropdown in a nice ascending order.
 	 */
 	@Override
-	public void notifyDataSetChanged()
-	{
+	public void notifyDataSetChanged() {
 		Collections.sort(receiptAccountList);
 		super.notifyDataSetChanged();
 	}

@@ -1,18 +1,17 @@
 package net.danielkvist.util;
 
 /**
- * This is a simple data holder class that is used to store setting names and values. It also keeps static references to
- * the name of the setting fields.
+ * This is a simple data holder class that is used to store setting names and
+ * values. It also keeps static references to the name of the setting fields.
  * 
  * @author Daniel Kvist
  * 
  */
-public class Setting
-{
+public class Setting {
 
 	public static final int SETTING_STORAGE_LOCAL = 0;
 	public static final int SETTING_STORAGE_CLOUD = 1;
-	
+
 	public static final int SETTING_SOUND_ON = 0;
 	public static final int SETTING_SOUND_OFF = 8;
 
@@ -31,8 +30,7 @@ public class Setting
 	/**
 	 * Empty constructor that initiates the value to 0 and name to empty string
 	 */
-	public Setting()
-	{
+	public Setting() {
 		this.value = 0;
 		this.name = "";
 	}
@@ -45,8 +43,7 @@ public class Setting
 	 * @param value
 	 *            value of Setting
 	 */
-	public Setting(String name, int value)
-	{
+	public Setting(String name, int value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -54,8 +51,7 @@ public class Setting
 	/**
 	 * @return the value
 	 */
-	public int getValue()
-	{
+	public int getValue() {
 		return value;
 	}
 
@@ -63,16 +59,14 @@ public class Setting
 	 * @param value
 	 *            the value to set
 	 */
-	public void setValue(int value)
-	{
+	public void setValue(int value) {
 		this.value = value;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -80,8 +74,7 @@ public class Setting
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 

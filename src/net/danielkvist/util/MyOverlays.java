@@ -9,13 +9,13 @@ import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
 /**
- * This class adds a marker to an Overlay that can be used to mark positions on a MapView
+ * This class adds a marker to an Overlay that can be used to mark positions on
+ * a MapView
  * 
  * @author Daniel Kvist
  * 
  */
-public class MyOverlays extends ItemizedOverlay<OverlayItem>
-{
+public class MyOverlays extends ItemizedOverlay<OverlayItem> {
 	private List<OverlayItem> overlays = new ArrayList<OverlayItem>();
 
 	/**
@@ -24,8 +24,7 @@ public class MyOverlays extends ItemizedOverlay<OverlayItem>
 	 * @param defaultMarker
 	 *            the default marker
 	 */
-	public MyOverlays(Drawable defaultMarker)
-	{
+	public MyOverlays(Drawable defaultMarker) {
 		super(boundCenterBottom(defaultMarker));
 	}
 
@@ -35,8 +34,7 @@ public class MyOverlays extends ItemizedOverlay<OverlayItem>
 	 * @param overlay
 	 *            the item to add
 	 */
-	public void addOverlay(OverlayItem overlay)
-	{
+	public void addOverlay(OverlayItem overlay) {
 		overlays.add(overlay);
 		populate();
 	}
@@ -45,8 +43,7 @@ public class MyOverlays extends ItemizedOverlay<OverlayItem>
 	 * Returns the item at the corresponding position to i
 	 */
 	@Override
-	protected OverlayItem createItem(int i)
-	{
+	protected OverlayItem createItem(int i) {
 		return overlays.get(i);
 	}
 
@@ -54,8 +51,7 @@ public class MyOverlays extends ItemizedOverlay<OverlayItem>
 	 * Returns the size of the overlay list
 	 */
 	@Override
-	public int size()
-	{
+	public int size() {
 		return overlays.size();
 	}
 

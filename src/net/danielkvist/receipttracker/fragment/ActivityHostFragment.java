@@ -10,40 +10,39 @@ import android.view.ViewParent;
 import android.view.Window;
 
 /**
- * This is a fragment that will be used during transition from activities to fragments.
+ * This is a fragment that will be used during transition from activities to
+ * fragments.
  */
-public abstract class ActivityHostFragment extends LocalActivityManagerFragment
-{
+public abstract class ActivityHostFragment extends LocalActivityManagerFragment {
 
-    protected abstract Class<? extends Activity> getActivityClass();
+	protected abstract Class<? extends Activity> getActivityClass();
 
-    private final static String ACTIVITY_TAG = "hosted";
+	private final static String ACTIVITY_TAG = "hosted";
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        Intent intent = new Intent(getActivity(), getActivityClass());
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Intent intent = new Intent(getActivity(), getActivityClass());
 
-        @SuppressWarnings("deprecation")
-        final Window w = getLocalActivityManager().startActivity(ACTIVITY_TAG, intent);
-        final View wd = w != null ? w.getDecorView() : null;
+		@SuppressWarnings("deprecation")
+		final Window w = getLocalActivityManager().startActivity(ACTIVITY_TAG,
+				intent);
+		final View wd = w != null ? w.getDecorView() : null;
 
-        if (wd != null)
-        {
-            ViewParent parent = wd.getParent();
-            if (parent != null)
-            {
-                ViewGroup v = (ViewGroup) parent;
-                v.removeView(wd);
-            }
+		if (wd != null) {
+			ViewParent parent = wd.getParent();
+			if (parent != null) {
+				ViewGroup v = (ViewGroup) parent;
+				v.removeView(wd);
+			}
 
-            wd.setVisibility(View.VISIBLE);
-            wd.setFocusableInTouchMode(true);
-            if (wd instanceof ViewGroup)
-            {
-                ((ViewGroup) wd).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-            }
-        }
-        return wd;
-    }
+			wd.setVisibility(View.VISIBLE);
+			wd.setFocusableInTouchMode(true);
+			if (wd instanceof ViewGroup) {
+				((ViewGroup) wd)
+						.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+			}
+		}
+		return wd;
+	}
 }

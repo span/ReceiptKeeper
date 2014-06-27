@@ -13,34 +13,34 @@ import android.content.Context;
 import android.graphics.Color;
 
 /**
- * This is a content class which has hard coded values for color and value variables that make up the slices in a pie
- * chart. At the moment this is only used to diplay the income, cost and sub total in the results view.
+ * This is a content class which has hard coded values for color and value
+ * variables that make up the slices in a pie chart. At the moment this is only
+ * used to diplay the income, cost and sub total in the results view.
  * 
  * @author Daniel Kvist
  * 
  */
-public class PieChartView extends GraphicalView
-{
+public class PieChartView extends GraphicalView {
 
 	public static final int COLOR_GREEN = Color.parseColor("#62c51a");
 	public static final int COLOR_ORANGE = Color.parseColor("#ff6c0a");
 	public static final int COLOR_BLUE = Color.parseColor("#23bae9");
-	
+
 	/**
-	 * Constructor that only calls the super method. It is not used to instantiate the object from outside of this
-	 * class.
+	 * Constructor that only calls the super method. It is not used to
+	 * instantiate the object from outside of this class.
 	 * 
 	 * @param context
 	 * @param arg1
 	 */
-	private PieChartView(Context context, AbstractChart arg1)
-	{
+	private PieChartView(Context context, AbstractChart arg1) {
 		super(context, arg1);
 	}
 
 	/**
-	 * This method returns a new graphical view as a pie chart view. It uses the income and costs and the static color
-	 * constants of the class to create the chart.
+	 * This method returns a new graphical view as a pie chart view. It uses the
+	 * income and costs and the static color constants of the class to create
+	 * the chart.
 	 * 
 	 * @param context
 	 *            the context
@@ -50,23 +50,23 @@ public class PieChartView extends GraphicalView
 	 *            the total cost
 	 * @return a GraphicalView object as a pie chart
 	 */
-	public static GraphicalView getNewInstance(Context context, int income, int costs)
-	{
-		return ChartFactory.getPieChartView(context, getDataSet(context, income, costs), getRenderer());
+	public static GraphicalView getNewInstance(Context context, int income,
+			int costs) {
+		return ChartFactory.getPieChartView(context,
+				getDataSet(context, income, costs), getRenderer());
 	}
 
 	/**
-	 * Creates the renderer for the pie chart and sets the basic color scheme and hides labels and legend.
+	 * Creates the renderer for the pie chart and sets the basic color scheme
+	 * and hides labels and legend.
 	 * 
 	 * @return a renderer for the pie chart
 	 */
-	private static DefaultRenderer getRenderer()
-	{
+	private static DefaultRenderer getRenderer() {
 		int[] colors = new int[] { COLOR_GREEN, COLOR_ORANGE, COLOR_BLUE };
 
 		DefaultRenderer defaultRenderer = new DefaultRenderer();
-		for (int color : colors)
-		{
+		for (int color : colors) {
 			SimpleSeriesRenderer simpleRenderer = new SimpleSeriesRenderer();
 			simpleRenderer.setColor(color);
 			defaultRenderer.addSeriesRenderer(simpleRenderer);
@@ -77,8 +77,9 @@ public class PieChartView extends GraphicalView
 	}
 
 	/**
-	 * Creates the data set used by the piechart by adding the string represantation and it's integer value to a
-	 * CategorySeries object. Note that the string representations are hard coded.
+	 * Creates the data set used by the piechart by adding the string
+	 * represantation and it's integer value to a CategorySeries object. Note
+	 * that the string representations are hard coded.
 	 * 
 	 * @param context
 	 *            the context
@@ -88,8 +89,8 @@ public class PieChartView extends GraphicalView
 	 *            the total costs
 	 * @return a CategorySeries instance with the data supplied
 	 */
-	private static CategorySeries getDataSet(Context context, int income, int costs)
-	{
+	private static CategorySeries getDataSet(Context context, int income,
+			int costs) {
 		CategorySeries series = new CategorySeries("Chart");
 		series.add(context.getString(R.string.income), income);
 		series.add(context.getString(R.string.costs), costs);
