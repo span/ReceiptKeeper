@@ -5,3 +5,5 @@
 .DS*
 *.settings*
 *.classpath
+src/net/danielkvist/util/DropboxHandler.java
+res/layout/my_map_activity.xml
