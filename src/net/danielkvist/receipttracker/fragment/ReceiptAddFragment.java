@@ -8,11 +8,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
-import net.danielkvist.receipttracker.activity.MyMapActivity;
-import net.danielkvist.receipttracker.activity.MyMapFragmentActivity;
 import net.danielkvist.receipttracker.activity.ReceiptFrameActivity;
 import net.danielkvist.receipttracker.adapter.ReceiptAccountAdapter;
 import net.danielkvist.receipttracker.content.Receipt;
@@ -27,11 +33,12 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -46,7 +53,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -63,10 +69,13 @@ import android.widget.TextView;
  * 
  */
 public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
-		DialogInterface.OnClickListener, AddReceiptAccountDialogListener {
+		DialogInterface.OnClickListener, AddReceiptAccountDialogListener,
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private static final String TAG = ReceiptAddFragment.class.getSimpleName();
 	private String filename;
 	private TextView timeView;
 	private EditText nameView;
@@ -85,6 +94,11 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 	private ReceiptAccountAdapter adapter;
 	private DropboxHandler dropbox;
 	private HashMap<String, Integer> settingsMap;
+	private boolean enabled;
+	private GoogleMap map;
+	private LocationManager locationManager;
+	private LocationClient locationClient;
+	private Object mCurrentLocation;
 
 	/**
 	 * Instantiates a Communicator, sets the Fragment to retain it's instance
@@ -93,17 +107,43 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		communicator = new Communicator(getActivity());
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
 		applicationContext = getActivity().getApplicationContext();
-		if (savedInstanceState != null)
-			receipt = (Receipt) savedInstanceState
-					.getParcelable(Receipt.EXTRA_RECEIPT);
-		else
-			receipt = (Receipt) getArguments().getParcelable(
-					Receipt.EXTRA_RECEIPT);
+		
+		if (savedInstanceState != null) {
+			receipt = (Receipt) savedInstanceState.getParcelable(Receipt.EXTRA_RECEIPT);
+		} else {
+			receipt = (Receipt) getArguments().getParcelable(Receipt.EXTRA_RECEIPT);
+		}
+		
+		enabled = communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE;
+		if(enabled) {
+			locationClient = new LocationClient(applicationContext, this, this);
+		}
 	}
+	
+	
+	/*
+     * Called when the Activity becomes visible.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        locationClient.connect();
+    }
+
+    /*
+     * Called when the Activity is no longer visible.
+     */
+    @Override
+    public void onStop() {
+    	locationClient.disconnect();
+        super.onStop();
+    }
+
 
 	/**
 	 * Adds the save icon to the options menu.
@@ -143,8 +183,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 
 		settingsMap = communicator.getAllSettings();
 
-		View rootView = inflater.inflate(R.layout.fragment_receipt_add,
-				container, false);
+		View rootView = inflater.inflate(R.layout.fragment_receipt_add, container, false);
 		imageView = (ImageView) rootView
 				.findViewById(R.id.receipt_photo_image_view);
 		imageView.setOnClickListener(new View.OnClickListener() {
@@ -230,25 +269,21 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 				showDateDialog();
 			}
 		});
-
-		FrameLayout f = (FrameLayout) rootView.findViewById(R.id.map_container);
-		f.setVisibility(settingsMap.get(Setting.SETTING_FIELD_LOCATION));
-		rootView.findViewById(R.id.map_container_label).setVisibility(
-				settingsMap.get(Setting.SETTING_FIELD_LOCATION));
-
-		if (settingsMap.get(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE) {
-			Bundle arguments = new Bundle();
-			arguments.putParcelable(Receipt.EXTRA_RECEIPT, receipt);
-
-			Fragment fr = new MyMapFragmentActivity();
-			fr.setArguments(arguments);
-
-			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			ft.add(R.id.map_container, fr);
-			ft.commit();
+		
+		if(enabled) {
+			MapFragment mapFragment = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
+			map = mapFragment.getMap();
+			map.setMyLocationEnabled(true);
 		}
 
 		return rootView;
+	}
+	
+	private void centerMap(Location location) {
+		if(location != null) {
+			LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+			map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
+		}
 	}
 
 	/**
@@ -370,6 +405,7 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 		} else {
 			return null;
 		}
+		
 	}
 
 	/**
@@ -382,21 +418,23 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 		int selectedPosition = accountSpinner.getSelectedItemPosition();
 		String name = nameView.getText().toString();
 
-		if (MyMapActivity.currentGeoPoint != null) {
-			int latitude = MyMapActivity.currentGeoPoint.getLatitudeE6();
-			int longitude = MyMapActivity.currentGeoPoint.getLongitudeE6();
-			receipt.setLocationLat(String.valueOf(latitude));
-			receipt.setLocationLong(String.valueOf(longitude));
+		if (locationClient != null) {
+			Location location = locationClient.getLastLocation();
+			receipt.setLocationLat(String.valueOf(location.getLatitude()));
+			receipt.setLocationLong(String.valueOf(location.getLongitude()));
 		}
+		
 		if (name.equals("")) {
 			communicator
 					.showToast("You need to fill in a name of your receipt.");
 			return false;
 		}
+		
 		if (receipt.getPhoto().equals("")) {
 			communicator.showToast("You need add a photo of your receipt.");
 			return false;
 		}
+		
 		receipt.setName(name);
 		receipt.setSum(sumView.getText().toString());
 		receipt.setTax(taxView.getText().toString());
@@ -483,6 +521,23 @@ public class ReceiptAddFragment extends Fragment implements OnDateSetListener,
 		} else {
 			communicator.showToast(ReceiptAccount.INVALID_ACCOUNT_MESSAGE);
 		}
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		Log.w(TAG, "Could not connect to services: " + result.toString());
+	}
+
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		Log.d(TAG, "Connected to sevices.");
+		Location location = locationClient.getLastLocation();
+		centerMap(location);
+	}
+
+	@Override
+	public void onDisconnected() {
+		Log.d(TAG, "Disconnected from sevices.");
 	}
 
 }

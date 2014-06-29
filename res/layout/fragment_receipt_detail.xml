@@ -27,10 +27,10 @@
             android:layout_height="wrap_content" >
 
             <fragment
-                android:name="net.danielkvist.receipttracker.activity.MyMapFragmentActivity"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" >
-            </fragment>
+	            android:id="@+id/map"
+	            android:layout_width="match_parent"
+	            android:layout_height="300dp"
+	            class="com.google.android.gms.maps.MapFragment" />
         </LinearLayout>
     </LinearLayout>
 

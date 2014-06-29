@@ -128,9 +128,9 @@
                 android:id="@+id/add_receipt_account_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_input_add"
+                android:layout_gravity="center_vertical"
                 android:contentDescription="@string/click_to_add_a_receipt_account"
-                android:layout_gravity="center_vertical"  />
+                android:src="@android:drawable/ic_input_add" />
 
             <Spinner
                 android:id="@+id/add_receipt_account"
@@ -153,11 +153,20 @@
              See this bug report for more information: http://code.google.com/p/android/issues/detail?id=18659
         -->
 
+
+        <!--
         <FrameLayout
             android:id="@+id/map_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </FrameLayout>
+        -->
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            class="com.google.android.gms.maps.MapFragment" />
     </LinearLayout>
 
 </ScrollView>

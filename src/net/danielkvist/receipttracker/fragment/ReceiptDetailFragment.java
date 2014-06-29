@@ -2,6 +2,13 @@ package net.danielkvist.receipttracker.fragment;
 
 import java.util.HashMap;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import net.danielkvist.receipttracker.R;
 import net.danielkvist.receipttracker.ReceiptTrackerApp;
 import net.danielkvist.receipttracker.activity.MainActivity;
@@ -206,6 +213,19 @@ public class ReceiptDetailFragment extends Fragment {
 		dateAndTimeView = (TextView) rootView
 				.findViewById(R.id.receipt_date_and_time);
 		dateAndTimeView.setText(receipt.getDateAndTime(getActivity()));
+		
+		boolean enabled = communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE;
+		MapFragment mapFragment = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
+		GoogleMap map = mapFragment.getMap();
+		if(enabled && !receipt.getLocationLat().isEmpty() && !receipt.getLocationLong().isEmpty())  {
+			map.setMyLocationEnabled(true);
+			LatLng latlng = new LatLng(Double.parseDouble(receipt.getLocationLat()), Double.parseDouble(receipt.getLocationLong()));
+			map.addMarker(new MarkerOptions().position(latlng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
+			map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
+		} else {
+			View v = rootView.findViewById(R.id.detail_map_container);
+			v.setVisibility(View.GONE);
+		}
 
 		return rootView;
 	}

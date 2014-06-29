@@ -166,4 +166,5 @@ public class MainActivity extends Activity implements View.OnClickListener {
 		detailIntent.putExtra(ReceiptTrackerApp.ARG_ITEM_ID, id);
 		startActivity(detailIntent);
 	}
+	
 }
