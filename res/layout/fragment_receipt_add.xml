@@ -153,20 +153,15 @@
              See this bug report for more information: http://code.google.com/p/android/issues/detail?id=18659
         -->
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="300dp" >
 
-        <!--
-        <FrameLayout
-            android:id="@+id/map_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </FrameLayout>
-        -->
-
-        <fragment
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            class="com.google.android.gms.maps.MapFragment" />
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapview"
+                android:layout_width="fill_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

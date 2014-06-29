@@ -18,9 +18,11 @@ import net.danielkvist.util.Communicator;
 import net.danielkvist.util.Setting;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +40,10 @@ import android.widget.TextView;
  * @author Daniel Kvist
  * 
  */
-public class ReceiptDetailFragment extends Fragment {
+public class ReceiptDetailFragment extends MapViewFragment {
+
+	private static final String TAG = ReceiptDetailFragment.class.getSimpleName();
+
 	private Receipt receipt;
 	private TextView nameView;
 	private TextView sumView;
@@ -50,6 +55,8 @@ public class ReceiptDetailFragment extends Fragment {
 	private TextView sumViewLabel;
 	private TextView taxViewLabel;
 	private ShareActionProvider shareActionProvider;
+
+	private boolean enabled;
 
 	/**
 	 * Custom interface to handle communication with the parent Activity.
@@ -99,6 +106,9 @@ public class ReceiptDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
+
+		mapContainerLayout = R.layout.fragment_receipt_detail;
+		mapViewResourceId = R.id.mapview;
 	}
 
 	/**
@@ -162,14 +172,21 @@ public class ReceiptDetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		getActivity().invalidateOptionsMenu(); // Need to call this since the
 												// options menu is not rendering
 												// properly on
 												// first run
+
 		communicator = new Communicator(getActivity());
+		enabled = communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE;
 		HashMap<String, Integer> settingsMap = communicator.getAllSettings();
-		View rootView = inflater.inflate(R.layout.fragment_receipt_detail,
-				container, false);
+
+		View rootView = super.onCreateView(inflater, container, savedInstanceState);
+		if(enabled) {
+			enableMap();
+		}
+
 		ImageView imageView = (ImageView) rootView
 				.findViewById(R.id.receipt_image);
 		BitmapLoader bitmapLoader = ((ReceiptTrackerApp) getActivity()
@@ -214,17 +231,13 @@ public class ReceiptDetailFragment extends Fragment {
 				.findViewById(R.id.receipt_date_and_time);
 		dateAndTimeView.setText(receipt.getDateAndTime(getActivity()));
 		
-		boolean enabled = communicator.getSettingValue(Setting.SETTING_FIELD_LOCATION) == View.VISIBLE;
-		MapFragment mapFragment = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
-		GoogleMap map = mapFragment.getMap();
 		if(enabled && !receipt.getLocationLat().isEmpty() && !receipt.getLocationLong().isEmpty())  {
 			map.setMyLocationEnabled(true);
 			LatLng latlng = new LatLng(Double.parseDouble(receipt.getLocationLat()), Double.parseDouble(receipt.getLocationLong()));
 			map.addMarker(new MarkerOptions().position(latlng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher)));
 			map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 16));
 		} else {
-			View v = rootView.findViewById(R.id.detail_map_container);
-			v.setVisibility(View.GONE);
+			mapView.setVisibility(View.GONE);
 		}
 
 		return rootView;
